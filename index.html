@@ -59,6 +59,19 @@
       }, 800); // Same duration as the transition
     }, 100);
   });
+
+
+  function checkWidth() {
+    if (window.innerWidth < 1110) {
+      console.log("Ширина экрана меньше 1200px. Перенаправление...");
+      window.location.href = "no-phone.html";
+    }
+  }
+
+  window.addEventListener("load", checkWidth);
+
+  window.addEventListener("resize", checkWidth);
+
 </script>
 
 
