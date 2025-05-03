@@ -1,9 +1,7 @@
-        // Contact information constants
 const EMAIL_ADDRESS = "mishka@tuta.com";
 const TELEGRAM_USERNAME = "https://ru.wiktionary.org/wiki/%D0%BD%D0%B0%D0%B5%D0%B1%D0%B0%D0%BB%D0%BE%D0%B2%D0%BE";
 const TOX_ID = "2800F4E2258D0A56175E40AF2CBAFAC3F43E4867B5C3A06DC638F4553A2E311086340A206E01";
 
-// Keep the existing Glitch functionality
 const chars = "×#-_¯—0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
 
 var Glitch = function(t, i, e, n, h, r) {
@@ -425,14 +423,6 @@ if (document.readyState === 'loading') {
 
 
 
-
-
-
-
-
-
-
-
 function goToPage(page) {
     window.location.href = page;
 }
@@ -441,20 +431,9 @@ function goToPage(page) {
 
 
 
-
-
-
-
-
-
-
-
-
-        // Configuration
-        const pt_targetPage = "./about.html"; // Change this to your destination page URL
-        const pt_animationDuration = 1500; // Total animation duration in milliseconds
+        const pt_targetPage = "./about.html"; 
+        const pt_animationDuration = 1500;
         
-        // Create PageTransitionMorph function (renamed from AsciiMorph)
         var PageTransitionMorph = (function() {
           'use strict';
           var pt_element = null;
@@ -647,14 +626,11 @@ function goToPage(page) {
           });
         })();
         
-        // Add event listener to the button
         document.getElementById("AboutPage").addEventListener("click", function(event) {
           event.preventDefault(); // Prevent default navigation
           
-          // Set transition flag in sessionStorage
           sessionStorage.setItem('pageTransition', 'active');
           
-          // Create overlay
           const pt_overlay = document.createElement("div");
           pt_overlay.style.position = "fixed";
           pt_overlay.style.top = "0";
@@ -670,7 +646,6 @@ function goToPage(page) {
           pt_overlay.style.transition = "opacity 100ms ease";
           document.body.appendChild(pt_overlay);
           
-          // Create animation container
           const pt_animationContainer = document.createElement("pre");
           pt_animationContainer.style.color = "antiquewhite";
           pt_animationContainer.style.fontFamily = "monospace";
@@ -678,264 +653,35 @@ function goToPage(page) {
           pt_animationContainer.style.fontSize = "12px";
           pt_overlay.appendChild(pt_animationContainer);
           
-          // Define ASCII art
           const pt_asciiArt = [
 " _____ _____ _____ _____ _____ _____ ",
 "|     |     |   __|  |  |  |  |  _  | ",
 "| | | |-   -|__   |     |    -|     | ",
 "|_|_|_|_____|_____|__|__|__|__|__|__| ",
   ];
-
-//       const pt_asciiArt = [
-// "██████            ██████",
-// "██   ██████████████   ██",
-// "██   ██████████████   ██",
-// " ██████████████████████",
-// "  ██ ██████████████ ██",
-// "  ██  ▒▒▒██████▒▒▒  ██",
-// "  ██    ████████    ██",
-// "   ███████▒▒▒▒███████",
-// "   ██████      ██████",
-// "      ███ ████ ███",
-// "        ████████",
-//       ];
           
-          // Empty art to morph from
           const pt_emptyArt = Array(pt_asciiArt.length).fill(" ".repeat(20));
           
-          // Initialize PageTransitionMorph
           PageTransitionMorph(pt_animationContainer, {
             x: Math.max(...pt_asciiArt.map(line => line.length)) + 4,
             y: pt_asciiArt.length + 4
           });
           
-          // Fade in overlay
           setTimeout(() => {
             pt_overlay.style.opacity = "1";
             
-            // Start with empty frame
             PageTransitionMorph.render(pt_emptyArt);
             
-            // After a short delay, morph to the ASCII art
             setTimeout(() => {
               PageTransitionMorph.morph(pt_asciiArt);
               
-              // Display the ASCII art for a moment
               setTimeout(() => {
-                // Then morph back to empty
                 PageTransitionMorph.morph(pt_emptyArt);
                 
-                // After the morph-out animation completes, navigate to the target page
                 setTimeout(() => {
                   window.location.href = pt_targetPage;
                 }, pt_animationDuration);
-              }, 800); // Display duration - how long to show the ASCII art
+              }, 800);
             }, 500);
           }, 10);
         });
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  const spinner = document.querySelector('.activity');
-  
-  if (!spinner) {
-    console.error('Элемент .activity не найден!');
-    return;
-  }
-  
-  spinner.classList.remove('spinning');
-  
-  let isScrolling = false;
-  let scrollTimeout = null;
-  let spinnerIndex = 0;
-  let spinInterval = null;
-  
-  const SPINNER_CHARS = ['|', '/', '-', '\\', '|', '/', '-', '\\'];
-  
-  function updateSpinner() {
-    spinnerIndex = (spinnerIndex + 1) % SPINNER_CHARS.length;
-    spinner.textContent = SPINNER_CHARS[spinnerIndex];
-  }
-  
-  function startAnimation() {
-    if (spinInterval === null) {
-      spinInterval = setInterval(updateSpinner, 80); 
-    }
-  }
-  
-  function stopAnimation() {
-    if (spinInterval !== null) {
-      clearInterval(spinInterval);
-      spinInterval = null;
-    }
-  }
-  
-  function handleScroll() {
-    if (scrollTimeout) {
-      clearTimeout(scrollTimeout);
-    }
-    
-    if (!isScrolling) {
-      isScrolling = true;
-      startAnimation();
-    }
-    
-    scrollTimeout = setTimeout(() => {
-      isScrolling = false;
-      stopAnimation();
-    }, 200); 
-  }
-  
-  let scrollActive = false;
-  window.addEventListener('scroll', () => {
-    if (!scrollActive) {
-      window.requestAnimationFrame(() => {
-        handleScroll();
-        scrollActive = false;
-      });
-      scrollActive = true;
-    }
-  });
-  
-  spinner.textContent = SPINNER_CHARS[0];
-  
-});
-
-
-
-
-
-const charsS = "×#-_¯—0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
-  
-var Glitch = function(t, i, e, n, h, r) {
-    this.selector = t, 
-    this.index = i, 
-    this.numberOfGlitchedLetter = e, 
-    this.innerText, 
-    this.charArray = [], 
-    this.charIndex = [], 
-    this.timeGlitch = n, 
-    this.timeBetweenGlitch = r, 
-    this.timePerLetter = h, 
-    this.maxCount = Math.floor(this.timeGlitch / this.timePerLetter), 
-    this.count = 0, 
-    this.intervalId = null, 
-    this.timeoutId = null
-};
-
-Glitch.prototype.init = function() {
-    this.innerText = this.selector.innerText, 
-    this.charArray = this.innerText.split(""), 
-    this.numberOfGlitchedLetter = this.charArray.length, 
-    this.defineCharIndexToRandomize()
-};
-
-Glitch.prototype.defineCharIndexToRandomize = function() {
-    this.charIndex = [];
-    for (let t = 0; t < this.numberOfGlitchedLetter; t++) {
-        let i = t;
-        this.charIndex.push(i)
-    }
-};
-
-Glitch.prototype.randomize = function() {
-    let t = Array.from(this.charArray);
-    for (let i = 0; i < this.numberOfGlitchedLetter; i++) {
-        let e = Math.floor(42 * Math.random()),
-        n = this.charIndex[i];
-        " " !== t[n] && (t[n] = charsS[e])
-    }
-    this.selector.innerText = t.join("")
-};
-
-Glitch.prototype.update = function() {
-    this.count >= this.maxCount - 1 ? (
-        this.selector.innerText = this.innerText, 
-        this.defineCharIndexToRandomize(), 
-        this.count = 0
-    ) : (
-        this.randomize(), 
-        this.count++
-    )
-};
-
-Glitch.prototype.startGlitch = function() {
-    let t = this;
-    this.intervalId = setInterval(function() {
-        t.update()
-    }, 10);
-    
-    this.timeoutId = setTimeout(function() {
-        t.stopGlitch()
-    }, this.timeGlitch)
-};
-
-Glitch.prototype.stopGlitch = function() {
-    clearInterval(this.intervalId);
-    clearTimeout(this.timeoutId);
-    this.selector.innerText = this.innerText;
-    this.count = 0
-};
-
-document.addEventListener("DOMContentLoaded", function() {
-    const loader = document.getElementById('loader');
-    const loaderText = document.getElementById('loader-text');
-    const progressBar = document.getElementById('progress');
-    const content = document.getElementById('content');
-    
-    // Создаем экземпляр глитч-эффекта для текста загрузки
-    let textGlitch = new Glitch(loaderText, 0, undefined, 200, 10, 400);
-    textGlitch.init();
-    
-    // Имитация загрузки в течение 10 секунд
-    let width = 0;
-    const totalTime = 12000; // 10 секунд
-    const interval = 100; // обновление каждые 100мс
-    const steps = totalTime / interval;
-    const increment = 100 / steps;
-    
-    const loadingInterval = setInterval(function() {
-        if (width >= 100) {
-            clearInterval(loadingInterval);
-            
-            // Меняем текст на COMPLETE
-            loaderText.innerText = "COMPLETE";
-            
-            // Запускаем глитч-эффект
-            textGlitch.init();
-            textGlitch.startGlitch();
-            
-            // Запускаем еще один глитч через секунду
-            setTimeout(function() {
-                textGlitch.startGlitch();
-                
-                // Через еще секунду скрываем загрузчик и показываем контент
-                setTimeout(function() {
-                    loader.style.opacity = '0';
-                    loader.style.transition = 'opacity 0.5s';
-                    
-                    setTimeout(function() {
-                        loader.style.display = 'none';
-                        content.style.opacity = '1';
-                    }, 500);
-                }, 1000);
-            }, 1000);
-        } else {
-            width += increment;
-            progressBar.style.width = width + '%';
-        }
-    }, interval);
-    
-    // Иногда запускаем глитч-эффект во время загрузки для интересности
-    const randomGlitchInterval = setInterval(function() {
-        if (Math.random() > 0.9) { // 10% шанс глитча
-            textGlitch.startGlitch();
-        }
-    }, 1000);
-    
-    // Очищаем интервал, когда загрузка завершена
-    setTimeout(function() {
-        clearInterval(randomGlitchInterval);
-    }, totalTime);
-});
