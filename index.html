@@ -16,6 +16,136 @@
 <div class="grid-glitch" data-grid-glitch=""></div>
 <div class="preloader" data-preloader=""></div>
 
+<style>
+    /* Overlay that initially covers the page */
+    .page-transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #010101;
+      z-index: 9999;
+      opacity: 1;
+      transition: opacity 800ms ease;
+    }
+    
+    /* Hide page content until it's ready to be shown */
+    body {
+      opacity: 0;
+      transition: opacity 400ms ease;
+    }
+    
+    body.content-visible {
+      opacity: 1;
+    }
+      .loader-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #010101;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+  }
+  
+  .ascii-art {
+      color: antiquewhite;
+      margin-bottom: 40px;
+      font-size: 14px;
+      line-height: 1.2;
+      text-align: center;
+  }
+  
+  .loader-text {
+      font-family: DOS437;
+      color: antiquewhite;
+      font-size: 28px;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-align: center;
+  }
+  
+  .progress-bar {
+      width: 300px;
+      height: 20px;
+      border: 2px solid antiquewhite;
+      border-radius: 3px;
+      position: relative;
+  }
+  
+  .progress {
+      height: 100%;
+      width: 0%;
+      background-color: antiquewhite;
+      transition: width 0.1s linear;
+  }
+  
+  .content {
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 1s ease;
+  }
+
+</style>
+
+<div class="page-transition-overlay" id="page-overlay"></div>
+
+<script>
+  // Run when page is fully loaded
+  window.addEventListener('load', function() {
+    // Wait a moment to ensure everything is rendered
+    setTimeout(function() {
+      // Make page content visible
+      document.body.classList.add('content-visible');
+      
+      // Fade out the overlay
+      var overlay = document.getElementById('page-overlay');
+      overlay.style.opacity = '0';
+      
+      // Remove overlay after transition completes
+      setTimeout(function() {
+        overlay.parentNode.removeChild(overlay);
+      }, 800); // Same duration as the transition
+    }, 100);
+  });
+
+
+  function checkWidth() {
+    if (window.innerWidth < 1110) {
+      console.log("Ширина экрана меньше 1200px. Перенаправление...");
+      window.location.href = "no-phone.html";
+    }
+  }
+
+  window.addEventListener("load", checkWidth);
+
+  window.addEventListener("resize", checkWidth);
+
+</script>
+
+
+    <div class="LOGWIN">
+        <p style="text-align: center;">
+            <span  style="font-family: Jersey; font-size: 30px;">HACK_AND_PROTECT_FROM</span><br>
+            <span style="font-family: Jersey; font-size: 30px;">DAY ONE</span>
+            <p style="font-size: 22px; font-family: DOS437;">Hello, Friend.<br>
+                We engineer security systems, break into them, and help make the world safer. MISHKA is your quiet guardian.<br><br>
+                <span style="float: right;">Regards.</span></p>
+        </p>
+    </div>
+    
+    <div class="LOGWINSM">
+        <div class="button-container">
+            <button class="LOGBUNAFTER">CONTACT</button>
+            <button id="AboutPage" class="LOGBUNAFTER">ABOUT</button>
+            <button class="LOGBUNAFTER" onclick="goToPage('disclaimer.html')">INFO</button>
+        </div>
+    </div>
 
     <script src="./indexpage.js"></script>
     <script src="./city.js"></script>
