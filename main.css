@@ -30,6 +30,12 @@
     --grad: linear-gradient(currentColor 0 0);
     --thik: 1px;
     --size: 10px;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari, Chrome, Opera, Samsung */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Edge, IE */
+    user-select: none;           /* Modern browsers */
 }
 
 .section--intro {

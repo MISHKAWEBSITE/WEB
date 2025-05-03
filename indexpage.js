@@ -801,3 +801,141 @@ document.addEventListener('DOMContentLoaded', function() {
   spinner.textContent = SPINNER_CHARS[0];
   
 });
+
+
+
+
+
+const charsS = "×#-_¯—0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZ";
+  
+var Glitch = function(t, i, e, n, h, r) {
+    this.selector = t, 
+    this.index = i, 
+    this.numberOfGlitchedLetter = e, 
+    this.innerText, 
+    this.charArray = [], 
+    this.charIndex = [], 
+    this.timeGlitch = n, 
+    this.timeBetweenGlitch = r, 
+    this.timePerLetter = h, 
+    this.maxCount = Math.floor(this.timeGlitch / this.timePerLetter), 
+    this.count = 0, 
+    this.intervalId = null, 
+    this.timeoutId = null
+};
+
+Glitch.prototype.init = function() {
+    this.innerText = this.selector.innerText, 
+    this.charArray = this.innerText.split(""), 
+    this.numberOfGlitchedLetter = this.charArray.length, 
+    this.defineCharIndexToRandomize()
+};
+
+Glitch.prototype.defineCharIndexToRandomize = function() {
+    this.charIndex = [];
+    for (let t = 0; t < this.numberOfGlitchedLetter; t++) {
+        let i = t;
+        this.charIndex.push(i)
+    }
+};
+
+Glitch.prototype.randomize = function() {
+    let t = Array.from(this.charArray);
+    for (let i = 0; i < this.numberOfGlitchedLetter; i++) {
+        let e = Math.floor(42 * Math.random()),
+        n = this.charIndex[i];
+        " " !== t[n] && (t[n] = charsS[e])
+    }
+    this.selector.innerText = t.join("")
+};
+
+Glitch.prototype.update = function() {
+    this.count >= this.maxCount - 1 ? (
+        this.selector.innerText = this.innerText, 
+        this.defineCharIndexToRandomize(), 
+        this.count = 0
+    ) : (
+        this.randomize(), 
+        this.count++
+    )
+};
+
+Glitch.prototype.startGlitch = function() {
+    let t = this;
+    this.intervalId = setInterval(function() {
+        t.update()
+    }, 10);
+    
+    this.timeoutId = setTimeout(function() {
+        t.stopGlitch()
+    }, this.timeGlitch)
+};
+
+Glitch.prototype.stopGlitch = function() {
+    clearInterval(this.intervalId);
+    clearTimeout(this.timeoutId);
+    this.selector.innerText = this.innerText;
+    this.count = 0
+};
+
+document.addEventListener("DOMContentLoaded", function() {
+    const loader = document.getElementById('loader');
+    const loaderText = document.getElementById('loader-text');
+    const progressBar = document.getElementById('progress');
+    const content = document.getElementById('content');
+    
+    // Создаем экземпляр глитч-эффекта для текста загрузки
+    let textGlitch = new Glitch(loaderText, 0, undefined, 200, 10, 400);
+    textGlitch.init();
+    
+    // Имитация загрузки в течение 10 секунд
+    let width = 0;
+    const totalTime = 12000; // 10 секунд
+    const interval = 100; // обновление каждые 100мс
+    const steps = totalTime / interval;
+    const increment = 100 / steps;
+    
+    const loadingInterval = setInterval(function() {
+        if (width >= 100) {
+            clearInterval(loadingInterval);
+            
+            // Меняем текст на COMPLETE
+            loaderText.innerText = "COMPLETE";
+            
+            // Запускаем глитч-эффект
+            textGlitch.init();
+            textGlitch.startGlitch();
+            
+            // Запускаем еще один глитч через секунду
+            setTimeout(function() {
+                textGlitch.startGlitch();
+                
+                // Через еще секунду скрываем загрузчик и показываем контент
+                setTimeout(function() {
+                    loader.style.opacity = '0';
+                    loader.style.transition = 'opacity 0.5s';
+                    
+                    setTimeout(function() {
+                        loader.style.display = 'none';
+                        content.style.opacity = '1';
+                    }, 500);
+                }, 1000);
+            }, 1000);
+        } else {
+            width += increment;
+            progressBar.style.width = width + '%';
+        }
+    }, interval);
+    
+    // Иногда запускаем глитч-эффект во время загрузки для интересности
+    const randomGlitchInterval = setInterval(function() {
+        if (Math.random() > 0.9) { // 10% шанс глитча
+            textGlitch.startGlitch();
+        }
+    }, 1000);
+    
+    // Очищаем интервал, когда загрузка завершена
+    setTimeout(function() {
+        clearInterval(randomGlitchInterval);
+    }, totalTime);
+});
