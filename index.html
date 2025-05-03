@@ -101,19 +101,6 @@
       }, 800);
     }, 100);
   });
-
-
-  function checkWidth() {
-    if (window.innerWidth < 1110) {
-      console.log("Ширина экрана меньше 1200px. Перенаправление...");
-      window.location.href = "no-phone.html";
-    }
-  }
-
-  window.addEventListener("load", checkWidth);
-
-  window.addEventListener("resize", checkWidth);
-
 </script>
 
 <pre id="fire-container"></pre>
@@ -136,7 +123,7 @@
             <button class="LOGBUNAFTER" onclick="goToPage('disclaimer.html')">INFO</button>
         </div>
     </div>
-    <!-- <script src="./doom.js"></script> -->
+    <script src="./doom.js"></script>
     <script src="./indexpage.js"></script>
 </body>
 </html>
