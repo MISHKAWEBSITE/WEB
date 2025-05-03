@@ -1775,14 +1775,16 @@ notification.innerHTML = `
         <pre style="font-size: 6px; text-align: center;">
  __    __     __     ______     __  __     __  __     ______    
 /\\ "-./  \\   /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\/ /    /\\  __ \\   
-\\ \\ \\-./\\ \\  \\ \\ \\  \\ \\___  \\  \\ \\  __ \\  \ \\  _"-.  \\ \\  __ \\  
+\\ \\ \\-./\\ \\  \\ \\ \\  \\ \\___  \\  \\ \\  __ \\  \\ \\  _"-.  \\ \\  __ \\  
  \\ \\_\\ \\ \\_\\  \\ \\_\\  \\/\\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\ 
-  \\/_/  \\/_/   \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_/\\/_/</pre>
+  \\/_/  \\/_/   \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_/\\/_/ </pre>
     <p class="greeting_hlwrld" style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
   </div>
   <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
-    You still won't understand or get into our work the way you would on a computer. So please, don't use your phone.<br><br>
-    See you soon :*</div>
+      mishka.ltd is not intended for viewing on a phone.<br>
+      First of all, due to the .nfo style and animations, it cannot be properly adapted.
+      Second, don't doomscroll through important information.<br><br>
+      Come back to us from a computer or change your screen resolution. See you soon :*</div>
 `;
 
 // Функция для проверки ширины

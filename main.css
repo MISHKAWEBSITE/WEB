@@ -505,7 +505,7 @@ body {
     background-color: #010101;
     font-family: 'VT323', monospace;
     width: 500px;
-    height: 280px;
+    height: 340px;
     border: 1px solid antiquewhite;
     border-radius: 2px;
     color: antiquewhite;
@@ -533,7 +533,7 @@ body {
     padding: 20px;
     margin-top: 20px;
     position: absolute;
-    top: calc(50% + 160px);
+    top: calc(50% + 200px);
     left: 50%;
     transform: translate(-50%, 0);
 }
