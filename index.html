@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <noscript><meta http-equiv="refresh" content="0; url=./no-js.html"></noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MISHKA</title>
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/img/Logo192.png">
@@ -30,7 +31,6 @@
       transition: opacity 800ms ease;
     }
     
-    /* Hide page content until it's ready to be shown */
     body {
       opacity: 0;
       transition: opacity 400ms ease;
@@ -96,21 +96,16 @@
 <div class="page-transition-overlay" id="page-overlay"></div>
 
 <script>
-  // Run when page is fully loaded
   window.addEventListener('load', function() {
-    // Wait a moment to ensure everything is rendered
     setTimeout(function() {
-      // Make page content visible
       document.body.classList.add('content-visible');
       
-      // Fade out the overlay
       var overlay = document.getElementById('page-overlay');
       overlay.style.opacity = '0';
       
-      // Remove overlay after transition completes
       setTimeout(function() {
         overlay.parentNode.removeChild(overlay);
-      }, 800); // Same duration as the transition
+      }, 800);
     }, 100);
   });
 

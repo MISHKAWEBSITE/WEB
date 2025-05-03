@@ -1751,28 +1751,3 @@ document.addEventListener('DOMContentLoaded', function() {
   spinner.textContent = SPINNER_CHARS[0];
   
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
