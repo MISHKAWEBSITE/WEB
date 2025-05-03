@@ -1229,6 +1229,106 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+
+
+
+
+
+
+
+
+const TG_ID = "UNAVAILABLE";
+
+function copyTgId() {
+  const tempInput = document.createElement('input');
+  tempInput.value = TG_ID;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand('copy');
+  document.body.removeChild(tempInput);
+  
+  showTgNotification();
+}
+
+function showTgNotification() {
+  const overlay = document.createElement('div');
+  overlay.className = 'tg-notification-overlay';
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.style.zIndex = '9998';
+  overlay.style.opacity = '0';
+  overlay.style.transition = 'opacity 0.4s ease';
+  
+  const notification = document.createElement('div');
+  notification.className = 'tg-notification';
+  notification.style.backgroundColor = '#010101';
+  notification.style.color = 'antiquewhite';
+  notification.style.border = '1px solid antiquewhite';
+  notification.style.padding = '30px 50px';
+  notification.style.borderRadius = '4px';
+  notification.style.fontFamily = 'DOS437, VT323, monospace';
+  notification.style.fontSize = '24px';
+  notification.style.transform = 'scale(0.9)';
+  notification.style.opacity = '0';
+  notification.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+  
+  notification.innerHTML = `
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <span>UNAVAILABLE</span>
+    </div>
+  `;
+  
+  overlay.appendChild(notification);
+  document.body.appendChild(overlay);
+  
+  setTimeout(() => {
+    overlay.style.opacity = '1';
+    notification.style.opacity = '1';
+    notification.style.transform = 'scale(1)';
+  }, 10);
+  
+  setTimeout(() => {
+    overlay.style.opacity = '0';
+    notification.style.opacity = '0';
+    notification.style.transform = 'scale(0.9)';
+    
+    setTimeout(() => {
+      if (document.body.contains(overlay)) {
+        document.body.removeChild(overlay);
+      }
+    }, 500);
+  }, 2000);
+}
+
+window.copyTgId = copyTgId;
+
+document.addEventListener('DOMContentLoaded', function() {
+  const tgButton = document.getElementById('ButtonTLGRM');
+  if (tgButton) {
+    tgButton.onclick = copyTgId;
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
     const wrapper = document.getElementById("gridblock");
     const rows = 11;
     const cols = 9;
@@ -1263,9 +1363,9 @@ document.addEventListener('DOMContentLoaded', function() {
           angle = -angle;
         }
         
-        const maxDistance = 240; // Максимальное расстояние влияния
+        const maxDistance = 240;
         let intensity = 1 - Math.min(distance / maxDistance, 1);
-        intensity = Math.pow(intensity, 0.5); // Делаем более плавным
+        intensity = Math.pow(intensity, 0.5);
         
         element.style.setProperty("--rotate", `${angle * intensity}deg`);
       });
