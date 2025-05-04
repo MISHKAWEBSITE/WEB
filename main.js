@@ -1,3 +1,4 @@
+
 var AsciiMorph = (function() {
   'use strict';
   var element = null;
@@ -446,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const spinner = document.querySelector('.activity');
   
   if (!spinner) {
-    console.error('Элемент .activity не найден!');
+    console.error('no .activity found');
     return;
   }
   
@@ -507,7 +508,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   spinner.textContent = SPINNER_CHARS[0];
   
-  console.log('Скрипт вращающейся палки инициализирован');
 });
 
 
@@ -533,7 +533,6 @@ const asciicontainer = document.querySelector(".ascii");
 const map = (t, o, e, a, x) => ((t - e) / (o - e)) * (a - x) + x;
 const lerp = (t, o, e) => o + (e - o) * t;
 const map_table = new Array(255).fill(1).map((t, o) => Math.ceil(map(o, 255, 0, 8, 0)));
-
 const line = (t, o, e, a) => {
   myCtx.beginPath();
   let x = myCtx.createLinearGradient(t, o, e, a);
@@ -547,32 +546,63 @@ const line = (t, o, e, a) => {
   myCtx.closePath();
 };
 
-// More efficient version of the original getAsciiOutput function
-const getAsciiOutput = (t, o) => {
-  let e = o.getImageData(0, 0, t.width, t.height).data;
-  let a = "";
-  for (let o = 0, x = e.length; o < x; o += 4) {
-    let x = (o / 4) % t.width;
-    let i = ascii[map_table[e[o]]];
-    if (x == 0) {
-      a += "<div>";
+// Создаем кэш последних значений ASCII для сравнения
+const lastAsciiValues = new Array(myCanvas.width * myCanvas.height).fill('');
+const asciiElements = [];
+
+// Инициализация DOM-элементов один раз
+function initAsciiContainer() {
+  asciicontainer.innerHTML = '';
+  for (let y = 0; y < myCanvas.height; y++) {
+    const rowDiv = document.createElement('div');
+    asciicontainer.appendChild(rowDiv);
+    
+    const rowElements = [];
+    for (let x = 0; x < myCanvas.width; x++) {
+      const span = document.createElement('span');
+      rowDiv.appendChild(span);
+      rowElements.push(span);
     }
-    a += i == ascii[0] ? `<span style="color: #0a0a0a">${i}</span>` : i;
-    if (x == t.width - 1) {
-      a += "</div>";
+    asciiElements.push(rowElements);
+  }
+}
+
+// Оптимизированная функция обновления ASCII
+const updateAsciiOutput = () => {
+  const imageData = myCtx.getImageData(0, 0, myCanvas.width, myCanvas.height).data;
+  
+  for (let y = 0; y < myCanvas.height; y++) {
+    for (let x = 0; x < myCanvas.width; x++) {
+      const pixelIndex = (y * myCanvas.width + x) * 4;
+      const brightness = imageData[pixelIndex]; // Используем красный канал для яркости
+      const asciiIndex = map_table[brightness];
+      const char = ascii[asciiIndex];
+      
+      const index = y * myCanvas.width + x;
+      // Обновляем только если значение изменилось
+      if (lastAsciiValues[index] !== char) {
+        lastAsciiValues[index] = char;
+        const element = asciiElements[y][x];
+        
+        element.textContent = char;
+        if (char === ascii[0]) {
+          element.style.color = "#0a0a0a";
+        } else {
+          element.style.color = "";
+        }
+      }
     }
   }
-  return a;
 };
 
-const randomBox = () => ({ 
-  x: Math.floor(10 * Math.random()) + 7, 
-  y: Math.floor(15 * Math.random()) + 7, 
-  sx: 0, 
-  sy: 0, 
-  w: 6, 
-  h: 10, 
-  progress: 0 
+const randomBox = () => ({
+  x: Math.floor(10 * Math.random()) + 7,
+  y: Math.floor(15 * Math.random()) + 7,
+  sx: 0,
+  sy: 0,
+  w: 6,
+  h: 10,
+  progress: 0
 });
 
 let box = randomBox();
@@ -584,20 +614,37 @@ let mouseState = false;
 let frameCount = 0;
 const asciiUpdateFrequency = 3; // Update ASCII only every 3 frames
 
-const loop = () => {
+// Для более стабильного FPS
+let lastFrameTime = 0;
+const targetFPS = 120;
+const frameInterval = 1000 / targetFPS;
+
+const loop = (timestamp) => {
+  // Ограничиваем частоту кадров
+  const elapsed = timestamp - lastFrameTime;
+  if (elapsed < frameInterval) {
+    requestAnimationFrame(loop);
+    return;
+  }
+  lastFrameTime = timestamp - (elapsed % frameInterval);
+  
   tick += 0.025;
   
-  // Draw on canvas
+  // Clear canvas with a single operation
   myCtx.fillStyle = "#000";
   myCtx.fillRect(0, 0, myCanvas.width, myCanvas.height);
+  
+  // Draw box
   myCtx.fillStyle = "#f4f4f4";
   myCtx.fillRect(box.x, box.y, box.w, box.h);
   
+  // Draw lines
   line(box.x, box.y, 0, 0);
   line(box.x + box.w, box.y, myCanvas.width, 0);
   line(box.x, box.y + box.h, 0, myCanvas.height);
   line(box.x + box.w, box.y + box.h, myCanvas.width, myCanvas.height);
   
+  // Draw gradient
   myCtx.beginPath();
   let t = box.x + box.w / 2;
   let o = box.y + box.h / 2;
@@ -620,24 +667,29 @@ const loop = () => {
       box.sx = box.x;
       box.sy = box.y;
       nextPos = randomBox();
+      box.progress = 0;
     }
   }
   
   frameCount++;
   if (frameCount % asciiUpdateFrequency === 0) {
-    asciicontainer.innerHTML = getAsciiOutput(myCanvas, myCtx);
+    updateAsciiOutput();
   }
   
   requestAnimationFrame(loop);
 };
 
-loop();
+// Инициализируем DOM-структуру один раз
+initAsciiContainer();
 
-window.addEventListener("mouseover", (t) => {
+// Начинаем анимацию
+requestAnimationFrame(loop);
+
+window.addEventListener("mouseover", () => {
   mouseState = true;
 });
 
-window.addEventListener("mouseout", (t) => {
+window.addEventListener("mouseout", () => {
   mouseState = false;
 });
 
@@ -647,9 +699,6 @@ window.addEventListener("mousemove", (t) => {
     box.y = map(t.clientY, window.innerHeight, 0, myCanvas.height, 0) - box.h / 2;
   }
 });
-
-
-
 
 
 
@@ -677,16 +726,6 @@ function changeText() {
     }
   }, 100);
 }
-
-window.addEventListener("scroll", () => {
-  const e = window.scrollY;
-  const t = parallaxContainer.offsetTop;
-  const a = parallaxContainer.offsetHeight;
-  const parallaxEffect = 0.5 * (e - t);
-  parallaxImage.style.transform = `translateY(${Math.min(0, parallaxEffect)}px)`;
-
-  parallaxContainer.style.width = "100%";
-});
 
 document.addEventListener('DOMContentLoaded', function() {
   changeText();
@@ -1787,7 +1826,6 @@ notification.innerHTML = `
 
 function checkWidth() {
   if (window.innerWidth < 1100) {
-    console.log("Width less than 1100px.");
     notification.style.display = 'block';
   } else {
     notification.style.display = 'none';
@@ -1801,3 +1839,465 @@ document.addEventListener("DOMContentLoaded", function() {
 
 window.addEventListener("load", checkWidth);
 window.addEventListener("resize", checkWidth);
+
+
+
+console.log(`Devs: Archi, root, ACID, Klaus`);
+console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Изолированный скрипт анимации MISHKA для существующего элемента #terminal
+(function() {
+  // Уникальное пространство имен для скрипта
+  const MISHKA_ANIMATION = {
+    // Константы
+    TAU: Math.PI * 2,
+    
+    // Состояние
+    terminal: null,
+    terminalId: 'terminal', // Используем существующий #terminal
+    cols: 0,
+    rows: 0,
+    grid: [],
+    frameCount: 0,
+    animationFrameId: null,
+    isRunning: false,
+    
+    // Инициализация анимации
+    init: function() {
+      // Получаем существующий элемент #terminal
+      this.terminal = document.getElementById(this.terminalId);
+      
+      if (!this.terminal) {
+        console.error('No #terminal found');
+        return this;
+      }
+      
+      // Добавляем тестовый символ для измерения ширины
+      this.addTestChar();
+      
+      // Инициализируем размеры терминала
+      this.initializeTerminal();
+      
+      // Добавляем обработчик изменения размера окна
+      window.addEventListener('resize', () => {
+        this.initializeTerminal();
+      });
+      
+      return this;
+    },
+    
+    // Добавляем временный элемент для точного измерения ширины символа
+    addTestChar: function() {
+      // Удаляем предыдущий тестовый элемент, если он существует
+      const oldTest = document.getElementById('mishka-test-char');
+      if (oldTest) oldTest.remove();
+      
+      // Создаем тестовый элемент с одним символом
+      const testChar = document.createElement('span');
+      testChar.id = 'mishka-test-char';
+      testChar.innerHTML = 'M'; // Используем широкий символ
+      testChar.style.visibility = 'hidden';
+      testChar.style.position = 'absolute';
+      testChar.style.fontFamily = getComputedStyle(this.terminal).fontFamily;
+      testChar.style.fontSize = getComputedStyle(this.terminal).fontSize;
+      testChar.style.fontWeight = getComputedStyle(this.terminal).fontWeight;
+      testChar.style.lineHeight = getComputedStyle(this.terminal).lineHeight;
+      testChar.style.whiteSpace = 'pre';
+      
+      // Добавляем элемент в DOM
+      document.body.appendChild(testChar);
+      
+      // Сохраняем измеренную ширину символа
+      this.charWidth = testChar.getBoundingClientRect().width;
+      
+      // Удаляем тестовый элемент
+      testChar.remove();
+    },
+    
+    // Инициализация терминала
+    initializeTerminal: function() {
+      if (!this.terminal) return;
+      
+      // Измеряем реальные размеры элемента с учетом padding и border
+      const style = getComputedStyle(this.terminal);
+      const paddingLeft = parseFloat(style.paddingLeft) || 0;
+      const paddingRight = parseFloat(style.paddingRight) || 0;
+      const paddingTop = parseFloat(style.paddingTop) || 0;
+      const paddingBottom = parseFloat(style.paddingBottom) || 0;
+      const borderLeft = parseFloat(style.borderLeftWidth) || 0;
+      const borderRight = parseFloat(style.borderRightWidth) || 0;
+      const borderTop = parseFloat(style.borderTopWidth) || 0;
+      const borderBottom = parseFloat(style.borderBottomWidth) || 0;
+      
+      // Вычисляем доступное пространство
+      const availableWidth = this.terminal.clientWidth - paddingLeft - paddingRight - borderLeft - borderRight;
+      const availableHeight = this.terminal.clientHeight - paddingTop - paddingBottom - borderTop - borderBottom;
+      
+      // Получаем размер шрифта и измеряем реальную ширину символа
+      const fontSize = parseFloat(style.fontSize);
+      const lineHeight = parseFloat(style.lineHeight) || fontSize;
+      
+      // Используем измеренную ширину символа или делаем оценку
+      const charWidth = this.charWidth || fontSize * 0.6;
+      
+      // Рассчитываем количество столбцов и строк, добавляя немного к cols для заполнения
+      this.cols = Math.floor(availableWidth / charWidth) + 1; // +1 для гарантии заполнения
+      this.rows = Math.floor(availableHeight / lineHeight);
+      
+      // Ограничиваем, чтобы избежать переполнения
+      this.cols = Math.min(this.cols, 200); // Разумное максимальное значение
+      this.rows = Math.min(this.rows, 50);  // Разумное максимальное значение
+      
+      // Создаем сетку
+      this.grid = [];
+      for (let y = 0; y < this.rows; y++) {
+        let row = [];
+        for (let x = 0; x < this.cols; x++) {
+          row.push(' ');
+        }
+        this.grid.push(row);
+      }
+      
+      // Отрисовываем сетку
+      this.renderGrid();
+    },
+    
+    // Отрисовка сетки
+    renderGrid: function() {
+      if (!this.terminal) return;
+      
+      let output = '';
+      for (let y = 0; y < this.rows; y++) {
+        for (let x = 0; x < this.cols; x++) {
+          output += this.grid[y][x];
+        }
+        if (y < this.rows - 1) {
+          output += '\n';
+        }
+      }
+      this.terminal.textContent = output;
+    },
+    
+    // Главная функция анимации (точное воспроизведение оригинального алгоритма)
+    main: function(coord, context) {
+      const a = context.frame * 0.02;
+      const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
+      const g = Math.floor(a / this.TAU) % 10 + 1;
+      const i = coord.index % (coord.y * g + 1) % (f % context.cols);
+      
+      return "MISHKA"[i];
+    },
+    
+    // Функция анимации
+    animate: function() {
+      if (!this.terminal) return;
+      
+      this.frameCount++;
+      
+      const context = {
+        frame: this.frameCount,
+        cols: this.cols,
+        rows: this.rows
+      };
+      
+      // Обновляем каждую ячейку в сетке
+      for (let y = 0; y < this.rows; y++) {
+        for (let x = 0; x < this.cols; x++) {
+          const coord = {
+            x: x,
+            y: y,
+            index: y * this.cols + x
+          };
+          
+          // Вызываем основную функцию, которая воспроизводит оригинальный алгоритм
+          const char = this.main(coord, context);
+          
+          // Если символ undefined или null, вставляем пробел
+          this.grid[y][x] = (char === undefined || char === null) ? ' ' : char;
+        }
+      }
+      
+      this.renderGrid();
+      
+      if (this.isRunning) {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+      }
+    },
+    
+    // Запуск анимации
+    start: function() {
+      if (!this.isRunning && this.terminal) {
+        this.isRunning = true;
+        this.animate();
+      }
+      return this;
+    },
+    
+    // Остановка анимации
+    stop: function() {
+      this.isRunning = false;
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+        this.animationFrameId = null;
+      }
+      return this;
+    },
+    
+    // Удаление анимации
+    destroy: function() {
+      this.stop();
+      
+      // Удаляем обработчик изменения размера окна
+      window.removeEventListener('resize', this.initializeTerminal);
+      
+      // Очищаем терминал
+      if (this.terminal) {
+        this.terminal.textContent = '';
+      }
+      
+      return this;
+    }
+  };
+  
+  // Создаем глобальный API для управления анимацией
+  window.MISHKA_ANIMATION = {
+    init: function() {
+      return MISHKA_ANIMATION.init();
+    },
+    start: function() {
+      return MISHKA_ANIMATION.start();
+    },
+    stop: function() {
+      return MISHKA_ANIMATION.stop();
+    },
+    destroy: function() {
+      return MISHKA_ANIMATION.destroy();
+    }
+  };
+  
+  // Автоматически инициализируем и запускаем анимацию при загрузке страницы
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    MISHKA_ANIMATION.init().start();
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      MISHKA_ANIMATION.init().start();
+    });
+  }
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function() {
+  // Game of Life Implementation - Isolated with IIFE
+  // Safe set function - private to this scope
+  function LIVE_set(val, x, y, w, h, buf) {
+    if (x < 0 || x >= w) return;
+    if (y < 0 || y >= h) return;
+    buf[y * w + x] = val;
+  }
+  
+  // Safe get function - private to this scope
+  function LIVE_get(x, y, w, h, buf) {
+    if (x < 0 || x >= w) return 0;
+    if (y < 0 || y >= h) return 0;
+    return buf[y * w + x];
+  }
+  
+  // Game state - all variables are private to this scope
+  let LIVE_cols, LIVE_rows;
+  let LIVE_data = [];
+  let LIVE_animationId;
+  let LIVE_isPaused = false;
+  let LIVE_frame = 0;
+  let LIVE_cursorX = -1;
+  let LIVE_cursorY = -1;
+  let LIVE_isPressed = false;
+  
+  // Get reference to our canvas element using the unique ID
+  const LIVE_canvas = document.getElementById('LIVEcanvas');
+  
+  function LIVE_init() {
+    // Calculate dimensions based on container size (not window)
+    const LIVE_container = document.getElementById('LIVEcontainer');
+    const fontSize = 16;
+    const containerWidth = LIVE_container.clientWidth || window.innerWidth * 0.9;
+    const containerHeight = LIVE_container.clientHeight || window.innerHeight * 0.8;
+    
+    LIVE_cols = Math.floor(containerWidth / (fontSize * 0.6));
+    LIVE_rows = Math.floor(containerHeight / fontSize);
+    
+    // Make sure cols/rows are reasonable sizes
+    LIVE_cols = Math.min(LIVE_cols, 150);
+    LIVE_rows = Math.min(LIVE_rows, 80);
+    
+    const len = LIVE_cols * LIVE_rows * 2; // double height
+    
+    // Initialize data buffers
+    LIVE_data[0] = [];
+    LIVE_data[1] = [];
+    
+    // Initialize with random state
+    for (let i = 0; i < len; i++) {
+      const v = Math.random() > 0.5 ? 1 : 0;
+      LIVE_data[0][i] = v;
+      LIVE_data[1][i] = v;
+    }
+    
+    // Set canvas size
+    LIVE_canvas.style.width = `${LIVE_cols * fontSize * 0.6}px`;
+    LIVE_canvas.style.height = `${LIVE_rows * fontSize}px`;
+  }
+  
+  function LIVE_updateGame() {
+    // Update the buffer
+    const prev = LIVE_data[LIVE_frame % 2];
+    const curr = LIVE_data[(LIVE_frame + 1) % 2];
+    const w = LIVE_cols;
+    const h = LIVE_rows * 2;
+    
+    // Fill a random rect when mouse is pressed
+    if (LIVE_isPressed && LIVE_cursorX >= 0 && LIVE_cursorY >= 0) {
+      const cx = Math.floor(LIVE_cursorX);
+      const cy = Math.floor(LIVE_cursorY * 2);
+      const s = 5;
+      for (let y = cy - s; y <= cy + s; y++) {
+        for (let x = cx - s; x <= cx + s; x++) {
+          const val = Math.random() < 0.5 ? 1 : 0;
+          LIVE_set(val, x, y, w, h, prev);
+        }
+      }
+    }
+    
+    // Update the automata
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const current = LIVE_get(x, y, w, h, prev);
+        const neighbors =
+          LIVE_get(x - 1, y - 1, w, h, prev) +
+          LIVE_get(x,     y - 1, w, h, prev) +
+          LIVE_get(x + 1, y - 1, w, h, prev) +
+          LIVE_get(x - 1, y,     w, h, prev) +
+          LIVE_get(x + 1, y,     w, h, prev) +
+          LIVE_get(x - 1, y + 1, w, h, prev) +
+          LIVE_get(x,     y + 1, w, h, prev) +
+          LIVE_get(x + 1, y + 1, w, h, prev);
+        
+        // Update
+        const i = x + y * w;
+        if (current == 1) {
+          curr[i] = neighbors == 2 || neighbors == 3 ? 1 : 0;
+        } else {
+          curr[i] = neighbors == 3 ? 1 : 0;
+        }
+      }
+    }
+    
+    // Increment frame
+    LIVE_frame++;
+  }
+  
+  function LIVE_render() {
+    // Current buffer
+    const curr = LIVE_data[(LIVE_frame + 1) % 2];
+    const w = LIVE_cols;
+    const h = LIVE_rows * 2;
+    
+    let output = '';
+    
+    // Render the cells
+    for (let y = 0; y < LIVE_rows; y++) {
+      for (let x = 0; x < LIVE_cols; x++) {
+        const idx = x + y * 2 * LIVE_cols;
+        const upper = curr[idx];
+        const lower = curr[idx + LIVE_cols];
+        
+        if (upper && lower) output += '█'; // both cells are occupied
+        else if (upper) output += '▀'; // upper cell
+        else if (lower) output += '▄'; // lower cell
+        else output += ' '; // both cells are empty
+      }
+      output += '\n';
+    }
+    
+    LIVE_canvas.textContent = output;
+  }
+  
+  function LIVE_gameLoop() {
+    if (!LIVE_isPaused) {
+      LIVE_updateGame();
+    }
+    LIVE_render();
+    LIVE_animationId = requestAnimationFrame(LIVE_gameLoop);
+  }
+  
+  function LIVE_startGame() {
+    LIVE_init();
+    LIVE_gameLoop();
+  }
+  
+  // Event listeners with namespaced handlers
+  function LIVE_handleMouseMove(e) {
+    const rect = LIVE_canvas.getBoundingClientRect();
+    LIVE_cursorX = Math.floor((e.clientX - rect.left) / rect.width * LIVE_cols);
+    LIVE_cursorY = Math.floor((e.clientY - rect.top) / rect.height * LIVE_rows);
+  }
+  
+  function LIVE_handleMouseDown() {
+    LIVE_isPressed = true;
+  }
+  
+  function LIVE_handleMouseUp() {
+    LIVE_isPressed = false;
+  }
+  
+  function LIVE_handleMouseLeave() {
+    LIVE_isPressed = false;
+    LIVE_cursorX = -1;
+    LIVE_cursorY = -1;
+  }
+  
+  function LIVE_handleResize() {
+    // Cancel previous animation before restarting
+    cancelAnimationFrame(LIVE_animationId);
+    LIVE_startGame();
+  }
+  
+  // Add event listeners with namespaced functions (allows for removal if needed)
+  LIVE_canvas.addEventListener('mousemove', LIVE_handleMouseMove);
+  LIVE_canvas.addEventListener('mousedown', LIVE_handleMouseDown);
+  LIVE_canvas.addEventListener('mouseup', LIVE_handleMouseUp);
+  LIVE_canvas.addEventListener('mouseleave', LIVE_handleMouseLeave);
+  window.addEventListener('resize', LIVE_handleResize);
+  
+  // Start the game
+  LIVE_startGame();
+  
+  // Public API - only expose what's absolutely necessary (nothing in this case)
+  // If you need to expose any functions/variables, you can return them here
+  return {
+    // No public API needed for this implementation
+  };
+})(); // End of IIFE

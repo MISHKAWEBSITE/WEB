@@ -160,7 +160,6 @@ function showNotification(message) {
   }, 2000);
 }
 
-// New function to show the contact modal with three buttons
 function showContactModal() {
   if (isModalActive) return; 
   isModalActive = true;
@@ -627,7 +626,7 @@ function goToPage(page) {
         })();
         
         document.getElementById("AboutPage").addEventListener("click", function(event) {
-          event.preventDefault(); // Prevent default navigation
+          event.preventDefault();
           
           sessionStorage.setItem('pageTransition', 'active');
           
@@ -637,7 +636,7 @@ function goToPage(page) {
           pt_overlay.style.left = "0";
           pt_overlay.style.width = "100%";
           pt_overlay.style.height = "100%";
-          pt_overlay.style.backgroundColor = "black";
+          pt_overlay.style.backgroundColor = "#010101";
           pt_overlay.style.zIndex = "9999";
           pt_overlay.style.display = "flex";
           pt_overlay.style.justifyContent = "center";

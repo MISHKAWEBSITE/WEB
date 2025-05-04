@@ -505,7 +505,7 @@ body {
     background-color: #010101;
     font-family: 'VT323', monospace;
     width: 500px;
-    height: 350px;
+    height: 300px;
     border: 1px solid antiquewhite;
     border-radius: 2px;
     color: antiquewhite;
@@ -533,7 +533,7 @@ body {
     padding: 20px;
     margin-top: 20px;
     position: absolute;
-    top: calc(50% + 200px);
+    top: calc(50% + 180px);
     left: 50%;
     transform: translate(-50%, 0);
 }
@@ -678,3 +678,14 @@ body {
 
 
 
+
+
+  #terminal {
+    margin: 0 auto;
+    width: 1080px;
+    height: 300px;
+    color: antiquewhite;
+    font-size: 14px;
+    line-height: 1;
+    white-space: pre;
+}

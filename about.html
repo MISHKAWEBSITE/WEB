@@ -80,30 +80,20 @@
           opacity: 1;
         }
     </style>
-
-    <div class="page-transition-overlay" id="page-overlay"></div>
-
     <script>
-      // Run when page is fully loaded
       window.addEventListener('load', function() {
-        // Wait a moment to ensure everything is rendered
         setTimeout(function() {
-          // Make page content visible
           document.body.classList.add('content-visible');
           
-          // Fade out the overlay
           var overlay = document.getElementById('page-overlay');
           overlay.style.opacity = '0';
           
-          // Remove overlay after transition completes
           setTimeout(function() {
             overlay.parentNode.removeChild(overlay);
-          }, 800); // Same duration as the transition
-        }, 100);
+          }, 800);
+        }, 1000);
       });
     </script>
-    <!-- Inspired by MIAO, Dragonfly and old .NFO's 
-    Thank you so much, guys! -->
 </head>
 
 <body>
@@ -122,12 +112,9 @@
         <span id="clock" style="color: antiquewhite; font-size: 20px;"></span>
     </nav>
 
-
 <p style="padding-top: 8px; text-align: center;"><script>runningline("ミーシュカ", 2000)</script></p>
 
-<div class="greeting" style="font-size: 20px;">
-  <p class="greeting_hlwrld" style="text-align: center; font-family: 'Jersey', sans-serif; font-size: 30px;">HACK_AND_PROTECT_FROM<br>DAY_ONE</p>
-</div>
+<p style="text-align: center; font-family: 'Jersey', sans-serif; font-size: 30px;">HACK_AND_PROTECT_FROM<br>DAY_ONE</p>
 
 <pre class="BANNER">
 ╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
@@ -360,8 +347,12 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ║ 06 │ DEVELOPMENT OF INSTANT, NON-PHYSICAL, FORENSIC-RESISTANT│  2016->2019  ║
 ║    │ DATA REMOVAL DEVICES FOR SOLID-STATE DRIVES             │              ║
 ╟────┼─────────────────────────────────────────────────────────┼──────────────╢
+║ 07 │ ACTIVE PARTICIPATION IN THE COMMUNITY:                  │  since 2016  ║
+║    │ CREATING CTFs, WEBINARS, AND HACKATHONS.                │              ║
+╟────┼─────────────────────────────────────────────────────────┼──────────────╢
 ║    │ RESEARCH ON THE EFFECTS OF HIGH- AND LOW-FREQUENCY      │              ║
-║ 07 │ ULTRASONIC WAVES ON HUMANS AND DEVELOPMENT OF           │  since 2024  ║
+║    │ RESEARCH ON THE EFFECTS OF HIGH- AND LOW-FREQUENCY      │              ║
+║ 08 │ ULTRASONIC WAVES ON HUMANS AND DEVELOPMENT OF           │  since 2024  ║
 ║    │ NON-LETHAL WAVE-BASED NEUTRALIZATION DEVICES            │              ║
 ╚═════════════════════════════════════════════════════════════════════════════╝</pre>
 
@@ -372,12 +363,19 @@ ENGR   MNGR   LEAD   DEVS</pre>
     ▀ The team actively invests time and resources into developing its own AI automation technologies, contributing to the future trajectory of hacking — one that is inevitably intertwined with artificial intelligence.<br><br>
   </div>
 
-  <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] IS_POWER_OVER_ALL&nbsp;</span><br>
-
   <div class="MINDSET_MANIFESTO">
     ▀ We’ve spent thousands of hours teaching students and high schoolers. These people are the future.
     Watching them get lectures from some fool who's got three Mondays left to live — that's a disgrace.<br>
     Our team collaborates with universities across several countries, participating in both research and academic initiatives.<br><br>
+  </div>
+
+  <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] IS_POWER_OVER_ALL&nbsp;</span><br>
+
+  <div class="MINDSET_MANIFESTO">
+    ▀ FOSS.<br>
+    Community and global collaboration are the only true paths to a brighter future.<br>
+    We actively support and invest in the growth of specialists, as well as in free, open education for those who are genuinely curious.<br>
+    We believe that knowledge should be shared, not hoarded — and that the strongest security is built together, not in isolation.
   </div>
 
 </div>
@@ -443,26 +441,319 @@ ENGR   MNGR   LEAD   DEVS</pre>
 
 
 
+<!-- PROJECTBOX - код для вставки на сайт -->
+
+<!-- 1. Вставьте этот HTML-элемент туда, где должны располагаться карточки -->
+<div id="projectbox-container" class="projectbox-container"></div>
+
+<!-- 2. Вставьте эти стили в раздел <head> или в CSS-файл -->
+<style>
+  /* PROJECTBOX изолированные стили */
+  .projectbox-container {
+    position: relative;
+    width: 100%;
+    max-width: 1080px;
+    height: 600px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    padding-top: 20px;
+  }
+  
+  .projectbox-card {
+    position: relative;
+    border: 4px double #000;
+    background-color: white;
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    font-family: 'Courier New', monospace;
+    image-rendering: pixelated;
+    height: 130px;
+    width: 180px;
+    margin: 0 25px 40px 25px;
+    z-index: 1;
+    transition: transform 0.05s ease-out; /* Легкий переход для плавности */
+  }
+  
+  .projectbox-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #000;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .projectbox-date {
+    font-size: 11px;
+    margin-bottom: 8px;
+    color: #666;
+  }
+  
+  .projectbox-content {
+    font-size: 12px;
+    line-height: 1.2;
+    color: #333;
+    text-align: left;
+    height: 60px;
+    overflow: hidden;
+    margin-bottom: auto;
+  }
+  
+  .projectbox-position {
+    font-size: 10px;
+    color: #999;
+    height: 12px;
+    margin-top: auto;
+  }
+</style>
+
+<!-- 3. Вставьте этот JavaScript-код перед закрывающим тегом </body> -->
+<script>
+  // PROJECTBOX - Изолированный скрипт
+  (function() {
+    // Конфигурация
+    const PROJECTBOX_CONFIG = {
+      baseWidth: 180,
+      baseHeight: 130,
+      spacingX: 50,  // Увеличено расстояние между карточками по горизонтали
+      spacingY: 40,  // Увеличено расстояние между карточками по вертикали
+      cursorInfluenceRadius: 200,
+      maxRepulsion: 60,
+      pixelSize: 4
+    };
+    
+    // Данные карточек - замените на ваши данные
+    const PROJECTBOX_DATA = [
+      { title: "Квантовые вычисления", date: "2 мая 2025", content: "Прорыв в области квантовой запутанности открывает новые возможности для вычислений" },
+      { title: "Искусственный интеллект", date: "28 апреля 2025", content: "Новая модель ИИ превзошла все ожидания в решении творческих задач" },
+      { title: "Космические технологии", date: "15 апреля 2025", content: "Запуск нового телескопа позволит заглянуть еще дальше в глубины космоса" },
+      { title: "Альтернативная энергия", date: "10 апреля 2025", content: "Эффективность солнечных панелей достигла рекордных 45% в лабораторных условиях" },
+      { title: "Медицина будущего", date: "5 апреля 2025", content: "Нанороботы успешно использованы для доставки лекарств к опухолям" },
+      { title: "Виртуальная реальность", date: "1 апреля 2025", content: "Новая VR-система позволяет ощущать текстуры и температуру объектов" },
+      { title: "Робототехника", date: "25 марта 2025", content: "Человекоподобный робот научился выполнять сложные манипуляции с предметами" },
+      { title: "Биотехнологии", date: "20 марта 2025", content: "Методы генной терапии успешно применены для лечения редких заболеваний" },
+      { title: "Новые материалы", date: "15 марта 2025", content: "Сверхлегкий материал прочнее стали и гибкий как ткань создан учеными" },
+      { title: "Квантовая связь", date: "10 марта 2025", content: "Первая межконтинентальная квантовая сеть заработала в тестовом режиме" },
+      { title: "Умные города", date: "5 марта 2025", content: "Система прогнозирования трафика сократила пробки на 35% в тестовом городе" },
+      { title: "Нейроинтерфейсы", date: "1 марта 2025", content: "Неинвазивный интерфейс мозг-компьютер достиг скорости ввода 100 символов в минуту" },
+      { title: "3D-печать", date: "25 февраля 2025", content: "Напечатанные органы успешно прошли первую фазу клинических испытаний" },
+      { title: "Автономные системы", date: "20 февраля 2025", content: "Беспилотные автомобили официально признаны безопаснее человека-водителя" },
+      { title: "Дополненная реальность", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
+    ];
+    
+    // Переменные состояния
+    const PROJECTBOX_STATE = {
+      boxes: [],
+      containerWidth: 0,
+      containerHeight: 0,
+      numX: 0,
+      numY: 0,
+      marginX: 0,
+      marginY: 0,
+      mouseX: 0,
+      mouseY: 0,
+      lastMouseX: 0,
+      lastMouseY: 0,
+      mouseSpeed: 0
+    };
+    
+    // Инициализация
+    function projectboxInit() {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      PROJECTBOX_STATE.containerWidth = container.clientWidth;
+      PROJECTBOX_STATE.containerHeight = container.clientHeight;
+      
+      // Создание карточек с использованием flexbox
+      for (let j = 0; j < 4; j++) {  // Задаем 4 ряда для высоты 600px
+        for (let i = 0; i < 4; i++) {  // Задаем 4 карточки в ряду для ширины 1080px
+          const box = document.createElement('div');
+          box.className = 'projectbox-card';
+          
+          // Получение данных карточки
+          const dataIndex = (i + j * 4) % PROJECTBOX_DATA.length;
+          const card = PROJECTBOX_DATA[dataIndex];
+          
+          // Добавление содержимого
+          box.innerHTML = `
+            <div class="projectbox-title">${card.title}</div>
+            <div class="projectbox-date">${card.date}</div>
+            <div class="projectbox-content">${card.content}</div>
+            <div class="projectbox-position">pos: ${i}×${j}</div>
+          `;
+          
+          // Добавление в контейнер
+          container.appendChild(box);
+          
+          // Сохранение данных карточки
+          PROJECTBOX_STATE.boxes.push({
+            element: box,
+            i: i,
+            j: j
+          });
+        }
+      }
+    }
+    
+    // Обновление позиций карточек
+    function projectboxUpdateBoxes() {
+      // Расчет скорости движения курсора
+      const dx = PROJECTBOX_STATE.mouseX - PROJECTBOX_STATE.lastMouseX;
+      const dy = PROJECTBOX_STATE.mouseY - PROJECTBOX_STATE.lastMouseY;
+      PROJECTBOX_STATE.mouseSpeed = Math.sqrt(dx*dx + dy*dy);
+      PROJECTBOX_STATE.mouseSpeed = Math.min(PROJECTBOX_STATE.mouseSpeed, 50);
+      
+      PROJECTBOX_STATE.lastMouseX = PROJECTBOX_STATE.mouseX;
+      PROJECTBOX_STATE.lastMouseY = PROJECTBOX_STATE.mouseY;
+      
+      PROJECTBOX_STATE.boxes.forEach(box => {
+        if (!box.velocity) {
+          box.velocity = { x: 0, y: 0 };
+          box.targetX = 0;
+          box.targetY = 0;
+          box.currentX = 0;
+          box.currentY = 0;
+        }
+        
+        const { element, i, j, velocity, currentX, currentY } = box;
+        
+        // Получаем текущую позицию карточки относительно контейнера
+        const rect = element.getBoundingClientRect();
+        const containerRect = document.getElementById('projectbox-container').getBoundingClientRect();
+        const centerX = rect.left - containerRect.left + rect.width / 2;
+        const centerY = rect.top - containerRect.top + rect.height / 2;
+        
+        // Расчет расстояния от курсора до центра карточки
+        const dx = PROJECTBOX_STATE.mouseX - centerX;
+        const dy = PROJECTBOX_STATE.mouseY - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Расчет целевой позиции для отталкивания
+        let targetX = 0;
+        let targetY = 0;
+        
+        if (distance < PROJECTBOX_CONFIG.cursorInfluenceRadius && distance > 0) {
+          // Нормализация вектора направления
+          const nx = -dx / distance;
+          const ny = -dy / distance;
+          
+          // Сила отталкивания уменьшается с расстоянием, но увеличивается со скоростью курсора
+          const speedFactor = 1 + PROJECTBOX_STATE.mouseSpeed / 50;
+          const strength = PROJECTBOX_CONFIG.maxRepulsion * (1 - distance / PROJECTBOX_CONFIG.cursorInfluenceRadius) * speedFactor;
+          
+          // Применение пиксельного движения
+          targetX = Math.round(nx * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
+          targetY = Math.round(ny * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
+          
+          // Сохраняем целевую позицию
+          box.targetX = targetX;
+          box.targetY = targetY;
+        } else {
+          // Если курсор далеко, то целевая позиция - возврат с отдачей
+          targetX = 0;
+          targetY = 0;
+          
+          // Если мы близко к целевой позиции и еще движемся с достаточной скоростью, 
+          // добавляем отдачу, меняя целевую позицию на противоположную
+          if (Math.abs(box.currentX) < 4 && Math.abs(velocity.x) > 0.5) {
+            targetX = -Math.sign(velocity.x) * 4;
+          }
+          
+          if (Math.abs(box.currentY) < 4 && Math.abs(velocity.y) > 0.5) {
+            targetY = -Math.sign(velocity.y) * 4;
+          }
+        }
+        
+        // Пружинная физика для более плавного движения с отдачей
+        const spring = 0.2;  // Сила пружины
+        const damping = 0.7; // Затухание (трение)
+        
+        // Вычисляем ускорение на основе разницы текущей и целевой позиции (закон Гука)
+        const ax = (targetX - box.currentX) * spring;
+        const ay = (targetY - box.currentY) * spring;
+        
+        // Обновляем скорость с учетом ускорения и затухания
+        velocity.x = velocity.x * damping + ax;
+        velocity.y = velocity.y * damping + ay;
+        
+        // Обновляем текущую позицию
+        box.currentX += velocity.x;
+        box.currentY += velocity.y;
+        
+        // Применяем пиксельное округление к финальной позиции для сохранения пиксельного эффекта
+        const pixelX = Math.round(box.currentX / 2) * 2;
+        const pixelY = Math.round(box.currentY / 2) * 2;
+        
+        // Применяем трансформацию для перемещения
+        element.style.transform = `translate(${pixelX}px, ${pixelY}px)`;
+        
+        // Обновление отображения позиции
+        const positionDiv = element.querySelector('.projectbox-position');
+        positionDiv.textContent = `pos: ${i}×${j}`;
+      });
+      
+      requestAnimationFrame(projectboxUpdateBoxes);
+    }
+    
+    // Отслеживание позиции курсора
+    function projectboxHandleMouseMove(event) {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      const rect = container.getBoundingClientRect();
+      PROJECTBOX_STATE.mouseX = event.clientX - rect.left;
+      PROJECTBOX_STATE.mouseY = event.clientY - rect.top;
+    }
+    
+    // Обработка изменения размера окна
+    function projectboxHandleResize() {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      // Удаление всех карточек
+      PROJECTBOX_STATE.boxes.forEach(box => box.element.remove());
+      PROJECTBOX_STATE.boxes = [];
+      
+      // Повторная инициализация
+      projectboxInit();
+    }
+    
+    // Настройка обработчиков событий
+    function projectboxSetupEventListeners() {
+      document.addEventListener('mousemove', projectboxHandleMouseMove);
+      window.addEventListener('resize', projectboxHandleResize);
+    }
+    
+    // Инициализация PROJECTBOX
+    function projectboxStart() {
+      projectboxInit();
+      projectboxSetupEventListeners();
+      projectboxUpdateBoxes();
+    }
+    
+    // Запуск при загрузке страницы
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', projectboxStart);
+    } else {
+      projectboxStart();
+    }
+  })(); // Немедленно вызываемая функция для изоляции кода
+</script>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<div id="terminal"></div>
 
 
 
@@ -478,6 +769,7 @@ ENGR   MNGR   LEAD   DEVS</pre>
   height: 400px;
 }
 #LIVEcanvas {
+  margin: 0;
   color: antiquewhite;
   line-height: 1;
   font-family: monospace;
@@ -485,200 +777,6 @@ ENGR   MNGR   LEAD   DEVS</pre>
   cursor: pointer;
 }
 </style>
-
-<script>
-(function() {
-  // Game of Life Implementation - Isolated with IIFE
-  // Safe set function - private to this scope
-  function LIVE_set(val, x, y, w, h, buf) {
-    if (x < 0 || x >= w) return;
-    if (y < 0 || y >= h) return;
-    buf[y * w + x] = val;
-  }
-  
-  // Safe get function - private to this scope
-  function LIVE_get(x, y, w, h, buf) {
-    if (x < 0 || x >= w) return 0;
-    if (y < 0 || y >= h) return 0;
-    return buf[y * w + x];
-  }
-  
-  // Game state - all variables are private to this scope
-  let LIVE_cols, LIVE_rows;
-  let LIVE_data = [];
-  let LIVE_animationId;
-  let LIVE_isPaused = false;
-  let LIVE_frame = 0;
-  let LIVE_cursorX = -1;
-  let LIVE_cursorY = -1;
-  let LIVE_isPressed = false;
-  
-  // Get reference to our canvas element using the unique ID
-  const LIVE_canvas = document.getElementById('LIVEcanvas');
-  
-  function LIVE_init() {
-    // Calculate dimensions based on container size (not window)
-    const LIVE_container = document.getElementById('LIVEcontainer');
-    const fontSize = 16;
-    const containerWidth = LIVE_container.clientWidth || window.innerWidth * 0.9;
-    const containerHeight = LIVE_container.clientHeight || window.innerHeight * 0.8;
-    
-    LIVE_cols = Math.floor(containerWidth / (fontSize * 0.6));
-    LIVE_rows = Math.floor(containerHeight / fontSize);
-    
-    // Make sure cols/rows are reasonable sizes
-    LIVE_cols = Math.min(LIVE_cols, 150);
-    LIVE_rows = Math.min(LIVE_rows, 80);
-    
-    const len = LIVE_cols * LIVE_rows * 2; // double height
-    
-    // Initialize data buffers
-    LIVE_data[0] = [];
-    LIVE_data[1] = [];
-    
-    // Initialize with random state
-    for (let i = 0; i < len; i++) {
-      const v = Math.random() > 0.5 ? 1 : 0;
-      LIVE_data[0][i] = v;
-      LIVE_data[1][i] = v;
-    }
-    
-    // Set canvas size
-    LIVE_canvas.style.width = `${LIVE_cols * fontSize * 0.6}px`;
-    LIVE_canvas.style.height = `${LIVE_rows * fontSize}px`;
-  }
-  
-  function LIVE_updateGame() {
-    // Update the buffer
-    const prev = LIVE_data[LIVE_frame % 2];
-    const curr = LIVE_data[(LIVE_frame + 1) % 2];
-    const w = LIVE_cols;
-    const h = LIVE_rows * 2;
-    
-    // Fill a random rect when mouse is pressed
-    if (LIVE_isPressed && LIVE_cursorX >= 0 && LIVE_cursorY >= 0) {
-      const cx = Math.floor(LIVE_cursorX);
-      const cy = Math.floor(LIVE_cursorY * 2);
-      const s = 5;
-      for (let y = cy - s; y <= cy + s; y++) {
-        for (let x = cx - s; x <= cx + s; x++) {
-          const val = Math.random() < 0.5 ? 1 : 0;
-          LIVE_set(val, x, y, w, h, prev);
-        }
-      }
-    }
-    
-    // Update the automata
-    for (let y = 0; y < h; y++) {
-      for (let x = 0; x < w; x++) {
-        const current = LIVE_get(x, y, w, h, prev);
-        const neighbors =
-          LIVE_get(x - 1, y - 1, w, h, prev) +
-          LIVE_get(x,     y - 1, w, h, prev) +
-          LIVE_get(x + 1, y - 1, w, h, prev) +
-          LIVE_get(x - 1, y,     w, h, prev) +
-          LIVE_get(x + 1, y,     w, h, prev) +
-          LIVE_get(x - 1, y + 1, w, h, prev) +
-          LIVE_get(x,     y + 1, w, h, prev) +
-          LIVE_get(x + 1, y + 1, w, h, prev);
-        
-        // Update
-        const i = x + y * w;
-        if (current == 1) {
-          curr[i] = neighbors == 2 || neighbors == 3 ? 1 : 0;
-        } else {
-          curr[i] = neighbors == 3 ? 1 : 0;
-        }
-      }
-    }
-    
-    // Increment frame
-    LIVE_frame++;
-  }
-  
-  function LIVE_render() {
-    // Current buffer
-    const curr = LIVE_data[(LIVE_frame + 1) % 2];
-    const w = LIVE_cols;
-    const h = LIVE_rows * 2;
-    
-    let output = '';
-    
-    // Render the cells
-    for (let y = 0; y < LIVE_rows; y++) {
-      for (let x = 0; x < LIVE_cols; x++) {
-        const idx = x + y * 2 * LIVE_cols;
-        const upper = curr[idx];
-        const lower = curr[idx + LIVE_cols];
-        
-        if (upper && lower) output += '█'; // both cells are occupied
-        else if (upper) output += '▀'; // upper cell
-        else if (lower) output += '▄'; // lower cell
-        else output += ' '; // both cells are empty
-      }
-      output += '\n';
-    }
-    
-    LIVE_canvas.textContent = output;
-  }
-  
-  function LIVE_gameLoop() {
-    if (!LIVE_isPaused) {
-      LIVE_updateGame();
-    }
-    LIVE_render();
-    LIVE_animationId = requestAnimationFrame(LIVE_gameLoop);
-  }
-  
-  function LIVE_startGame() {
-    LIVE_init();
-    LIVE_gameLoop();
-  }
-  
-  // Event listeners with namespaced handlers
-  function LIVE_handleMouseMove(e) {
-    const rect = LIVE_canvas.getBoundingClientRect();
-    LIVE_cursorX = Math.floor((e.clientX - rect.left) / rect.width * LIVE_cols);
-    LIVE_cursorY = Math.floor((e.clientY - rect.top) / rect.height * LIVE_rows);
-  }
-  
-  function LIVE_handleMouseDown() {
-    LIVE_isPressed = true;
-  }
-  
-  function LIVE_handleMouseUp() {
-    LIVE_isPressed = false;
-  }
-  
-  function LIVE_handleMouseLeave() {
-    LIVE_isPressed = false;
-    LIVE_cursorX = -1;
-    LIVE_cursorY = -1;
-  }
-  
-  function LIVE_handleResize() {
-    // Cancel previous animation before restarting
-    cancelAnimationFrame(LIVE_animationId);
-    LIVE_startGame();
-  }
-  
-  // Add event listeners with namespaced functions (allows for removal if needed)
-  LIVE_canvas.addEventListener('mousemove', LIVE_handleMouseMove);
-  LIVE_canvas.addEventListener('mousedown', LIVE_handleMouseDown);
-  LIVE_canvas.addEventListener('mouseup', LIVE_handleMouseUp);
-  LIVE_canvas.addEventListener('mouseleave', LIVE_handleMouseLeave);
-  window.addEventListener('resize', LIVE_handleResize);
-  
-  // Start the game
-  LIVE_startGame();
-  
-  // Public API - only expose what's absolutely necessary (nothing in this case)
-  // If you need to expose any functions/variables, you can return them here
-  return {
-    // No public API needed for this implementation
-  };
-})(); // End of IIFE
-</script>
 
 
 
@@ -709,10 +807,10 @@ ENGR   MNGR   LEAD   DEVS</pre>
 
 <pre class="BANNER">
 ╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
-║░░░║       COOPERATION     ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 3x00 ║
+║░░░║      ENGAGEMENTS      ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 3x00 ║
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
-
+<!-- ЗДЕСЬ ПРО ПРИМЕРЫ РАБОТ -->
 <div style="width: 1080px; margin: 0 auto;">
 
   <pre class="TABLE" style="margin: 0;">
@@ -806,19 +904,55 @@ ENGR   MNGR   LEAD   DEVS</pre>
   <div class="COOP_HIGHLIGHT">▀ NEARLY EVERY SECOND ORDER WE GET IS A CUSTOM SPEC BOOK, SO OUR CREW IS WELL-VERSED IN DEALING WITH DEMANDING CLIENT DREAMS.<br><br></div>
   <div class="COOP_LINE"     >└─────────────────────────────────────────────────────────────────────────────────────┘</div>
 
-
 </div>
+
+<pre class="BANNER">
+╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
+║░░░║      METHODOLOGY      ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 5x00 ║
+╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
+</pre>
+
+<!-- <div>ПРО ЭТАПЫ РАБОТЫ ИТД</div> -->
+  <pre class="TABLE">
+┌────────────┬────┬─────────────────────┐ ╔═════════╦════╗
+│ ENGINEERS  │ 12 │ ▓▓▓▓▓▓▓▓░░ 80% FULL │ ║ MEMBERS ║ 22 ║
+├────────────┼────┼─────────────────────┤ ╠═════════╬════╣
+│ DEVELOPERS │ 08 │ ▓▓▓▓░░░░░░ 40% FULL │ ║   LEAD  ║ 04 ║
+└────────────┴────┴─────────────────────┘ ╚═════════╩════╝
+   MISHKA is currently hiring developers and engineers.  
+          Details available upon direct contact.         </pre>
+
+
+
+
+
+
+<!-- ЗДЕСЬ ПРО ТО, КАК МЫ КОНКРЕТНО И С КЕМ СОТРУДНИЧАЕМ.  -->
+<pre class="BANNER">
+╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
+║░░░║      COOPERATION      ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 5x00 ║
+╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
+</pre>
+
+
+
+
+
+
+
+
 
 
 <pre class="BANNER">
 ╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
-║░░░║         CONTACT       ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 4x00 ║
+║░░░║      CONTACT_INFO     ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 4x00 ║
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
+
 <p style="text-align: center;"><script>createRunningLine("ミーシュカ", 200)</script></p>
 
 <div style="width: 1080px; margin: 0 auto;">
-<pre style="font-size: 12px; color: #585858; float: right;">
+  <pre style="font-size: 12px; color: #585858; float: right;">
         8
         8
         8
@@ -839,17 +973,16 @@ ENGR   MNGR   LEAD   DEVS</pre>
         8
         8
         8</pre><br><br>
-        <div class="MINDSET_MANIFESTO">
-          ▀ We’d be glad to discuss your case, explore possible solutions, and help you find a way forward — no matter the situation. Feel free to reach out to us with any questions or suggestions. Сontacts is below.<br><br>
-        </div>
-        <div class="MINDSET_MANIFESTO">
-          ▀  We typically respond within a few hours.<br><br>
-        </div>
-        <div class="MINDSET_MANIFESTO">
-          ▀  Please include the subject of your inquiry in your initial message.<br><br><br>
-        </div>
+  <div class="MINDSET_MANIFESTO">
+    ▀ We’d be glad to discuss your case, explore possible solutions, and help you find a way forward — no matter the situation. Feel free to reach out to us with any questions or suggestions. Сontacts is below.<br><br>
+  </div>
+  <div class="MINDSET_MANIFESTO">
+    ▀  We typically respond within a few hours.<br><br>
+  </div>
+  <div class="MINDSET_MANIFESTO">
+    ▀  Please include the subject of your inquiry in your initial message.<br><br><br>
+  </div>
 </div><br><br>
-
 
 <footer id="LINKS" style="margin: 0 auto; width: 100%; max-width: 1080px; padding: 10px; color: antiquewhite; margin-bottom: 20px; margin-top: 40px; font-size: 24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
   <div style="flex: 1; text-align: left;">
@@ -863,20 +996,15 @@ ENGR   MNGR   LEAD   DEVS</pre>
   </div>
 </footer>
 
-
 <div id="myDiv" style="text-align: center; font-size: 20px; height: 50px; margin-top: 15px;"></div>
-
 
 <div id="dynamic-line"></div>
 
-
 <script src="main.js"></script>
 <script>
-// Configuration
-const pt_targetPage = "./index.html"; // Change this to your destination page URL
-const pt_animationDuration = 1500; // Total animation duration in milliseconds
+const pt_targetPage = "./index.html";
+const pt_animationDuration = 1500;
 
-// Create PageTransitionMorph function (renamed from AsciiMorph)
 var PageTransitionMorph = (function() {
   'use strict';
   var pt_element = null;
@@ -1069,21 +1197,18 @@ var PageTransitionMorph = (function() {
   });
 })();
 
-// Add event listener to the button
 document.getElementById("IndexPage").addEventListener("click", function(event) {
-  event.preventDefault(); // Prevent default navigation
+  event.preventDefault();
   
-  // Set transition flag in sessionStorage
   sessionStorage.setItem('pageTransition', 'active');
   
-  // Create overlay
   const pt_overlay = document.createElement("div");
   pt_overlay.style.position = "fixed";
   pt_overlay.style.top = "0";
   pt_overlay.style.left = "0";
   pt_overlay.style.width = "100%";
   pt_overlay.style.height = "100%";
-  pt_overlay.style.backgroundColor = "black";
+  pt_overlay.style.backgroundColor = "#010101";
   pt_overlay.style.zIndex = "9999";
   pt_overlay.style.display = "flex";
   pt_overlay.style.justifyContent = "center";
@@ -1100,47 +1225,37 @@ document.getElementById("IndexPage").addEventListener("click", function(event) {
   pt_animationContainer.style.fontSize = "12px";
   pt_overlay.appendChild(pt_animationContainer);
   
-  // Define ASCII art
   const pt_asciiArt = [
 " _____ _____ _____ _____ _____ _____ ",
 "|     |     |   __|  |  |  |  |  _  | ",
 "| | | |-   -|__   |     |    -|     | ",
 "|_|_|_|_____|_____|__|__|__|__|__|__| ",
   ];
-  // Empty art to morph from
   const pt_emptyArt = Array(pt_asciiArt.length).fill(" ".repeat(20));
   
-  // Initialize PageTransitionMorph
   PageTransitionMorph(pt_animationContainer, {
     x: Math.max(...pt_asciiArt.map(line => line.length)) + 4,
     y: pt_asciiArt.length + 4
   });
   
-  // Fade in overlay
   setTimeout(() => {
     pt_overlay.style.opacity = "1";
     
-    // Start with empty frame
     PageTransitionMorph.render(pt_emptyArt);
     
-    // After a short delay, morph to the ASCII art
     setTimeout(() => {
       PageTransitionMorph.morph(pt_asciiArt);
       
-      // Display the ASCII art for a moment
       setTimeout(() => {
-        // Then morph back to empty
         PageTransitionMorph.morph(pt_emptyArt);
         
-        // After the morph-out animation completes, navigate to the target page
         setTimeout(() => {
           window.location.href = pt_targetPage;
         }, pt_animationDuration);
-      }, 800); // Display duration - how long to show the ASCII art
+      }, 800);
     }, 500);
   }, 10);
 });
 </script>
-
 
 </body>

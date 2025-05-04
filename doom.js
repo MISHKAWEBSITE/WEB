@@ -77,7 +77,7 @@ function setupStyles() {
       font-family: monospace;
       font-size: 12px;
       line-height: 1;
-      background-color: black;
+      background-color: #010101;
       color: white;
       box-sizing: border-box;
       letter-spacing: 0;

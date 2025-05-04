@@ -31,25 +31,19 @@
             opacity: 1;
           }
     </style>  
-    <div class="page-transition-overlay" id="page-overlay"></div>
     <script>
-        // Run when page is fully loaded
-        window.addEventListener('load', function() {
-          // Wait a moment to ensure everything is rendered
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          document.body.classList.add('content-visible');
+          
+          var overlay = document.getElementById('page-overlay');
+          overlay.style.opacity = '0';
+          
           setTimeout(function() {
-            // Make page content visible
-            document.body.classList.add('content-visible');
-            
-            // Fade out the overlay
-            var overlay = document.getElementById('page-overlay');
-            overlay.style.opacity = '0';
-            
-            // Remove overlay after transition completes
-            setTimeout(function() {
-              overlay.parentNode.removeChild(overlay);
-            }, 800); // Same duration as the transition
-          }, 100);
-        });
+            overlay.parentNode.removeChild(overlay);
+          }, 800);
+        }, 1000);
+      });
     </script>
 </head>
 
