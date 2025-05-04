@@ -1,12 +1,9 @@
-// Код эффекта Doom Fire (v8)
 const fireContainer = document.getElementById('fire-container');
 
-// Оригинальный код реализации огня
 const flame = '...::/\\/\\/\\+=*abcdef01XYZ#';
 let cols, rows;
 let data = [];
 
-// Вспомогательные функции
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 const map = (value, inMin, inMax, outMin, outMax) => 
   (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
@@ -16,28 +13,23 @@ const smoothstep = (min, max, value) => {
   return x * x * (3 - 2 * x);
 };
 
-// Случайное целое число
 function rndi(a, b = 0) {
   if (a > b) [a, b] = [b, a];
   return Math.floor(a + Math.random() * (b - a + 1));
 }
 
-// Функция шума
 function valueNoise() {
   const tableSize = 256;
   const r = new Array(tableSize);
   const permutationTable = new Array(tableSize * 2);
   
-  // Создание массива случайных значений и инициализация таблицы перестановок
   for (let k = 0; k < tableSize; k++) {
     r[k] = Math.random();
     permutationTable[k] = k;
   }
   
-  // Перемешивание значений таблицы перестановок
   for (let k = 0; k < tableSize; k++) {
     const i = Math.floor(Math.random() * tableSize);
-    // swap
     [permutationTable[k], permutationTable[i]] = [permutationTable[i], permutationTable[k]];
     permutationTable[k + tableSize] = permutationTable[k];
   }
@@ -52,28 +44,23 @@ function valueNoise() {
     const ry0 = yi % tableSize;
     const ry1 = (ry0 + 1) % tableSize;
     
-    // Случайные значения в углах ячейки с использованием таблицы перестановок
     const c00 = r[permutationTable[permutationTable[rx0] + ry0]];
     const c10 = r[permutationTable[permutationTable[rx1] + ry0]];
     const c01 = r[permutationTable[permutationTable[rx0] + ry1]];
     const c11 = r[permutationTable[permutationTable[rx1] + ry1]];
     
-    // Ремаппинг tx и ty с использованием функции Smoothstep
     const sx = smoothstep(0, 1, tx);
     const sy = smoothstep(0, 1, ty);
     
-    // Линейная интерполяция значений по оси x
     const nx0 = mix(c00, c10, sx);
     const nx1 = mix(c01, c11, sx);
     
-    // Линейная интерполяция nx0/nx1 по оси y
     return mix(nx0, nx1, sy);
   };
 }
 
 const noise = valueNoise();
 
-// Добавляем стили для правильного отображения контейнера
 function setupStyles() {
   const style = document.createElement('style');
   style.textContent = `
@@ -104,24 +91,18 @@ function setupStyles() {
   document.head.appendChild(style);
 }
 
-// Инициализация размеров
 function initializeFire() {
-  // Устанавливаем свойство отображения контейнера в block для полного заполнения ширины
   fireContainer.style.display = 'block';
   
-  // Принудительно устанавливаем полную ширину и высоту
   fireContainer.style.width = '100vw';
   fireContainer.style.height = '100vh';
   
-  // Расчет размеров на основе размера шрифта и контейнера
   const computedStyle = window.getComputedStyle(fireContainer);
   const fontSize = parseFloat(computedStyle.getPropertyValue('font-size'));
   
-  // Используем clientWidth вместо расчета через fontSize для точных расчетов
   const containerWidth = fireContainer.clientWidth;
   const containerHeight = fireContainer.clientHeight;
   
-  // Расчет ширины одного символа на основе тестового элемента
   const testSpan = document.createElement('span');
   testSpan.style.fontFamily = 'monospace';
   testSpan.style.fontSize = fontSize + 'px';
@@ -132,21 +113,16 @@ function initializeFire() {
   const charHeight = fontSize;
   document.body.removeChild(testSpan);
   
-  // Вычисляем количество столбцов и строк
   cols = Math.ceil(containerWidth / charWidth) + 1; // +1 для надежности
   rows = Math.ceil(containerHeight / charHeight);
   
-  // Принудительно устанавливаем стиль переноса текста
   fireContainer.style.whiteSpace = 'pre';
   fireContainer.style.overflowX = 'hidden';
   
-  // Инициализация массива данных
   data = new Array(cols * rows).fill(0);
   
-  console.log(`Инициализация огня: ${cols}x${rows} символов`);
 }
 
-// Обработка нажатия мыши
 let mousePressed = false;
 let mouseX = -1, mouseY = -1;
 
@@ -182,14 +158,12 @@ fireContainer.addEventListener('mouseleave', () => {
   mouseY = -1;
 });
 
-// Обновление и отрисовка огня
 let startTime = performance.now();
 let lastFrameTime = 0;
 const frameRate = 24; // Средняя скорость (24 fps)
 const frameInterval = 1000 / frameRate;
 
 function updateFire(time) {
-  // Обновление только с заданной частотой кадров
   if (time - lastFrameTime < frameInterval) {
     requestAnimationFrame(updateFire);
     return;
@@ -203,7 +177,6 @@ function updateFire(time) {
     rows: rows
   };
   
-  // Заполнение нижнего ряда шумом
   if (!mousePressed) {
     const t = context.time * 0.0012;
     const last = cols * (rows - 1);
@@ -216,7 +189,6 @@ function updateFire(time) {
     data[mouseX + mouseY * cols] = rndi(5, 40);
   }
   
-  // Распространение к верху с некоторой случайностью
   for (let i = 0; i < data.length; i++) {
     const row = Math.floor(i / cols);
     const col = i % cols;
@@ -225,7 +197,6 @@ function updateFire(time) {
     data[dest] = Math.max(0, data[src] - rndi(0, 2));
   }
   
-  // Отрисовка ASCII огня с гарантированной полной шириной
   let result = '';
   
   for (let y = 0; y < rows; y++) {
@@ -235,13 +206,12 @@ function updateFire(time) {
       const u = data[idx];
       
       if (u === 0) {
-        row += ' '; // Вставляет пробел
+        row += ' ';
       } else {
         const charIndex = clamp(u, 0, flame.length - 1);
         row += flame[charIndex];
       }
     }
-    // Убедимся, что строка заполнена полностью
     while (row.length < cols) {
       row += ' ';
     }
@@ -253,10 +223,8 @@ function updateFire(time) {
   requestAnimationFrame(updateFire);
 }
 
-// Добавим обработчик на изменение размеров вкладки
 function handleVisibilityChange() {
   if (!document.hidden) {
-    // Перезапускаем отрисовку при возвращении на вкладку
     lastFrameTime = 0;
     startTime = performance.now();
     requestAnimationFrame(updateFire);
@@ -265,11 +233,12 @@ function handleVisibilityChange() {
 
 document.addEventListener("visibilitychange", handleVisibilityChange);
 
-// Инициализация и запуск
 setupStyles();
 initializeFire();
 window.addEventListener('resize', () => {
-  // Добавляем небольшую задержку при изменении размера окна для стабильности
   setTimeout(initializeFire, 100);
 });
 requestAnimationFrame(updateFire);
+
+console.log(`Devs: Archi, root, ACID`);
+console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);

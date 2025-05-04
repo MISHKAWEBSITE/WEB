@@ -448,6 +448,265 @@ ENGR   MNGR   LEAD   DEVS</pre>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="LIVEcontainer">
+  <pre id="LIVEcanvas"></pre>
+</div>
+
+<style>
+#LIVEcontainer {
+  margin: 0 auto;
+  width: 1080px;
+  height: 400px;
+}
+#LIVEcanvas {
+  color: antiquewhite;
+  line-height: 1;
+  font-family: monospace;
+  font-size: 16px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+(function() {
+  // Game of Life Implementation - Isolated with IIFE
+  // Safe set function - private to this scope
+  function LIVE_set(val, x, y, w, h, buf) {
+    if (x < 0 || x >= w) return;
+    if (y < 0 || y >= h) return;
+    buf[y * w + x] = val;
+  }
+  
+  // Safe get function - private to this scope
+  function LIVE_get(x, y, w, h, buf) {
+    if (x < 0 || x >= w) return 0;
+    if (y < 0 || y >= h) return 0;
+    return buf[y * w + x];
+  }
+  
+  // Game state - all variables are private to this scope
+  let LIVE_cols, LIVE_rows;
+  let LIVE_data = [];
+  let LIVE_animationId;
+  let LIVE_isPaused = false;
+  let LIVE_frame = 0;
+  let LIVE_cursorX = -1;
+  let LIVE_cursorY = -1;
+  let LIVE_isPressed = false;
+  
+  // Get reference to our canvas element using the unique ID
+  const LIVE_canvas = document.getElementById('LIVEcanvas');
+  
+  function LIVE_init() {
+    // Calculate dimensions based on container size (not window)
+    const LIVE_container = document.getElementById('LIVEcontainer');
+    const fontSize = 16;
+    const containerWidth = LIVE_container.clientWidth || window.innerWidth * 0.9;
+    const containerHeight = LIVE_container.clientHeight || window.innerHeight * 0.8;
+    
+    LIVE_cols = Math.floor(containerWidth / (fontSize * 0.6));
+    LIVE_rows = Math.floor(containerHeight / fontSize);
+    
+    // Make sure cols/rows are reasonable sizes
+    LIVE_cols = Math.min(LIVE_cols, 150);
+    LIVE_rows = Math.min(LIVE_rows, 80);
+    
+    const len = LIVE_cols * LIVE_rows * 2; // double height
+    
+    // Initialize data buffers
+    LIVE_data[0] = [];
+    LIVE_data[1] = [];
+    
+    // Initialize with random state
+    for (let i = 0; i < len; i++) {
+      const v = Math.random() > 0.5 ? 1 : 0;
+      LIVE_data[0][i] = v;
+      LIVE_data[1][i] = v;
+    }
+    
+    // Set canvas size
+    LIVE_canvas.style.width = `${LIVE_cols * fontSize * 0.6}px`;
+    LIVE_canvas.style.height = `${LIVE_rows * fontSize}px`;
+  }
+  
+  function LIVE_updateGame() {
+    // Update the buffer
+    const prev = LIVE_data[LIVE_frame % 2];
+    const curr = LIVE_data[(LIVE_frame + 1) % 2];
+    const w = LIVE_cols;
+    const h = LIVE_rows * 2;
+    
+    // Fill a random rect when mouse is pressed
+    if (LIVE_isPressed && LIVE_cursorX >= 0 && LIVE_cursorY >= 0) {
+      const cx = Math.floor(LIVE_cursorX);
+      const cy = Math.floor(LIVE_cursorY * 2);
+      const s = 5;
+      for (let y = cy - s; y <= cy + s; y++) {
+        for (let x = cx - s; x <= cx + s; x++) {
+          const val = Math.random() < 0.5 ? 1 : 0;
+          LIVE_set(val, x, y, w, h, prev);
+        }
+      }
+    }
+    
+    // Update the automata
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const current = LIVE_get(x, y, w, h, prev);
+        const neighbors =
+          LIVE_get(x - 1, y - 1, w, h, prev) +
+          LIVE_get(x,     y - 1, w, h, prev) +
+          LIVE_get(x + 1, y - 1, w, h, prev) +
+          LIVE_get(x - 1, y,     w, h, prev) +
+          LIVE_get(x + 1, y,     w, h, prev) +
+          LIVE_get(x - 1, y + 1, w, h, prev) +
+          LIVE_get(x,     y + 1, w, h, prev) +
+          LIVE_get(x + 1, y + 1, w, h, prev);
+        
+        // Update
+        const i = x + y * w;
+        if (current == 1) {
+          curr[i] = neighbors == 2 || neighbors == 3 ? 1 : 0;
+        } else {
+          curr[i] = neighbors == 3 ? 1 : 0;
+        }
+      }
+    }
+    
+    // Increment frame
+    LIVE_frame++;
+  }
+  
+  function LIVE_render() {
+    // Current buffer
+    const curr = LIVE_data[(LIVE_frame + 1) % 2];
+    const w = LIVE_cols;
+    const h = LIVE_rows * 2;
+    
+    let output = '';
+    
+    // Render the cells
+    for (let y = 0; y < LIVE_rows; y++) {
+      for (let x = 0; x < LIVE_cols; x++) {
+        const idx = x + y * 2 * LIVE_cols;
+        const upper = curr[idx];
+        const lower = curr[idx + LIVE_cols];
+        
+        if (upper && lower) output += '█'; // both cells are occupied
+        else if (upper) output += '▀'; // upper cell
+        else if (lower) output += '▄'; // lower cell
+        else output += ' '; // both cells are empty
+      }
+      output += '\n';
+    }
+    
+    LIVE_canvas.textContent = output;
+  }
+  
+  function LIVE_gameLoop() {
+    if (!LIVE_isPaused) {
+      LIVE_updateGame();
+    }
+    LIVE_render();
+    LIVE_animationId = requestAnimationFrame(LIVE_gameLoop);
+  }
+  
+  function LIVE_startGame() {
+    LIVE_init();
+    LIVE_gameLoop();
+  }
+  
+  // Event listeners with namespaced handlers
+  function LIVE_handleMouseMove(e) {
+    const rect = LIVE_canvas.getBoundingClientRect();
+    LIVE_cursorX = Math.floor((e.clientX - rect.left) / rect.width * LIVE_cols);
+    LIVE_cursorY = Math.floor((e.clientY - rect.top) / rect.height * LIVE_rows);
+  }
+  
+  function LIVE_handleMouseDown() {
+    LIVE_isPressed = true;
+  }
+  
+  function LIVE_handleMouseUp() {
+    LIVE_isPressed = false;
+  }
+  
+  function LIVE_handleMouseLeave() {
+    LIVE_isPressed = false;
+    LIVE_cursorX = -1;
+    LIVE_cursorY = -1;
+  }
+  
+  function LIVE_handleResize() {
+    // Cancel previous animation before restarting
+    cancelAnimationFrame(LIVE_animationId);
+    LIVE_startGame();
+  }
+  
+  // Add event listeners with namespaced functions (allows for removal if needed)
+  LIVE_canvas.addEventListener('mousemove', LIVE_handleMouseMove);
+  LIVE_canvas.addEventListener('mousedown', LIVE_handleMouseDown);
+  LIVE_canvas.addEventListener('mouseup', LIVE_handleMouseUp);
+  LIVE_canvas.addEventListener('mouseleave', LIVE_handleMouseLeave);
+  window.addEventListener('resize', LIVE_handleResize);
+  
+  // Start the game
+  LIVE_startGame();
+  
+  // Public API - only expose what's absolutely necessary (nothing in this case)
+  // If you need to expose any functions/variables, you can return them here
+  return {
+    // No public API needed for this implementation
+  };
+})(); // End of IIFE
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <pre class="BANNER">
 ╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
 ║░░░║       COOPERATION     ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 3x00 ║
