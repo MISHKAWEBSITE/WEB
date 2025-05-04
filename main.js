@@ -339,12 +339,6 @@ var AsciiMorph = (function() {
 
 
 
-
-
-
-
-
-
   const scrollIndicatorBars = document.getElementById("scroll-indicator-bars");
   const scrollProgress = document.getElementById("scroll-progress");
   const scrollIndicator = document.getElementById("scroll-indicator");
@@ -378,60 +372,150 @@ var AsciiMorph = (function() {
     smoothScrollTo(targetScrollPosition);
   });
   
-  // Add dragging functionality
+  // Improved dragging functionality
   let isDraggingItem = false;
+  let currentScrollAnimation = null;
+  let dragStartTime = null;
   
-  scrollIndicator.addEventListener("mousedown", function() {
+  scrollIndicator.addEventListener("mousedown", function(event) {
     isDraggingItem = true;
     document.body.style.userSelect = "none"; // Prevent text selection while dragging
+    dragStartTime = Date.now();
+    
+    // Cancel any ongoing scroll animation
+    if (currentScrollAnimation) {
+      cancelAnimationFrame(currentScrollAnimation);
+      currentScrollAnimation = null;
+    }
+    
+    // Handle the initial click as a drag event
+    handleDragMove(event);
   });
   
   document.addEventListener("mouseup", function() {
-    isDraggingItem = false;
-    document.body.style.userSelect = "";
+    if (isDraggingItem) {
+      isDraggingItem = false;
+      document.body.style.userSelect = "";
+      dragStartTime = null;
+      
+      // Stop any ongoing animation immediately when mouse is released
+      if (currentScrollAnimation) {
+        cancelAnimationFrame(currentScrollAnimation);
+        currentScrollAnimation = null;
+      }
+    }
   });
   
   document.addEventListener("mousemove", function(event) {
     if (isDraggingItem) {
-      const rect = scrollIndicator.getBoundingClientRect();
-      const positionRatio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-      const targetScrollPosition = positionRatio * (document.body.scrollHeight - window.innerHeight);
-      window.scrollTo(0, targetScrollPosition);
+      handleDragMove(event);
     }
   });
   
-  // Smooth scrolling function
+  // Handle the dragging motion
+  function handleDragMove(event) {
+    const rect = scrollIndicator.getBoundingClientRect();
+    const positionRatio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const targetScrollPosition = positionRatio * (document.body.scrollHeight - window.innerHeight);
+    
+    // Use improved lerp function for smoother movement
+    improvedLerpScrollTo(targetScrollPosition);
+  }
+  
+  // Improved linear interpolation for smoother scrolling with less "tail" effect
+  function improvedLerpScrollTo(targetPosition) {
+    if (currentScrollAnimation) {
+      cancelAnimationFrame(currentScrollAnimation);
+    }
+    
+    // Track animation duration to prevent excessive "tail"
+    const maxAnimationDuration = 300; // ms
+    const startTime = Date.now();
+    
+    function animate() {
+      // Get current position
+      const currentPosition = window.scrollY;
+      const animationDuration = Date.now() - startTime;
+      
+      // Calculate the distance to move
+      let lerpFactor = 0.25; // Slightly faster approach
+      
+      // Increase the lerp factor as time goes on to reduce the "tail" effect
+      if (animationDuration > 150) {
+        lerpFactor = 0.4; // Even faster approach when animation has been running a while
+      }
+      
+      // Further increase the factor when we're close to target
+      if (Math.abs(targetPosition - currentPosition) < 50) {
+        lerpFactor = 0.5; // Much faster approach when close to target
+      }
+      
+      const nextPosition = currentPosition + (targetPosition - currentPosition) * lerpFactor;
+      
+      // Apply the scroll
+      window.scrollTo(0, nextPosition);
+      
+      // Determine if we should continue the animation
+      const closeEnough = Math.abs(targetPosition - nextPosition) < 3; // Larger threshold
+      const timeUp = animationDuration > maxAnimationDuration;
+      
+      if (!closeEnough && !timeUp && isDraggingItem) {
+        currentScrollAnimation = requestAnimationFrame(animate);
+      } else {
+        // We're either close enough, time is up, or dragging stopped
+        // Snap to exact position to eliminate "tail"
+        if (Math.abs(targetPosition - nextPosition) < 20) {
+          window.scrollTo(0, targetPosition);
+        }
+        currentScrollAnimation = null;
+      }
+    }
+    
+    currentScrollAnimation = requestAnimationFrame(animate);
+  }
+  
+  // Smooth scrolling function for clicking
   function smoothScrollTo(targetPosition) {
+    if (currentScrollAnimation) {
+      cancelAnimationFrame(currentScrollAnimation);
+    }
+    
     const startPosition = window.scrollY;
     const distance = targetPosition - startPosition;
-    const duration = 500; // ms
+    const duration = 500; // Slightly shorter duration
     let startTime = null;
     
     function animation(currentTime) {
       if (startTime === null) startTime = currentTime;
       const timeElapsed = currentTime - startTime;
       const progress = Math.min(timeElapsed / duration, 1);
-      const easeProgress = easeInOutCubic(progress);
       
-      window.scrollTo(0, startPosition + distance * easeProgress);
+      // Smooth easing function with faster finish
+      const easedProgress = easeOutQuint(progress);
       
-      if (timeElapsed < duration) {
-        requestAnimationFrame(animation);
+      window.scrollTo(0, startPosition + distance * easedProgress);
+      
+      if (timeElapsed < duration && progress < 0.99) {
+        currentScrollAnimation = requestAnimationFrame(animation);
+      } else {
+        // Ensure we land exactly on target
+        window.scrollTo(0, targetPosition);
+        currentScrollAnimation = null;
       }
     }
     
-    // Easing function for smooth animation
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-    
-    requestAnimationFrame(animation);
+    currentScrollAnimation = requestAnimationFrame(animation);
   }
-
-
-
-
-
+  
+  // Faster easing function with quicker finish
+  function easeOutQuint(t) {
+    return 1 - Math.pow(1 - t, 5);
+  }
+  
+  // Original smooth easing
+  function easeInOutQuad(t) {
+    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  }
 
 
 
