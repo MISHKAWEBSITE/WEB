@@ -1791,43 +1791,49 @@ notification.style.backgroundColor = '#010101';
 notification.style.zIndex = '9999';
 notification.style.display = 'none';
 notification.style.color = 'antiquewhite';
-
 notification.innerHTML = `
-  <div style="font-size: 30px; padding-top: 20px;">
-        <pre style="font-size: 6px; text-align: center;">
- __    __     __     ______     __  __     __  __     ______    
-/\\ "-./  \\   /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\/ /    /\\  __ \\   
-\\ \\ \\-./\\ \\  \\ \\ \\  \\ \\___  \\  \\ \\  __ \\  \\ \\  _"-.  \\ \\  __ \\  
- \\ \\_\\ \\ \\_\\  \\ \\_\\  \\/\\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\ 
-  \\/_/  \\/_/   \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_/\\/_/ </pre>
-    <p style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
-  </div>
-  <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
-    You still won't understand or get into our work the way you would on a computer. So please, don't use your phone.<br><br>
-    See you soon :*</div>
+ <div style="font-size: 30px; padding-top: 20px;">
+ <pre style="font-size: 6px; text-align: center;">
+ ** _**___ **  **______
+/\\ "-./ \\ /\\ \\ /\\ ___\\ /\\ \\_\\ \\ /\\ \\/ / /\\ __ \\
+\\ \\ \\-./\\ \\ \\ \\ \\ \\ \\___ \\ \\ \\ __ \\ \\ \\ *"-. \\ \\ *_ \\
+\\ \\_\\ \\ \\_\\ \\ \\_\\ \\/\\_____\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\
+\\/_/ \\/_/ \\/_/ \\/_____/ \\/_/\\/_/ \\/_/\\/_/ \\/_/\\/_/ </pre>
+ <p style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
+ </div>
+ <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
+ You still won't understand or get into our work the way you would on a computer. So please, don't use your phone.<br><br>
+ See you soon :*</div>
 `;
 
 function checkWidth() {
   if (window.innerWidth < 1100) {
+    console.log("Width less than 1100px.");
     notification.style.display = 'block';
   } else {
     notification.style.display = 'none';
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  document.body.appendChild(notification);
-  checkWidth();
-});
+function initNotification() {
+  if (!document.getElementById('phone-notification')) {
+    document.body.appendChild(notification);
+    checkWidth();
+  }
+}
 
-window.addEventListener("load", checkWidth);
-window.addEventListener("resize", checkWidth);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNotification);
+} else {
+  initNotification();
+}
 
+window.addEventListener('load', checkWidth);
+window.addEventListener('resize', checkWidth);
 
+window.addEventListener('orientationchange', checkWidth);
 
-console.log(`Devs: Archi, root, ACID, Klaus`);
-console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
-
+setTimeout(checkWidth, 500);
 
 
 
@@ -2555,21 +2561,11 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
 
 
 
-
-
-
-
-
-// SlimeMold.js - изолированный модуль для симуляции слизней
-// Для вставки в существующую страницу
-
 (function(window, document) {
     'use strict';
     
-    // Создаем уникальное пространство имен
     window.SlimeMoldNamespace = window.SlimeMoldNamespace || {};
     
-    // Vector 2 module - изолирован внутри замыкания
     const v2 = {
         vec2: (x, y) => ({ x, y }),
         add: (a, b) => ({ x: a.x + b.x, y: a.y + b.y }),
@@ -2582,21 +2578,18 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
         floor: (v) => ({ x: Math.floor(v.x), y: Math.floor(v.y) })
     };
 
-    // Константы симуляции - скрыты внутри замыкания
     const WIDTH = 400;
     const HEIGHT = 400;
     const NUM_AGENTS = 1500;
     const DECAY = 0.9;
     const MIN_CHEM = 0.0001;
 
-    // Константы агентов
     const SENS_ANGLE = 45 * Math.PI / 180;
     const SENS_DIST = 9;
     const AGT_SPEED = 1;
     const AGT_ANGLE = 45 * Math.PI / 180;
     const DEPOSIT = 1;
 
-    // Текстуры для рендеринга
     const TEXTURE = [
         "  ``^@",
         " ..„v0",
@@ -2605,7 +2598,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
 
     const R = Math.min(WIDTH, HEIGHT)/2;
 
-    // Вспомогательные функции
     function bounded(vec) {
         return ((vec.x-R)**2 + (vec.y-R)**2 <= R**2);
     }
@@ -2630,7 +2622,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
         };
     }
 
-    // Класс агента
     class Agent {
         constructor(pos, dir) {
             this.pos = pos;
@@ -2655,7 +2646,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             let leftChem = this.sense(-1, chem);
             let rightChem = this.sense(1, chem);
 
-            // Rotate
             let rotate = 0;
             if (forwardChem > leftChem && forwardChem > rightChem) {
                 rotate = 0;
@@ -2675,12 +2665,10 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                 rotate = -AGT_ANGLE;
             }
             else if (forwardChem < 0) {
-                // Turn around at edge
                 rotate = Math.PI / 2;
             }
             this.dir = v2.rot(this.dir, rotate);
 
-            // Move
             this.pos = v2.add(this.pos, v2.mulN(this.dir, AGT_SPEED));
         }
 
@@ -2691,7 +2679,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
         }
     }
 
-    // Класс симуляции
     class SlimeMoldSimulation {
         constructor(containerElement, options = {}) {
             if (!containerElement) {
@@ -2699,7 +2686,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                 return;
             }
             
-            // Создаем симуляционный элемент если он не существует
             this.container = typeof containerElement === 'string' 
                 ? document.getElementById(containerElement) 
                 : containerElement;
@@ -2709,20 +2695,16 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                 return;
             }
             
-            // Проверим, есть ли уже стили для этого контейнера
             if (!this.container.classList.contains('slime-mold-container')) {
                 this.container.classList.add('slime-mold-container');
                 this.container.style.position = 'relative';
                 this.container.style.overflow = 'hidden';
                 
-                // Применяем цвет фона только если он явно указан в опциях
-                // Иначе сохраняем существующий цвет из CSS
                 if (options.backgroundColor) {
                     this.container.style.backgroundColor = options.backgroundColor;
                 }
             }
             
-            // Создаем элемент для симуляции
             this.simulationElement = document.createElement('div');
             this.simulationElement.style.position = 'absolute';
             this.simulationElement.style.top = '0';
@@ -2738,7 +2720,7 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             
             this.container.appendChild(this.simulationElement);
             
-            this.metrics = { aspect: 0.5 }; // Типичное соотношение сторон для шрифтов моноширинных
+            this.metrics = { aspect: 0.5 };
 
             this.data = {};
             this.cursor = { pressed: false, x: 0, y: 0 };
@@ -2750,13 +2732,10 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             };
             this.buffer = [];
 
-            // Инициализация
             this.boot();
             
-            // Настройка слушателей событий
             this.setupEventListeners();
             
-            // Запуск анимации
             this.animate();
         }
 
@@ -2769,12 +2748,10 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             this.data.viewScale = { y: 100 / this.metrics.aspect, x: 100 };
             this.data.viewFocus = { y: 0.5, x: 0.5 };
             
-            // Сброс состояния анимации
             this.isResetting = false;
             this.resetAnimationPhase = null;
             this.isMouseDown = false;
             
-            // Обновление размеров симуляции
             this.updateDimensions();
         }
 
@@ -2782,16 +2759,13 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             this.data.agents = [];
             for (let agent = 0; agent < NUM_AGENTS; agent++) {
                 this.data.agents.push(new Agent(
-                    // Случайная позиция
                     v2.mulN(v2.addN(v2.mulN(randCircle(), 0.5), 1), 0.5 * WIDTH),
-                    // Случайное направление
                     v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
                 ));
             }
         }
 
         pre() {
-            // Diffuse & decay
             for (let row = 0; row < HEIGHT; row++) {
                 for (let col = 0; col < WIDTH; col++) {
                     let val = DECAY * blur(row, col, this.data.chem);
@@ -2806,24 +2780,20 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
 
             const { chem, agents } = this.data;
 
-            // Sense, rotate, and move
             const isScattering = Math.sin(this.context.frame / 150) > 0.8;
             for (const agent of agents) {
                 agent.scatter = isScattering;
                 agent.react(chem);
             }
 
-            // Deposit
             for (const agent of agents) {
                 agent.deposit(chem);
             }
 
-            // Update view params
             this.updateView();
         }
 
         updateView() {
-            // Всегда поддерживаем центрированный вид
             const targetScale = {
                 y: 1.1 * WIDTH / this.context.rows,
                 x: 1.1 * WIDTH / this.context.rows * this.metrics.aspect,
@@ -2834,7 +2804,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                 this.data.viewScale.x += 0.1 * (targetScale.x - this.data.viewScale.x);
             }
 
-            // Всегда держать центрированным
             const targetFocus = { y: 0.5, x: 0.5 };
             
             if (this.data.viewFocus.y !== targetFocus.y || this.data.viewFocus.x !== targetFocus.x) {
@@ -2846,19 +2815,16 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
         main(coord) {
             const { viewFocus, viewScale } = this.data;
 
-            // Алгоритм масштабирования на основе ближайшего соседа
             const offset = {
                 y: Math.floor(viewFocus.y * (HEIGHT - viewScale.y * this.context.rows)),
                 x: Math.floor(viewFocus.x * (WIDTH - viewScale.x * this.context.cols)),
             };
 
-            // "Ближайший сосед"
             const sampleFrom = {
                 y: offset.y + Math.floor(coord.y * viewScale.y),
                 x: offset.x + Math.floor(coord.x * viewScale.x),
             };
 
-            // Следующая ячейка ближайшего соседа
             const sampleTo = {
                 y: offset.y + Math.floor((coord.y + 1) * viewScale.y),
                 x: offset.x + Math.floor((coord.x + 1) * viewScale.x),
@@ -2867,12 +2833,9 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             if (!bounded(sampleFrom) || !bounded(sampleTo))
                 return OOB;
 
-            // При увеличении sampleW/H может быть 0
             const sampleH = Math.max(1, sampleTo.y - sampleFrom.y);
             const sampleW = Math.max(1, sampleTo.x - sampleFrom.x);
 
-            // Объединяем все ячейки в [sampleFrom, sampleTo) в одно значение
-            // Для этого случая хорошо работает значение на полпути между средним и максимальным
             let max = 0;
             let sum = 0;
             for (let x = sampleFrom.x; x < sampleFrom.x + sampleW; x++) {
@@ -2885,10 +2848,8 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             let val = sum / (sampleW * sampleH);
             val = (val + max) / 2;
 
-            // Взвешиваем val, чтобы получить лучшее распределение текстур
             val = Math.pow(val, 1/3);
 
-            // Конвертируем значение ячейки в символ из карты текстур
             const texRow = (coord.x + coord.y) % TEXTURE.length;
             const texCol = Math.ceil(val * (TEXTURE[0].length - 1));
             const char = TEXTURE[texRow][texCol] || ' ';
@@ -2920,15 +2881,12 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             
             this.simulationElement.addEventListener('mousedown', (e) => {
                 this.isMouseDown = true;
-                // Запускаем только фазу затухания
                 this.prepareReset();
             });
             
-            // Отслеживаем mouseup на всем документе
             this.mouseUpHandler = (e) => {
                 if (this.isMouseDown) {
                     this.isMouseDown = false;
-                    // Теперь завершаем процесс сброса
                     this.completeReset();
                 }
             };
@@ -2939,7 +2897,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             };
             window.addEventListener('resize', this.resizeHandler);
 
-            // Начальное обновление
             this.updateDimensions();
         }
 
@@ -2948,31 +2905,25 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             const containerWidth = parseInt(containerStyle.width);
             const containerHeight = parseInt(containerStyle.height);
             
-            // Рассчитываем строки и столбцы на основе размеров контейнера и размера шрифта
             const fontSize = parseInt(window.getComputedStyle(this.simulationElement).fontSize);
             this.context.cols = Math.floor(containerWidth / (fontSize * 0.6));
             this.context.rows = Math.floor(containerHeight / fontSize);
             
-            // Обновляем соотношение сторон
             this.metrics.aspect = (fontSize * 0.6) / fontSize;
         }
 
         prepareReset() {
-            // Сохраняем исходное состояние
             this.originalAgents = [...this.data.agents];
             this.originalChem = new Float32Array(this.data.chem);
             
-            // Сохраняем текущую позицию вида
             this.originalViewFocus = {
                 x: this.data.viewFocus.x,
                 y: this.data.viewFocus.y
             };
             
-            // Переменные анимации
             this.resetStartTime = performance.now();
             this.resetAnimationPhase = 'fadeOut';
             
-            // Запускаем цикл анимации, если он еще не запущен
             if (!this.isResetting) {
                 this.isResetting = true;
                 this.animateReset();
@@ -2980,23 +2931,18 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
         }
 
         completeReset() {
-            // Продолжаем только если мы были в фазе затухания
             if (this.resetAnimationPhase === 'fadeOut') {
-                // Подготавливаем новых агентов, но пока не делаем их видимыми
                 this.newAgents = [];
                 for (let agent = 0; agent < NUM_AGENTS; agent++) {
                     this.newAgents.push(new Agent(
-                        // Начинаем из центра с случайным направлением
                         v2.mulN({x: 0.5, y: 0.5}, WIDTH),
                         v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
                     ));
                 }
                 
-                // Полностью очищаем химическое поле
                 this.data.chem = new Float32Array(HEIGHT * WIDTH);
                 this.data.wip = new Float32Array(HEIGHT * WIDTH);
                 
-                // Переключаемся на фазу появления
                 this.resetAnimationPhase = 'fadeIn';
                 this.resetStartTime = performance.now();
             }
@@ -3007,27 +2953,21 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             const elapsed = timestamp - this.resetStartTime;
             const fadeDuration = 1500; // 1.5 секунды для каждой фазы
             const progress = Math.min(elapsed / fadeDuration, 1);
-            // Используем кубическое сглаживание для более плавного эффекта
             const easedProgress = progress * (2 - progress);
             
             if (this.resetAnimationPhase === 'fadeOut') {
-                // Фаза затухания
                 
-                // Постепенно уменьшаем химическое поле до нуля
                 for (let i = 0; i < HEIGHT * WIDTH; i++) {
                     this.data.chem[i] = this.originalChem[i] * (1 - easedProgress);
                 }
                 
-                // Анимируем фокус вида обратно к центру
                 this.data.viewFocus = {
                     y: this.originalViewFocus.y + (0.5 - this.originalViewFocus.y) * easedProgress,
                     x: this.originalViewFocus.x + (0.5 - this.originalViewFocus.x) * easedProgress
                 };
                 
-                // Медленно уменьшаем отложения агентов и перемещаем их к центру
                 for (let i = 0; i < this.originalAgents.length; i++) {
                     if (i < this.data.agents.length) {
-                        // Постепенно перемещаем агентов к центру
                         const agent = this.data.agents[i];
                         const center = { x: WIDTH / 2, y: HEIGHT / 2 };
                         const dirToCenter = {
@@ -3040,13 +2980,11 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                                 x: dirToCenter.x / dist,
                                 y: dirToCenter.y / dist
                             };
-                            // Постепенно поворачиваем к центру
                             agent.dir = {
                                 x: agent.dir.x * (1 - easedProgress) + normalizedDir.x * easedProgress,
                                 y: agent.dir.y * (1 - easedProgress) + normalizedDir.y * easedProgress
                             };
                             
-                            // Движемся к центру
                             const moveSpeed = dist * easedProgress * 0.02;
                             agent.pos = {
                                 x: agent.pos.x + normalizedDir.x * moveSpeed,
@@ -3056,45 +2994,34 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                     }
                 }
                 
-                // Продолжаем анимацию, если она не завершена или ждём отпускания мыши
                 if (progress < 1 || this.isMouseDown) {
                     requestAnimationFrame(() => this.animateReset());
                 } else {
-                    // Если затухание завершено и мышь отпущена, переходим к появлению
                     this.completeReset();
                 }
             } else if (this.resetAnimationPhase === 'fadeIn') {
-                // Фаза появления - постепенно вводим новых агентов
                 
-                // Заменяем агентов на новых
                 if (progress < 0.1) {
-                    // Очищаем текущих агентов и подготавливаем новых
                     this.data.agents = [];
                     for (let i = 0; i < this.newAgents.length; i++) {
                         const agent = this.newAgents[i];
-                        // Создаем копию, чтобы избежать изменения оригинала
                         this.data.agents.push(new Agent(
-                            // Все начинают из центра
                             {x: agent.pos.x, y: agent.pos.y}, 
-                            // Сохраняем исходное направление
                             {x: agent.dir.x, y: agent.dir.y}
                         ));
                     }
                 }
                 
-                // Постепенно распространяем агентов из центра
                 for (let i = 0; i < this.data.agents.length; i++) {
                     const agent = this.data.agents[i];
                     const originalAgent = this.newAgents[i];
                     
-                    // Вычисляем целевую позицию на основе исходного направления и случайного расстояния
                     const randDist = Math.random() * WIDTH * 0.4 * easedProgress;
                     const targetPos = {
                         x: WIDTH/2 + originalAgent.dir.x * randDist,
                         y: HEIGHT/2 + originalAgent.dir.y * randDist
                     };
                     
-                    // Двигаемся к целевой позиции
                     const dirToTarget = {
                         x: targetPos.x - agent.pos.x,
                         y: targetPos.y - agent.pos.y
@@ -3107,7 +3034,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                             y: dirToTarget.y / dist
                         };
                         
-                        // Постепенно перемещаемся из центра
                         const moveSpeed = 0.5 + 2 * easedProgress;
                         agent.pos = {
                             x: agent.pos.x + normalizedDir.x * moveSpeed,
@@ -3115,27 +3041,20 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
                         };
                     }
                     
-                    // Слегка рандомизируем направление для более естественного вида
                     if (Math.random() < 0.1) {
                         const randAngle = (Math.random() - 0.5) * Math.PI/2;
                         agent.dir = v2.rot(agent.dir, randAngle);
                     }
                 }
                 
-                // Продолжаем анимацию, пока она не завершится
                 if (progress < 1) {
                     requestAnimationFrame(() => this.animateReset());
                 } else {
-                    // Анимация завершена
                     this.isResetting = false;
-                    // Сохраняем агентов, которые уже двигаются
                 }
             }
         }
         
-        // Публичные методы
-        
-        // Остановить симуляцию
         stop() {
             if (this.animationFrame) {
                 cancelAnimationFrame(this.animationFrame);
@@ -3143,35 +3062,28 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
             }
         }
         
-        // Запустить симуляцию, если она остановлена
         start() {
             if (!this.animationFrame) {
                 this.animate();
             }
         }
         
-        // Полностью уничтожить симуляцию и очистить ресурсы
         destroy() {
             this.stop();
             
-            // Удаляем обработчики событий
             document.removeEventListener('mouseup', this.mouseUpHandler);
             window.removeEventListener('resize', this.resizeHandler);
             
-            // Удаляем DOM элементы
             if (this.simulationElement && this.simulationElement.parentNode) {
                 this.simulationElement.parentNode.removeChild(this.simulationElement);
             }
             
-            // Очищаем ссылки на данные
             this.data = null;
         }
     }
     
-    // Экспортируем класс в наше пространство имен
     window.SlimeMoldNamespace.SlimeMoldSimulation = SlimeMoldSimulation;
     
-    // Удобная функция для создания симуляции
     window.createSlimeMold = function(container, options = {}) {
         return new SlimeMoldSimulation(container, options);
     };

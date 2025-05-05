@@ -291,20 +291,19 @@ notification.style.backgroundColor = '#010101';
 notification.style.zIndex = '9999';
 notification.style.display = 'none';
 notification.style.color = 'antiquewhite';
-
 notification.innerHTML = `
-  <div style="font-size: 30px; padding-top: 20px;">
-        <pre style="font-size: 6px; text-align: center;">
- __    __     __     ______     __  __     __  __     ______    
-/\\ "-./  \\   /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\/ /    /\\  __ \\   
-\\ \\ \\-./\\ \\  \\ \\ \\  \\ \\___  \\  \\ \\  __ \\  \\ \\  _"-.  \\ \\  __ \\  
- \\ \\_\\ \\ \\_\\  \\ \\_\\  \\/\\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\ 
-  \\/_/  \\/_/   \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_/\\/_/ </pre>
-    <p style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
-  </div>
-  <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
-    You still won't understand or get into our work the way you would on a computer. So please, don't use your phone.<br><br>
-    See you soon :*</div>
+ <div style="font-size: 30px; padding-top: 20px;">
+ <pre style="font-size: 6px; text-align: center;">
+ ** _**___ **  **______
+/\\ "-./ \\ /\\ \\ /\\ ___\\ /\\ \\_\\ \\ /\\ \\/ / /\\ __ \\
+\\ \\ \\-./\\ \\ \\ \\ \\ \\ \\___ \\ \\ \\ __ \\ \\ \\ *"-. \\ \\ *_ \\
+\\ \\_\\ \\ \\_\\ \\ \\_\\ \\/\\_____\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\
+\\/_/ \\/_/ \\/_/ \\/_____/ \\/_/\\/_/ \\/_/\\/_/ \\/_/\\/_/ </pre>
+ <p style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
+ </div>
+ <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
+ You still won't understand or get into our work the way you would on a computer. So please, don't use your phone.<br><br>
+ See you soon :*</div>
 `;
 
 function checkWidth() {
@@ -316,10 +315,22 @@ function checkWidth() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-  document.body.appendChild(notification);
-  checkWidth();
-});
+function initNotification() {
+  if (!document.getElementById('phone-notification')) {
+    document.body.appendChild(notification);
+    checkWidth();
+  }
+}
 
-window.addEventListener("load", checkWidth);
-window.addEventListener("resize", checkWidth);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNotification);
+} else {
+  initNotification();
+}
+
+window.addEventListener('load', checkWidth);
+window.addEventListener('resize', checkWidth);
+
+window.addEventListener('orientationchange', checkWidth);
+
+setTimeout(checkWidth, 500);
