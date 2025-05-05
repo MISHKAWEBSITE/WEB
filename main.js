@@ -1458,14 +1458,14 @@ let lastMouseY = 0;
 const cubeSize = 3.6;
 
 const vertices = [
-  [-cubeSize, -cubeSize, -cubeSize], // 0: back bottom left
-  [cubeSize, -cubeSize, -cubeSize],  // 1: back bottom right
-  [cubeSize, cubeSize, -cubeSize],   // 2: back top right
-  [-cubeSize, cubeSize, -cubeSize],  // 3: back top left
-  [-cubeSize, -cubeSize, cubeSize],  // 4: front bottom left
-  [cubeSize, -cubeSize, cubeSize],   // 5: front bottom right
-  [cubeSize, cubeSize, cubeSize],    // 6: front top right
-  [-cubeSize, cubeSize, cubeSize]    // 7: front top left
+  [-cubeSize, -cubeSize, -cubeSize],
+  [cubeSize, -cubeSize, -cubeSize],
+  [cubeSize, cubeSize, -cubeSize],
+  [-cubeSize, cubeSize, -cubeSize],
+  [-cubeSize, -cubeSize, cubeSize],
+  [cubeSize, -cubeSize, cubeSize],
+  [cubeSize, cubeSize, cubeSize],
+  [-cubeSize, cubeSize, cubeSize]
 ];
 
 const edges = [
