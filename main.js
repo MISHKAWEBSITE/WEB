@@ -2030,7 +2030,7 @@ setTimeout(checkWidth, 500);
     cols: 0,
     rows: 0,
     grid: [],
-    frameCount: Math.floor(Math.random() * 1000), // Рандомный начальный кадр
+    frameCount: Math.floor(Math.random() * 1000),
     animationFrameId: null,
     isRunning: false,
     
@@ -2292,18 +2292,18 @@ setTimeout(checkWidth, 500);
     };
     
     const PROJECTBOX_DATA = [
-      { title: "VIP", date: "they love us", content: "from personal/physical protection to info SEC etc" },
-      { title: "RUSSIA", date: "most of us live here", content: "don't shit where you eat" },
-      { title: "EUROPE", date: "others of us live here", content: "fine place tho" },
-      { title: "ASIA", date: "we like them, cool guys", content: "protection, defending, software. Also we make our hardtech in there" },
-      { title: "FOSS", date: "hi, Richard", content: "Almoust no money in there" },
-      { title: "FINTECH", date: "CONSTRUCTION", content: "CONSTRUCTION" },
-      { title: "RESEARCH/EDUCATION", date: "N/a", content: "CONSTRUCTION" },
-      { title: "FOSS", date: "N/a", content: "CONSTRUCTION" },
-      { title: "STATE-OWNED", date: "N/a", content: "CONSTRUCTION" },
-      { title: "OUTSOURCING", date: "N/a", content: "CONSTRUCTION" },
-      { title: "CLOUD", date: "N/a", content: "CONSTRUCTION" },
-      { title: "SAAS", date: "N/a", content: "CONSTRUCTION" },
+      { title: "EXECUTIVE OPS", date: "they love us", content: "Operational support, data control, digital concealment" },
+      { title: "LOCAL INFRASTRUCTURE", date: "most of us live here", content: "Threat mitigation, infrastructure testing, conflict resolution" },
+      { title: "EU ZONE", date: "others of us live here", content: "Compliance stress-testing, red team scenarios, access audits" },
+      { title: "ASIA PARTNERSHIPS", date: "we like them, cool guys", content: "Endpoint defense, surveillance analysis, threat surface reduction" },
+      { title: "OPEN SOURCE SECURITY", date: "hi, Richard", content: "Security audits, backdoor hunting, patch review" },
+      { title: "FINANCIAL SYSTEMS", date: "Q1/2024", content: "Web-facing exploit simulation, wallet security, API resilience" },
+      { title: "RESEARCH NETWORKS", date: "N/a", content: "Airgap testing, software sandboxing, opsec training" },
+      { title: "FOSS MAINTENANCE", date: "N/a", content: "Contributor verification, supply chain scanning, CI/CD watchdogs" },
+      { title: "STATE-LEVEL", date: "N/a", content: "Fuzzing, signal exposure mapping, hardware interception testing" },
+      { title: "VENDOR SECURITY", date: "N/a", content: "Pipeline integrity checks, access audits, delivery chain stress" },
+      { title: "CLOUD ARCHITECTURE", date: "N/a", content: "Isolation validation, metadata leakage checks, IAM hardening" },
+      { title: "SAAS PRODUCTS", date: "N/a", content: "Auth flow misuses, tenant bleedover, uptime-exploit balancing" },
     ];
 
     const PROJECTBOX_STATE = {
