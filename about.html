@@ -21,42 +21,23 @@
         }, 1000);
 
         function runningline(msg, ctrlwidth) {
-            msg = " " + msg;
-            newmsg = msg;
-            while (newmsg.length < ctrlwidth) {
-                newmsg += msg;
-            }
-            document.write('<form name="Tekst">');
-            document.write('<input name="tekst" style="border:0;font-family:DotGothic16, sans-serif; font-size:20px;color:antiquewhite;background-color:#0a0a0a;width:100%;user-select:none;pointer-events: none;" value="' + newmsg + '" size=' + ctrlwidth + ' />');
-            document.write('</form>');
-            prokrutka();
-        }
+  msg = " " + msg;
+  newmsg = msg;
+  while (newmsg.length < ctrlwidth) {
+    newmsg += msg;
+  }
+  document.write('<form name="Tekst" style="text-align: center; display: block; width: 100%;">');
+  document.write('<input name="tekst" style="border:0;font-family:DotGothic16, sans-serif; font-size:20px;color:antiquewhite;background-color:#010101; width:80%; max-width:1080px; margin: 0 auto; display: block; pointer-events: none;" value="' + newmsg + '" size=' + ctrlwidth + ' />');
+  document.write('</form>');
+  prokrutka();
+}
 
-        function prokrutka() {
-            NowMsg = document.Tekst.tekst.value;
-            NowMsg = NowMsg.substring(1, NowMsg.length) + NowMsg.substring(0, 1);
-            document.Tekst.tekst.value = NowMsg;
-            bannerid = setTimeout("prokrutka()", 200);
-        }
-
-        function createRunningLine(message, controlWidth) {
-            message = " " + message;
-            newMessage = message;
-            while (newMessage.length < controlWidth) {
-                newMessage += message;
-            }
-            document.write('<form name="TextForm">');
-            document.write('<input name="textInput" style="border:0;font-family:DotGothic, sans-serif; font-size:30px;color:antiquewhite;background-color:#0a0a0a;width:100%;user-select:none;pointer-events: none;" value="' + newMessage + '" size=' + controlWidth + ' />');
-            document.write('</form>');
-            scrollText();
-        }
-
-        function scrollText() {
-            currentMessage = document.TextForm.textInput.value;
-            currentMessage = currentMessage.substring(1, currentMessage.length) + currentMessage.substring(0, 1);
-            document.TextForm.textInput.value = currentMessage;
-            bannerId = setTimeout("scrollText()", 200);
-        }
+function prokrutka() {
+  NowMsg = document.Tekst.tekst.value;
+  NowMsg = NowMsg.substring(1, NowMsg.length) + NowMsg.substring(0, 1);
+  document.Tekst.tekst.value = NowMsg;
+  bannerid = setTimeout("prokrutka()", 200);
+}
     </script>
     <style>
         .page-transition-overlay {
@@ -65,7 +46,7 @@
           left: 0;
           width: 100%;
           height: 100%;
-          background-color: black;
+          background-color: #010101;
           z-index: 9999;
           opacity: 1;
           transition: opacity 800ms ease;
@@ -112,7 +93,7 @@
         <span id="clock" style="color: antiquewhite; font-size: 20px;"></span>
     </nav>
 
-<p style="padding-top: 8px; text-align: center;"><script>runningline("ミーシュカ", 2000)</script></p>
+<p style="padding-top: 8px; text-align: center; margin: 0 auto;"><script>runningline("ミーシュカ", 2000)</script></p>
 
 <p style="text-align: center; font-family: 'Jersey', sans-serif; font-size: 30px;">HACK_AND_PROTECT_FROM<br>DAY_ONE</p>
 
@@ -177,19 +158,19 @@
   <pre class="MEMBERS_HEADER">╔═════════════════════════════════════════════[ OUR_CULTURE ]════════════════════════════════════════════╗</pre>
 
     <div class="EMPLOYEE_MANIFESTO">
-      ▀ A fault-tolerant, autonomous team that designs, breaks, rebuilds, and fortifies systems — digital or physical.<br><br>
-      ▀ Every MISHKA team member understands the value of their contribution.
+      ■ A fault-tolerant, autonomous team that designs, breaks, rebuilds, and fortifies systems — digital or physical.<br><br>
+      ■ Every MISHKA team member understands the value of their contribution.
       They know how their work strengthens the collective effort, and they can rely on the team's full support and recognition.<br><br>
-      ▀ MISHKA, like many independent collectives, is designed to operate sustainably for years without relying on external contracts.
+      ■ MISHKA, like many independent collectives, is designed to operate sustainably for years without relying on external contracts.
       This autonomy allows our members to choose what they build, how they build it, and why.<br><br>
-      ▀ Each team member holds a share in MISHKA’s internal fund and receives regular dividend payouts.
+      ■ Each team member holds a share in MISHKA’s internal fund and receives regular dividend payouts.
       We take care of our people — and those close to them.
       Depending on individual needs and location, every member has a tailored healthcare plan, fully covered by the team. This includes medical procedures and dental care.<br><br>
-      ▀ In addition to a core annual salary paid in cryptocurrency, members receive a percentage of revenue from projects they personally deliver, as well as ongoing dividends and royalties from their tools distributed through our platform. More of that, all employees are entitled to fully paid vacation time as part of their core benefits.<br><br>
-      ▀ In accordance with the agreement, each team member receives two annual bonuses, each equivalent to 1.5 months of base salary. At the end of the calendar year, unused vacation days are also compensated in full.<br><br>
-      ▀ Salaries start at 600k$ per year, not including shares from personal projects, product revenue, or performance-based bonuses.<br><br>
-      ▀ Roles are flexible, and responsibilities are shaped around individual strengths and interests.<br><br>
-      ▀ We encourage initiative, curiosity, and independence. Trust is earned through work — not through titles.          
+      ■ In addition to a core annual salary paid in cryptocurrency, members receive a percentage of revenue from projects they personally deliver, as well as ongoing dividends and royalties from their tools distributed through our platform. More of that, all employees are entitled to fully paid vacation time as part of their core benefits.<br><br>
+      ■ In accordance with the agreement, each team member receives two annual bonuses, each equivalent to 1.5 months of base salary. At the end of the calendar year, unused vacation days are also compensated in full.<br><br>
+      ■ Salaries start at 600k$ per year, not including shares from personal projects, product revenue, or performance-based bonuses.<br><br>
+      ■ Roles are flexible, and responsibilities are shaped around individual strengths and interests.<br><br>
+      ■ We encourage initiative, curiosity, and independence. Trust is earned through work — not through titles.          
     </div>
 
   <pre class="MEMBERS_HEADER">╚════════════════════════════════════════════════════════════════════════════════════════════════════════╝</pre>
@@ -214,22 +195,22 @@ ENGR   MNGR   LEAD   DEVS</pre>
 
   <pre class="TABLE">
 ┌─────────────────────────────────┬──────────────┐
-│ DEEP-LEARNING_RESEARCH_ENGINEER │ 1m200k$/year │
+│ DEEP-LEARNING_RESEARCH_ENGINEER │ $1m200k/year │
 ├─────────────────────────────────┼──────────────┤
-│   MACHINE_LEARNING_ENGINEER     │ 1m110k$/year │
+│   MACHINE_LEARNING_ENGINEER     │ $1m110k/year │
 ├─────────────────────────────────┼──────────────┤
-│     AI_ALGORITHM_ENGINEER       │  920k$/year  │
+│     AI_ALGORITHM_ENGINEER       │  $920k/year  │
 ├─────────────────────────────────┼──────────────┤
-│        ML_OPS_ENGINEER          │  860k$/year  │
+│        ML_OPS_ENGINEER          │  $860k/year  │
 ├─────────────────────────────────┼──────────────┤
-│ INFERENCE_OPTIMIZATION_ENGINEER │  800k$/year  │
+│ INFERENCE_OPTIMIZATION_ENGINEER │  $800k/year  │
 ├─────────────────────────────────┼──────────────┤
-│       PENETRATION_TESTER        │  800k$/year  │
+│       PENETRATION_TESTER        │  $750k/year  │
 ├─────────────────────────────────┼──────────────┤
-│   EMBEDDED_SOFTWARE_ENGINEER    │  650k$/year  │
+│   EMBEDDED_SOFTWARE_ENGINEER    │  $650k/year  │
 └─────────────────────────────────┴──────────────┘</pre>
   <div class="EMPLOYEE_MANIFESTO">
-    ▀ We’re also looking for developers of various specializations as we expand our team, and we welcome any resumes that align with our needs.
+    ■ We’re also looking for developers of various specializations as we expand our team, and we welcome any resumes that align with our needs.
   </div>
 
   <pre class="MEMBERS_HEADER">[+]═══════════════════════════════════════════════════════════════════════════════════════════════════[+]</pre>
@@ -276,7 +257,7 @@ ENGR   MNGR   LEAD   DEVS</pre>
   </div>
   
   <div class="MINDSET_MANIFESTO">
-    ▀ MISHKA protects specialists of any race, nationality, orientation, and from any part of the world.
+    ■ MISHKA protects specialists of any race, nationality, orientation, and from any part of the world.
     Unlike, for example, the European Union and certain individual states, we hold no prejudice toward any specific nation.<br>
     There are only bad people — objectively bad.<br>
     And our mission is to stand against that evil. To protect, or to strike, when necessary.<br><br>
@@ -300,9 +281,9 @@ ENGR   MNGR   LEAD   DEVS</pre>
   <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] NO_FLAGS,NO_BORDERS,JUST_PURPOSE&nbsp;</span>
 
   <div class="MINDSET_MANIFESTO">
-    ▀ We follow the principles of a civilized human being — we don’t shit where we eat.
+    ■ We follow the principles of a civilized human being — we don’t shit where we eat.
     That said, this doesn’t apply to corporate wars, private contracts, or vendettas.<br>Think of it as Robin Hood logic.<br><br>
-    ▀ Fun fact:<br>
+    ■ Fun fact:<br>
     Our robotics engineer once served 3 years for illegally crossing a border, resisting arrest, and discharging a firearm.<br>
     Yes, we have a very good lawyer.
     <!-- Thanks, Danny :* -->
@@ -348,456 +329,90 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ║    │ DATA REMOVAL DEVICES FOR SOLID-STATE DRIVES             │              ║
 ╟────┼─────────────────────────────────────────────────────────┼──────────────╢
 ║ 07 │ ACTIVE PARTICIPATION IN THE COMMUNITY:                  │  since 2016  ║
-║    │ CREATING CTFs, WEBINARS, AND HACKATHONS.                │              ║
+║    │ CREATING CTFs, WEBINARS, AND HACKATHONS                 │              ║
 ╟────┼─────────────────────────────────────────────────────────┼──────────────╢
-║    │ RESEARCH ON THE EFFECTS OF HIGH- AND LOW-FREQUENCY      │              ║
 ║    │ RESEARCH ON THE EFFECTS OF HIGH- AND LOW-FREQUENCY      │              ║
 ║ 08 │ ULTRASONIC WAVES ON HUMANS AND DEVELOPMENT OF           │  since 2024  ║
 ║    │ NON-LETHAL WAVE-BASED NEUTRALIZATION DEVICES            │              ║
 ╚═════════════════════════════════════════════════════════════════════════════╝</pre>
 
   <!-- The language of the Sardaukar and the music from Dune should be playing while you read this. -->
-  <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] POWER_OVER_KNOWLEDGE&nbsp;</span><br>
+  <span style="background-color: #fa4c14; color: #010101; font-family: DOS437; font-size: 26px;">[X] POWER_OVER_KNOWLEDGE&nbsp;</span><br>
   
   <div class="MINDSET_MANIFESTO">
-    ▀ The team actively invests time and resources into developing its own AI automation technologies, contributing to the future trajectory of hacking — one that is inevitably intertwined with artificial intelligence.<br><br>
+    ■ The team actively invests time and resources into developing its own AI automation technologies, contributing to the future trajectory of hacking — one that is inevitably intertwined with artificial intelligence.<br><br>
   </div>
 
   <div class="MINDSET_MANIFESTO">
-    ▀ We’ve spent thousands of hours teaching students and high schoolers. These people are the future.
+    ■ We’ve spent thousands of hours teaching students and high schoolers. These people are the future.
     Watching them get lectures from some fool who's got three Mondays left to live — that's a disgrace.<br>
     Our team collaborates with universities across several countries, participating in both research and academic initiatives.<br><br>
   </div>
 
-  <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] IS_POWER_OVER_ALL&nbsp;</span><br>
+  <span style="background-color: #fa4c14; color: #010101; font-family: DOS437; font-size: 26px;">[X] IS_POWER_OVER_ALL&nbsp;</span><br>
 
   <div class="MINDSET_MANIFESTO">
-    ▀ FOSS.<br>
+    ■ FOSS<br>
     Community and global collaboration are the only true paths to a brighter future.<br>
     We actively support and invest in the growth of specialists, as well as in free, open education for those who are genuinely curious.<br>
-    We believe that knowledge should be shared, not hoarded — and that the strongest security is built together, not in isolation.
+    We believe that knowledge should be shared, not hoarded — and that the strongest security is built together, not in isolation.<br><br>
   </div>
 
+  <div class="MINDSET_MANIFESTO">
+    ■ Most of the time, we use GPLv3 in our commercial projects (hi Richard!).
+    It helps us get rid of script kiddies who try to resell our products on the dark web — and companies that took our work wholesale, stripped our comments, and launched it to market without even a mention.
+    Not even a credit. Bastards.<br><br>
+  </div>
+
+  <div class="MINDSET_MANIFESTO">
+    ■ For non-commercial, promotional, charitable, or pet projects, we stick with MIT.<br>
+    Take it, tweak it, make something cool :)
 </div>
 
 
 <pre class="BANNER">
 ╔═══╦═══════════════════════╦═══╦════════════════════════════════════════╦══════╗
-║░░░║        PORTFOLIO      ║ + ║░░░░░░░░░░░░░░░░CONSTRUCTION░░░░░░░░░░░░║ 3x01 ║
+║░░░║        PORTFOLIO      ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 3x01 ║
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
 
 <div style="width: 1080px; margin: 0 auto;">
 
-  <div class="asciiscull" style="width: 100%; height: 280px; text-align: center;">
-    <pre id="skullPre" style="font-family: DOS437; color: antiquewhite;">
-       .gs$$$$sk.       
-    ,d$$$$$$$$$$sk.     
-    ,?^?$?^* ^?$$$$$L.  
-  ,? $SL.___,d$113$$$SL 
-  j$Su:%$$$$$$$?:i13$$$b
-:?=?^4$$$$"=?$$L:113$$1:
-:' '/ ^?$' - "?L13$$$1: 
-  '    '      . 7k13$1? 
-    :.   :. $k = '?S17  
-  .,_,_  /-i$$x7::17'   
-  ?zu$zu0_16$?'-?='     
-  $$$$$$$$$$$i/         
-.?$$S?                  </pre>
-  </div>
-
   <!-- ░ ▒ ▓ │ ┤ ╡ ╢ ╖ ╕ ╣ ║ ╗ ╝ ╜ ╛ ┐ └ ┴ ┬ ├ ─ ┼ ╞ ╟ ╚ ╔ ╩ ╦ ╠ 
  ═ ╬ ╧ ╨ ╤ ╥ ╙ ╘ ╒ ╓ ╫ ╪ ┘ ┌ █ ▄ ▌ ▐ ▀ · -->
-  <span style="background-color: #fa4c14; color: #0a0a0a; font-family: DOS437; font-size: 26px;">[X] CONSTRUCTION!&nbsp;</span><br>
-  <div class="MINDSET_MANIFESTO">
-    ▀ We’re currently discussing with the team and our clients which specific cases we’re allowed to include in the portfolio. It’ll be ready soon.<br><br>
-  </div>
+
   <pre class="TABLE" style="margin: 0;">
-╔════╦═════════════╗                                           ╔══════════════╗
-║ ID ║ DESCRIPTION ║                                           ║     DATE     ║
-╠════╬═════════════╩═══════════════════════════════════════════╬══════════════╣
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░        ║              ║
-║ 01 ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   ║ ░░░░░░░░░░░░ ║
-║    ║ ░░░░░░░░░░░░░░░░░░░                                     ║              ║
+╔════╦═════════════════════════════════════════════════════════╦══════════════╗
+║    ║ For the most part, Mishka works with private clients,   ║              ║
+║ 01 ║ exclusive orders, and contracts.                        ║      42%     ║
+║    ║ This is our primary mode of operation and income.       ║  ▓▓▓▓░░░░░░  ║
 ╟════╬═════════════════════════════════════════════════════════╬══════════════╢
-║ 02 ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  ║ ░░░░░░░░░░░░ ║
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░     ║              ║
-╟════╬═════════════════════════════════════════════════════════╬══════════════╢
-║ 03 ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░     ║ ░░░░░░░░░░░░ ║
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░                      ║              ║
-╟════╬═════════════════════════════════════════════════════════╬══════════════╢
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   ║              ║
-║ 04 ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░         ║ ░░░░░░░░░░░░ ║
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░                                ║              ║
-╟════╬═════════════════════════════════════════════════════════╬══════════════╢
-║ 05 ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    ║ ░░░░░░░░░░░░ ║
-║    ║ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░            ║              ║
+║    ║ The team actively participates in corporate wars,helps  ║              ║
+║ 02 ║ companies resolve cybersecurity issues,                 ║      28%     ║
+║    ║ and takes on large tenders a couple of times a year.    ║  ▓▓▓░░░░░░░  ║
 ╚════╩═════════════════════════════════════════════════════════╩══════════════╝</pre>
 
+  <div id="projectbox-container" class="projectbox-container"></div>
+
+  <pre class="TABLE" style="margin: 0;">
+╔════╦═════════════════════════════════════════════════════════╦══════════════╗
+║    ║ In addition to private contracts, we run our own Store  ║              ║
+║    ║ Offering custom tools, utilities, and programs.         ║              ║
+║ 03 ║ Some are distributed individually,                      ║      16%     ║
+║    ║ others are available in team-wide packages.             ║  ▓▓░░░░░░░░  ║
+║    ║ Access is invite-only.                                  ║              ║
+╟════╬═════════════════════════════════════════════════════════╬══════════════╢
+║    ║ We also receive a bit of support from our FOSS projects ║              ║
+║ 04 ║ and through donations, community backing,               ║      12%     ║
+║    ║ and like-minded guys who believe in what we do.         ║  ▓▓░░░░░░░░  ║
+╟════╬═════════════════════════════════════════════════════════╬══════════════╢
+║    ║ The smallest part of our income comes from universities,║              ║
+║    ║ hackathons, and CTFs. But hey! We like to think of it   ║      02%     ║
+║ 05 ║ as an investment in the future of our field.            ║  ░░░░░░░░░░  ║
+║    ║ At least that is how we justify it to ourselves.        ║              ║
+╚════╩═════════════════════════════════════════════════════════╩══════════════╝</pre>
 
 </div>
-
-
-
-
-
-<!-- PROJECTBOX - код для вставки на сайт -->
-
-<!-- 1. Вставьте этот HTML-элемент туда, где должны располагаться карточки -->
-<div id="projectbox-container" class="projectbox-container"></div>
-
-<!-- 2. Вставьте эти стили в раздел <head> или в CSS-файл -->
-<style>
-  /* PROJECTBOX изолированные стили */
-  .projectbox-container {
-    position: relative;
-    width: 100%;
-    max-width: 1080px;
-    height: 800px;
-    margin: 0 auto;
-    overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: flex-start;
-    padding-top: 20px;
-  }
-  
-  .projectbox-card {
-    position: relative;
-    border: 4px double #000;
-    background-color: white;
-    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
-    padding: 12px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    user-select: none;
-    font-family: 'Courier New', monospace;
-    image-rendering: pixelated;
-    height: 130px;
-    width: 180px;
-    margin: 0 25px 40px 25px;
-    z-index: 1;
-    transition: transform 0.05s ease-out; /* Легкий переход для плавности */
-  }
-  
-  .projectbox-title {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #000;
-    height: 20px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  
-  .projectbox-date {
-    font-size: 11px;
-    margin-bottom: 8px;
-    color: #666;
-  }
-  
-  .projectbox-content {
-    font-size: 12px;
-    line-height: 1.2;
-    color: #333;
-    text-align: left;
-    height: 60px;
-    overflow: hidden;
-    margin-bottom: auto;
-  }
-  
-  .projectbox-position {
-    font-size: 10px;
-    color: #999;
-    height: 12px;
-    margin-top: auto;
-  }
-</style>
-
-<!-- 3. Вставьте этот JavaScript-код перед закрывающим тегом </body> -->
-<script>
-  // PROJECTBOX - Изолированный скрипт
-  (function() {
-    // Конфигурация
-    const PROJECTBOX_CONFIG = {
-      baseWidth: 180,
-      baseHeight: 130,
-      spacingX: 50,  // Увеличено расстояние между карточками по горизонтали
-      spacingY: 40,  // Увеличено расстояние между карточками по вертикали
-      cursorInfluenceRadius: 200,
-      maxRepulsion: 60,
-      pixelSize: 4
-    };
-    
-    // Данные карточек - замените на ваши данные
-    const PROJECTBOX_DATA = [
-      { title: "Квантовые вычисления", date: "2 мая 2025", content: "Прорыв в области квантовой запутанности открывает новые возможности для вычислений" },
-      { title: "Искусственный интеллект", date: "28 апреля 2025", content: "Новая модель ИИ превзошла все ожидания в решении творческих задач" },
-      { title: "Космические технологии", date: "15 апреля 2025", content: "Запуск нового телескопа позволит заглянуть еще дальше в глубины космоса" },
-      { title: "Альтернативная энергия", date: "10 апреля 2025", content: "Эффективность солнечных панелей достигла рекордных 45% в лабораторных условиях" },
-      { title: "Медицина будущего", date: "5 апреля 2025", content: "Нанороботы успешно использованы для доставки лекарств к опухолям" },
-      { title: "Виртуальная реальность", date: "1 апреля 2025", content: "Новая VR-система позволяет ощущать текстуры и температуру объектов" },
-      { title: "Робототехника", date: "25 марта 2025", content: "Человекоподобный робот научился выполнять сложные манипуляции с предметами" },
-      { title: "Биотехнологии", date: "20 марта 2025", content: "Методы генной терапии успешно применены для лечения редких заболеваний" },
-      { title: "Новые материалы", date: "15 марта 2025", content: "Сверхлегкий материал прочнее стали и гибкий как ткань создан учеными" },
-      { title: "Квантовая связь", date: "10 марта 2025", content: "Первая межконтинентальная квантовая сеть заработала в тестовом режиме" },
-      { title: "Умные города", date: "5 марта 2025", content: "Система прогнозирования трафика сократила пробки на 35% в тестовом городе" },
-      { title: "Нейроинтерфейсы", date: "1 марта 2025", content: "Неинвазивный интерфейс мозг-компьютер достиг скорости ввода 100 символов в минуту" },
-      { title: "3D-печать", date: "25 февраля 2025", content: "Напечатанные органы успешно прошли первую фазу клинических испытаний" },
-      { title: "Автономные системы", date: "20 февраля 2025", content: "Беспилотные автомобили официально признаны безопаснее человека-водителя" },
-      { title: "Дополненная реальность", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
-    ];
-    
-    // Переменные состояния
-    const PROJECTBOX_STATE = {
-      boxes: [],
-      containerWidth: 0,
-      containerHeight: 0,
-      numX: 0,
-      numY: 0,
-      marginX: 0,
-      marginY: 0,
-      mouseX: 0,
-      mouseY: 0,
-      lastMouseX: 0,
-      lastMouseY: 0,
-      mouseSpeed: 0
-    };
-    
-    // Инициализация
-    function projectboxInit() {
-      const container = document.getElementById('projectbox-container');
-      if (!container) return;
-      
-      PROJECTBOX_STATE.containerWidth = container.clientWidth;
-      PROJECTBOX_STATE.containerHeight = container.clientHeight;
-      
-      // Создание карточек с использованием flexbox
-      for (let j = 0; j < 4; j++) {  // Задаем 4 ряда для высоты 600px
-        for (let i = 0; i < 4; i++) {  // Задаем 4 карточки в ряду для ширины 1080px
-          const box = document.createElement('div');
-          box.className = 'projectbox-card';
-          
-          // Получение данных карточки
-          const dataIndex = (i + j * 4) % PROJECTBOX_DATA.length;
-          const card = PROJECTBOX_DATA[dataIndex];
-          
-          // Добавление содержимого
-          box.innerHTML = `
-            <div class="projectbox-title">${card.title}</div>
-            <div class="projectbox-date">${card.date}</div>
-            <div class="projectbox-content">${card.content}</div>
-            <div class="projectbox-position">pos: ${i}×${j}</div>
-          `;
-          
-          // Добавление в контейнер
-          container.appendChild(box);
-          
-          // Сохранение данных карточки
-          PROJECTBOX_STATE.boxes.push({
-            element: box,
-            i: i,
-            j: j
-          });
-        }
-      }
-    }
-    
-    // Обновление позиций карточек
-    function projectboxUpdateBoxes() {
-      // Расчет скорости движения курсора
-      const dx = PROJECTBOX_STATE.mouseX - PROJECTBOX_STATE.lastMouseX;
-      const dy = PROJECTBOX_STATE.mouseY - PROJECTBOX_STATE.lastMouseY;
-      PROJECTBOX_STATE.mouseSpeed = Math.sqrt(dx*dx + dy*dy);
-      PROJECTBOX_STATE.mouseSpeed = Math.min(PROJECTBOX_STATE.mouseSpeed, 50);
-      
-      PROJECTBOX_STATE.lastMouseX = PROJECTBOX_STATE.mouseX;
-      PROJECTBOX_STATE.lastMouseY = PROJECTBOX_STATE.mouseY;
-      
-      PROJECTBOX_STATE.boxes.forEach(box => {
-        if (!box.velocity) {
-          box.velocity = { x: 0, y: 0 };
-          box.targetX = 0;
-          box.targetY = 0;
-          box.currentX = 0;
-          box.currentY = 0;
-        }
-        
-        const { element, i, j, velocity, currentX, currentY } = box;
-        
-        // Получаем текущую позицию карточки относительно контейнера
-        const rect = element.getBoundingClientRect();
-        const containerRect = document.getElementById('projectbox-container').getBoundingClientRect();
-        const centerX = rect.left - containerRect.left + rect.width / 2;
-        const centerY = rect.top - containerRect.top + rect.height / 2;
-        
-        // Расчет расстояния от курсора до центра карточки
-        const dx = PROJECTBOX_STATE.mouseX - centerX;
-        const dy = PROJECTBOX_STATE.mouseY - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        
-        // Расчет целевой позиции для отталкивания
-        let targetX = 0;
-        let targetY = 0;
-        
-        if (distance < PROJECTBOX_CONFIG.cursorInfluenceRadius && distance > 0) {
-          // Нормализация вектора направления
-          const nx = -dx / distance;
-          const ny = -dy / distance;
-          
-          // Сила отталкивания уменьшается с расстоянием, но увеличивается со скоростью курсора
-          const speedFactor = 1 + PROJECTBOX_STATE.mouseSpeed / 50;
-          const strength = PROJECTBOX_CONFIG.maxRepulsion * (1 - distance / PROJECTBOX_CONFIG.cursorInfluenceRadius) * speedFactor;
-          
-          // Применение пиксельного движения
-          targetX = Math.round(nx * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
-          targetY = Math.round(ny * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
-          
-          // Сохраняем целевую позицию
-          box.targetX = targetX;
-          box.targetY = targetY;
-        } else {
-          // Если курсор далеко, то целевая позиция - возврат с отдачей
-          targetX = 0;
-          targetY = 0;
-          
-          // Если мы близко к целевой позиции и еще движемся с достаточной скоростью, 
-          // добавляем отдачу, меняя целевую позицию на противоположную
-          if (Math.abs(box.currentX) < 4 && Math.abs(velocity.x) > 0.5) {
-            targetX = -Math.sign(velocity.x) * 4;
-          }
-          
-          if (Math.abs(box.currentY) < 4 && Math.abs(velocity.y) > 0.5) {
-            targetY = -Math.sign(velocity.y) * 4;
-          }
-        }
-        
-        // Пружинная физика для более плавного движения с отдачей
-        const spring = 0.2;  // Сила пружины
-        const damping = 0.7; // Затухание (трение)
-        
-        // Вычисляем ускорение на основе разницы текущей и целевой позиции (закон Гука)
-        const ax = (targetX - box.currentX) * spring;
-        const ay = (targetY - box.currentY) * spring;
-        
-        // Обновляем скорость с учетом ускорения и затухания
-        velocity.x = velocity.x * damping + ax;
-        velocity.y = velocity.y * damping + ay;
-        
-        // Обновляем текущую позицию
-        box.currentX += velocity.x;
-        box.currentY += velocity.y;
-        
-        // Применяем пиксельное округление к финальной позиции для сохранения пиксельного эффекта
-        const pixelX = Math.round(box.currentX / 2) * 2;
-        const pixelY = Math.round(box.currentY / 2) * 2;
-        
-        // Применяем трансформацию для перемещения
-        element.style.transform = `translate(${pixelX}px, ${pixelY}px)`;
-        
-        // Обновление отображения позиции
-        const positionDiv = element.querySelector('.projectbox-position');
-        positionDiv.textContent = `pos: ${i}×${j}`;
-      });
-      
-      requestAnimationFrame(projectboxUpdateBoxes);
-    }
-    
-    // Отслеживание позиции курсора
-    function projectboxHandleMouseMove(event) {
-      const container = document.getElementById('projectbox-container');
-      if (!container) return;
-      
-      const rect = container.getBoundingClientRect();
-      PROJECTBOX_STATE.mouseX = event.clientX - rect.left;
-      PROJECTBOX_STATE.mouseY = event.clientY - rect.top;
-    }
-    
-    // Обработка изменения размера окна
-    function projectboxHandleResize() {
-      const container = document.getElementById('projectbox-container');
-      if (!container) return;
-      
-      // Удаление всех карточек
-      PROJECTBOX_STATE.boxes.forEach(box => box.element.remove());
-      PROJECTBOX_STATE.boxes = [];
-      
-      // Повторная инициализация
-      projectboxInit();
-    }
-    
-    // Настройка обработчиков событий
-    function projectboxSetupEventListeners() {
-      document.addEventListener('mousemove', projectboxHandleMouseMove);
-      window.addEventListener('resize', projectboxHandleResize);
-    }
-    
-    // Инициализация PROJECTBOX
-    function projectboxStart() {
-      projectboxInit();
-      projectboxSetupEventListeners();
-      projectboxUpdateBoxes();
-    }
-    
-    // Запуск при загрузке страницы
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', projectboxStart);
-    } else {
-      projectboxStart();
-    }
-  })(); // Немедленно вызываемая функция для изоляции кода
-</script>
-
-
-
-<div id="terminal"></div>
-
-
-
-
-<div id="LIVEcontainer">
-  <pre id="LIVEcanvas"></pre>
-</div>
-
-<style>
-#LIVEcontainer {
-  margin: 0 auto;
-  width: 1080px;
-  height: 400px;
-}
-#LIVEcanvas {
-  margin: 0;
-  color: antiquewhite;
-  line-height: 1;
-  font-family: monospace;
-  font-size: 16px;
-  cursor: pointer;
-}
-</style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -836,33 +451,6 @@ ENGR   MNGR   LEAD   DEVS</pre>
 │ INFRASTRUCTURE STRESS TESTING: FROM DDOS          │  200k$  │              │ │
 │ SIMULATIONS TO CLOUD MISCONFIGS                   │         │ SEVERALWEEKS │ │
 ├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ SECURITY DUE DILIGENCE FOR M&A / IPO STAGES       │  250k$  │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ CORPORATE ESPIONAGE THREAT MODELING               │  120k$  │              │ │
-│ & COUNTERMEASURES                                 │         │ 1m110k$/year │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ STAFF TRAINING VIA LIVE ATTACK SIMULATIONS        │  120k$  │              │ │
-│ & PHISHING CAMPAIGNS                              │         │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ BUILDING CUSTOM HARDWARE FOR WIRELESS, RFID, SDR, │  ~60k$  │              │ │
-│ OR SIGNAL OPS                                     │         │    MONTHS    │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ ON-SITE SOCIAL ENGINEERING OPS                    │  ~35k$  │     DAYS     │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ TAILORED PHISHING CAMPAIGNS                       │  ~50k$  │     WEEK     │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ FILELESS MEMORY ATTACKS                           │  ~35k$  │     WEEK     │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ HONEYPOT & DECOY SYSTEM DEPLOYMENT                │  140k$  │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ EDR / FORENSICS EVASION TESTING                   │  ~80k$  │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ MOBILE AND IoT APP SECURITY ASSESSMENT            │  160k$  │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ USB DROP / BAD HID DEVICE TESTS                   │  ~20k$  │     DAYS     │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ COVERT CHANNEL & DATA EXFILTRATION TESTS          │  ~30k$  │ SEVERALWEEKS │ │
-├───────────────────────────────────────────────────┼─────────┼──────────────┤ │
 │ DISASTER RECOVERY RESILIENCE TESTING              │  200k$  │ SEVERALWEEKS ├─┘
 └───────────────────────────────────────────────────┴─────────┴──────────────┘  </pre>
 
@@ -884,24 +472,16 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ├─────────────────────────────────────────────────┼─────────┼──────────────┤ M
 │ LICENSE BYPASS & DRM CRACKING                   │  120k$  │    MONTHS    │ E
 ├─────────────────────────────────────────────────┼─────────┼──────────────┤ S
-│ FIRMWARE RE & BACKDOOR INSERTION                │  360k$  │    MONTHS    │ │
-├─────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ CRYPTO IMPLEMENTATION ANALYSIS                  │  ~90k$  │ SEVERALWEEKS │ │
-├─────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ DEFENSIVE HARDENING OF HIGH-RISK APPS           │  100k$  │ SEVERALWEEKS │ │
-├─────────────────────────────────────────────────┼─────────┼──────────────┤ │
-│ CUSTOM OBFUSCATORS / PACKERS / ENCRYPTORS       │  140k$  │    MONTHS    │ │
-├─────────────────────────────────────────────────┼─────────┼──────────────┤ │
 │ AI/ML MODEL SECURITY TESTING                    │  ~80k$  │     DAYS     ├─┘
 ├──────────────────┬──────────────────────────────┼─────────┼──────────────┘  
 └[PRODUCT_SERVICES]┘                              └[ PRICE ]┘                 </pre><br><br><br>
 
   <div class="COOP_LINE">┌──────────────────────────────────────[IMPORTANT]────────────────────────────────────┐</div><br>
-  <div class="COOP_HIGHLIGHT">▀ WE HAVEN'T LISTED MANY OF OUR PRIVATE TOOLS — INCLUDING AI_PRODUCTS — AS THEY'RE ONLY AVAILABLE VIA OUR PRIVATE STORE, ACCESSIBLE THROUGH TRUSTED CONTACTS OR BY INVITE ONLY.<br><br></div>
-  <div class="COOP_HIGHLIGHT">▀ PHYSICAL SECURITY SOLUTIONS AND DEVICES ARE ALSO MOSTLY OMITTED HERE, SINCE THEY ARE BUILT EXCLUSIVELY ON REQUEST.<br><br></div>
-  <div class="COOP_HIGHLIGHT">▀ EVERYTHING LISTED ABOVE IS JUST A SAMPLE OF WHAT OUR TEAM CAN DELIVER.EVERY NEW PROJECT IS HANDLED THROUGH DIRECT COMMUNICATION WITH THE CLIENT TO CAPTURE ALL NUANCES OF THE SPECIFIC TASK.<br><br></div>
-  <div class="COOP_HIGHLIGHT">▀ ALL SERVICES ARE BACKED BY STANDARDIZED METHODOLOGIES AND COME WITH DEFINED OUTCOMES AND DOCUMENTED REPORTS. IF YOU HAVE A REQUEST FOR A CUSTOM VERSION OF A PRODUCT OR SERVICE — WE'RE OPEN TO DISCUSS EVERY DETAIL.<br><br></div>
-  <div class="COOP_HIGHLIGHT">▀ NEARLY EVERY SECOND ORDER WE GET IS A CUSTOM SPEC BOOK, SO OUR CREW IS WELL-VERSED IN DEALING WITH DEMANDING CLIENT DREAMS.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ WE HAVEN'T LISTED MANY OF OUR PRIVATE TOOLS — INCLUDING AI_PRODUCTS — AS THEY'RE ONLY AVAILABLE VIA OUR PRIVATE STORE, ACCESSIBLE THROUGH TRUSTED CONTACTS OR BY INVITE ONLY.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ PHYSICAL SECURITY SOLUTIONS AND DEVICES ARE ALSO MOSTLY OMITTED HERE, SINCE THEY ARE BUILT EXCLUSIVELY ON REQUEST.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ EVERYTHING LISTED ABOVE IS JUST A SAMPLE OF WHAT OUR TEAM CAN DELIVER.EVERY NEW PROJECT IS HANDLED THROUGH DIRECT COMMUNICATION WITH THE CLIENT TO CAPTURE ALL NUANCES OF THE SPECIFIC TASK.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ ALL SERVICES ARE BACKED BY STANDARDIZED METHODOLOGIES AND COME WITH DEFINED OUTCOMES AND DOCUMENTED REPORTS. IF YOU HAVE A REQUEST FOR A CUSTOM VERSION OF A PRODUCT OR SERVICE — WE'RE OPEN TO DISCUSS EVERY DETAIL.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ NEARLY EVERY SECOND ORDER WE GET IS A CUSTOM SPEC BOOK, SO OUR CREW IS WELL-VERSED IN DEALING WITH DEMANDING CLIENT DREAMS.<br><br></div>
   <div class="COOP_LINE"     >└─────────────────────────────────────────────────────────────────────────────────────┘</div>
 
 </div>
@@ -911,6 +491,8 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ║░░░║      METHODOLOGY      ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 4x01 ║
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
+
+<div id="terminal"></div>
 
 <!-- <div>ПРО ЭТАПЫ РАБОТЫ ИТД</div> -->
   <pre class="TABLE">
@@ -934,6 +516,24 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
 
+<div style="width: 1080px; margin: 0 auto;">
+
+  <div id="LIVECONTAINER">
+    <pre id="LIVECANVAS"></pre>
+  </div>
+  
+  <div class="COOP_LINE">┌──────────────────────────────────────[IMPORTANT]────────────────────────────────────┐</div><br>
+  <div class="COOP_HIGHLIGHT">■ WE HAVEN'T LISTED MANY OF OUR PRIVATE TOOLS — INCLUDING AI_PRODUCTS — AS THEY'RE ONLY AVAILABLE VIA OUR PRIVATE STORE, ACCESSIBLE THROUGH TRUSTED CONTACTS OR BY INVITE ONLY.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ PHYSICAL SECURITY SOLUTIONS AND DEVICES ARE ALSO MOSTLY OMITTED HERE, SINCE THEY ARE BUILT EXCLUSIVELY ON REQUEST.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ EVERYTHING LISTED ABOVE IS JUST A SAMPLE OF WHAT OUR TEAM CAN DELIVER.EVERY NEW PROJECT IS HANDLED THROUGH DIRECT COMMUNICATION WITH THE CLIENT TO CAPTURE ALL NUANCES OF THE SPECIFIC TASK.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ ALL SERVICES ARE BACKED BY STANDARDIZED METHODOLOGIES AND COME WITH DEFINED OUTCOMES AND DOCUMENTED REPORTS. IF YOU HAVE A REQUEST FOR A CUSTOM VERSION OF A PRODUCT OR SERVICE — WE'RE OPEN TO DISCUSS EVERY DETAIL.<br><br></div>
+  <div class="COOP_HIGHLIGHT">■ NEARLY EVERY SECOND ORDER WE GET IS A CUSTOM SPEC BOOK, SO OUR CREW IS WELL-VERSED IN DEALING WITH DEMANDING CLIENT DREAMS.<br><br></div>
+  <div class="COOP_LINE"     >└─────────────────────────────────────────────────────────────────────────────────────┘</div>
+
+</div>
+
+
+
 
 
 
@@ -948,31 +548,10 @@ ENGR   MNGR   LEAD   DEVS</pre>
 ║░░░║      CONTACT_INFO     ║ + ║░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░║ 5x00 ║
 ╚═══╩═══════════════════════╩═══╩════════════════════════════════════════╩══════╝
 </pre>
-
-<p style="text-align: center;"><script>createRunningLine("ミーシュカ", 200)</script></p>
-
 <div style="width: 1080px; margin: 0 auto;">
-  <pre style="font-size: 12px; color: #585858; float: right;">
-        8
-        8
-        8
-       888
-       888  
-      88888
-     8888888
-    888888888
-   88888888888
-88888888888888888
-   88888888888
-    888888888
-     8888888
-      88888
-      88888
-       888
-       888
-        8
-        8
-        8</pre><br><br>
+
+  <div id="slime-container"></div><br><br><br>
+
   <div class="MINDSET_MANIFESTO">
     ▀ We’d be glad to discuss your case, explore possible solutions, and help you find a way forward — no matter the situation. Feel free to reach out to us with any questions or suggestions. Сontacts is below.<br><br>
   </div>
@@ -984,7 +563,7 @@ ENGR   MNGR   LEAD   DEVS</pre>
   </div>
 </div><br><br>
 
-<footer id="LINKS" style="margin: 0 auto; width: 100%; max-width: 1080px; padding: 10px; color: antiquewhite; margin-bottom: 20px; margin-top: 40px; font-size: 24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+<footer id="LINKS" style="margin: 0 auto; width: 100%; max-width: 1080px; padding: 10px; color: antiquewhite; margin-bottom: 20px; font-size: 24px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
   <div style="flex: 1; text-align: left;">
     <span data-email-element style="color: antiquewhite; text-decoration: none; font-size: 34px; font-family: VT323; cursor: pointer;">EMAIL</span>
   </div>
@@ -998,9 +577,10 @@ ENGR   MNGR   LEAD   DEVS</pre>
 
 <div id="myDiv" style="text-align: center; font-size: 20px; height: 50px; margin-top: 15px;"></div>
 
-<div id="dynamic-line"></div>
+<div style="text-align: center;">////////////////////////////////////////////////////////////////////////////////////////////////////////////</div>
 
 <script src="main.js"></script>
+
 <script>
 const pt_targetPage = "./index.html";
 const pt_animationDuration = 1500;
@@ -1256,6 +836,17 @@ document.getElementById("IndexPage").addEventListener("click", function(event) {
     }, 500);
   }, 10);
 });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Создаем экземпляр симуляции
+      const slimeMold = window.createSlimeMold('slime-container', {
+          // Цвет текста изменен на античный белый
+          color: 'antiquewhite',
+          fontSize: '14px'
+      });
+  });
 </script>
 
 </body>

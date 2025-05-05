@@ -683,9 +683,124 @@ body {
   #terminal {
     margin: 0 auto;
     width: 1080px;
-    height: 300px;
+    height: 400px;
     color: antiquewhite;
     font-size: 14px;
     line-height: 1;
     white-space: pre;
 }
+
+
+
+
+
+
+
+
+
+
+  /* PROJECTBOX изолированные стили */
+  .projectbox-container {
+    position: relative;
+    width: 100%;
+    max-width: 1080px;
+    height: 800px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    padding-top: 20px;
+  }
+  
+  .projectbox-card {
+    position: relative;
+    border: 1px double antiquewhite;
+    background-color: #010101;
+    box-shadow: 5px 5px 0px #333333;
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    font-family: DOS437;
+    image-rendering: pixelated;
+    height: 140px;
+    width: 200px;
+    margin: 0 20px 35px 20px;
+    z-index: 1;
+    transition: transform 0.05s ease-out; /* Легкий переход для плавности */
+  }
+  
+  .projectbox-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: antiquewhite;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .projectbox-date {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #666;
+  }
+  
+  .projectbox-content {
+    font-size: 14px;
+    line-height: 1.2;
+    color: antiquewhite;
+    text-align: left;
+    height: 60px;
+    overflow: hidden;
+    margin-bottom: auto;
+  }
+  
+  .projectbox-position {
+    font-size: 10px;
+    color: #999;
+    height: 12px;
+    margin-top: auto;
+  }
+
+
+
+
+
+
+
+
+
+    /* Минимальные необходимые стили только для контейнера симуляции */
+  #slime-container {
+      width: 400px;
+      height: 400px;
+      float: right;
+  }
+
+
+
+
+
+
+
+
+
+  #LIVECONTAINER {
+    margin: 0 auto;
+    width: 1080px;
+    height: 400px;
+  }
+  #LIVECANVAS {
+    margin: 0;
+    color: antiquewhite;
+    line-height: 1;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  

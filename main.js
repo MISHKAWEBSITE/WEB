@@ -820,36 +820,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-function updateLine() {
-  const lineElement = document.getElementById('dynamic-line');
-  const screenWidth = window.innerWidth;
-  const lineLength = Math.floor(screenWidth / 8); 
-  lineElement.textContent = '/'.repeat(lineLength);
-  
-  lineElement.style.width = "100%";
-  lineElement.style.textAlign = "center";
-  lineElement.style.margin = "0 auto";
-}
-
-window.onload = function() {
-  updateLine();
-
-  document.body.style.width = "100%";
-  document.body.style.margin = "0";
-  document.body.style.padding = "0";
-  document.body.style.overflow = "hidden"; 
-};
-
-window.onresize = updateLine;
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1736,77 +1706,6 @@ animate();
 
 
 
-     const skullPre = document.getElementById('skullPre');
-     
-     const originalText = skullPre.textContent;
-     
-     const bufferChars = "$§@#*?!:;,.^-+=_|/<>[]{}()\\~`'\"";
-     
-     let isEffectActive = false;
-     
-     function applyBufferEffect() {
-       let newContent = '';
-       
-       const lines = originalText.split('\n');
-       
-       for (const line of lines) {
-         let newLine = '';
-         
-         for (let i = 0; i < line.length; i++) {
-           if (line[i] === ' ' || line[i] === '\n') {
-             newLine += line[i];
-             continue;
-           }
-           
-           if (Math.random() < 0.10) {
-             const randomChar = bufferChars[Math.floor(Math.random() * bufferChars.length)];
-             newLine += randomChar;
-           } else {
-             newLine += line[i];
-           }
-         }
-         
-         newContent += newLine + '\n';
-       }
-       
-       skullPre.textContent = newContent;
-     }
-     
-     function restoreOriginalText() {
-       skullPre.textContent = originalText;
-     }
-     
-     function toggleEffectPeriodically() {
-       if (isEffectActive) {
-         restoreOriginalText();
-         isEffectActive = false;
-         
-         setTimeout(toggleEffectPeriodically, Math.random() * 2000 + 2000);
-       } 
-       else {
-         isEffectActive = true;
-         
-         let bufferDuration = Math.random() * 500 + 500;
-         let frames = 0;
-         
-         let bufferInterval = setInterval(() => {
-           applyBufferEffect();
-           frames++;
-           
-           if (frames > bufferDuration / 200) {
-             clearInterval(bufferInterval);
-             restoreOriginalText();
-             isEffectActive = false;
-             
-             setTimeout(toggleEffectPeriodically, Math.random() * 2000 + 2000);
-           }
-         }, 100);
-       }
-     }
-     
-     setTimeout(toggleEffectPeriodically, 2000);
-
-
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1942,251 +1841,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
 
 
 
-// Изолированный скрипт анимации MISHKA для существующего элемента #terminal
-(function() {
-  // Уникальное пространство имен для скрипта
-  const MISHKA_ANIMATION = {
-    // Константы
-    TAU: Math.PI * 2,
-    
-    // Состояние
-    terminal: null,
-    terminalId: 'terminal', // Используем существующий #terminal
-    cols: 0,
-    rows: 0,
-    grid: [],
-    frameCount: 0,
-    animationFrameId: null,
-    isRunning: false,
-    
-    // Инициализация анимации
-    init: function() {
-      // Получаем существующий элемент #terminal
-      this.terminal = document.getElementById(this.terminalId);
-      
-      if (!this.terminal) {
-        console.error('No #terminal found');
-        return this;
-      }
-      
-      // Добавляем тестовый символ для измерения ширины
-      this.addTestChar();
-      
-      // Инициализируем размеры терминала
-      this.initializeTerminal();
-      
-      // Добавляем обработчик изменения размера окна
-      window.addEventListener('resize', () => {
-        this.initializeTerminal();
-      });
-      
-      return this;
-    },
-    
-    // Добавляем временный элемент для точного измерения ширины символа
-    addTestChar: function() {
-      // Удаляем предыдущий тестовый элемент, если он существует
-      const oldTest = document.getElementById('mishka-test-char');
-      if (oldTest) oldTest.remove();
-      
-      // Создаем тестовый элемент с одним символом
-      const testChar = document.createElement('span');
-      testChar.id = 'mishka-test-char';
-      testChar.innerHTML = 'M'; // Используем широкий символ
-      testChar.style.visibility = 'hidden';
-      testChar.style.position = 'absolute';
-      testChar.style.fontFamily = getComputedStyle(this.terminal).fontFamily;
-      testChar.style.fontSize = getComputedStyle(this.terminal).fontSize;
-      testChar.style.fontWeight = getComputedStyle(this.terminal).fontWeight;
-      testChar.style.lineHeight = getComputedStyle(this.terminal).lineHeight;
-      testChar.style.whiteSpace = 'pre';
-      
-      // Добавляем элемент в DOM
-      document.body.appendChild(testChar);
-      
-      // Сохраняем измеренную ширину символа
-      this.charWidth = testChar.getBoundingClientRect().width;
-      
-      // Удаляем тестовый элемент
-      testChar.remove();
-    },
-    
-    // Инициализация терминала
-    initializeTerminal: function() {
-      if (!this.terminal) return;
-      
-      // Измеряем реальные размеры элемента с учетом padding и border
-      const style = getComputedStyle(this.terminal);
-      const paddingLeft = parseFloat(style.paddingLeft) || 0;
-      const paddingRight = parseFloat(style.paddingRight) || 0;
-      const paddingTop = parseFloat(style.paddingTop) || 0;
-      const paddingBottom = parseFloat(style.paddingBottom) || 0;
-      const borderLeft = parseFloat(style.borderLeftWidth) || 0;
-      const borderRight = parseFloat(style.borderRightWidth) || 0;
-      const borderTop = parseFloat(style.borderTopWidth) || 0;
-      const borderBottom = parseFloat(style.borderBottomWidth) || 0;
-      
-      // Вычисляем доступное пространство
-      const availableWidth = this.terminal.clientWidth - paddingLeft - paddingRight - borderLeft - borderRight;
-      const availableHeight = this.terminal.clientHeight - paddingTop - paddingBottom - borderTop - borderBottom;
-      
-      // Получаем размер шрифта и измеряем реальную ширину символа
-      const fontSize = parseFloat(style.fontSize);
-      const lineHeight = parseFloat(style.lineHeight) || fontSize;
-      
-      // Используем измеренную ширину символа или делаем оценку
-      const charWidth = this.charWidth || fontSize * 0.6;
-      
-      // Рассчитываем количество столбцов и строк, добавляя немного к cols для заполнения
-      this.cols = Math.floor(availableWidth / charWidth) + 1; // +1 для гарантии заполнения
-      this.rows = Math.floor(availableHeight / lineHeight);
-      
-      // Ограничиваем, чтобы избежать переполнения
-      this.cols = Math.min(this.cols, 200); // Разумное максимальное значение
-      this.rows = Math.min(this.rows, 50);  // Разумное максимальное значение
-      
-      // Создаем сетку
-      this.grid = [];
-      for (let y = 0; y < this.rows; y++) {
-        let row = [];
-        for (let x = 0; x < this.cols; x++) {
-          row.push(' ');
-        }
-        this.grid.push(row);
-      }
-      
-      // Отрисовываем сетку
-      this.renderGrid();
-    },
-    
-    // Отрисовка сетки
-    renderGrid: function() {
-      if (!this.terminal) return;
-      
-      let output = '';
-      for (let y = 0; y < this.rows; y++) {
-        for (let x = 0; x < this.cols; x++) {
-          output += this.grid[y][x];
-        }
-        if (y < this.rows - 1) {
-          output += '\n';
-        }
-      }
-      this.terminal.textContent = output;
-    },
-    
-    // Главная функция анимации (точное воспроизведение оригинального алгоритма)
-    main: function(coord, context) {
-      const a = context.frame * 0.02;
-      const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
-      const g = Math.floor(a / this.TAU) % 10 + 1;
-      const i = coord.index % (coord.y * g + 1) % (f % context.cols);
-      
-      return "MISHKA"[i];
-    },
-    
-    // Функция анимации
-    animate: function() {
-      if (!this.terminal) return;
-      
-      this.frameCount++;
-      
-      const context = {
-        frame: this.frameCount,
-        cols: this.cols,
-        rows: this.rows
-      };
-      
-      // Обновляем каждую ячейку в сетке
-      for (let y = 0; y < this.rows; y++) {
-        for (let x = 0; x < this.cols; x++) {
-          const coord = {
-            x: x,
-            y: y,
-            index: y * this.cols + x
-          };
-          
-          // Вызываем основную функцию, которая воспроизводит оригинальный алгоритм
-          const char = this.main(coord, context);
-          
-          // Если символ undefined или null, вставляем пробел
-          this.grid[y][x] = (char === undefined || char === null) ? ' ' : char;
-        }
-      }
-      
-      this.renderGrid();
-      
-      if (this.isRunning) {
-        this.animationFrameId = requestAnimationFrame(() => this.animate());
-      }
-    },
-    
-    // Запуск анимации
-    start: function() {
-      if (!this.isRunning && this.terminal) {
-        this.isRunning = true;
-        this.animate();
-      }
-      return this;
-    },
-    
-    // Остановка анимации
-    stop: function() {
-      this.isRunning = false;
-      if (this.animationFrameId) {
-        cancelAnimationFrame(this.animationFrameId);
-        this.animationFrameId = null;
-      }
-      return this;
-    },
-    
-    // Удаление анимации
-    destroy: function() {
-      this.stop();
-      
-      // Удаляем обработчик изменения размера окна
-      window.removeEventListener('resize', this.initializeTerminal);
-      
-      // Очищаем терминал
-      if (this.terminal) {
-        this.terminal.textContent = '';
-      }
-      
-      return this;
-    }
-  };
-  
-  // Создаем глобальный API для управления анимацией
-  window.MISHKA_ANIMATION = {
-    init: function() {
-      return MISHKA_ANIMATION.init();
-    },
-    start: function() {
-      return MISHKA_ANIMATION.start();
-    },
-    stop: function() {
-      return MISHKA_ANIMATION.stop();
-    },
-    destroy: function() {
-      return MISHKA_ANIMATION.destroy();
-    }
-  };
-  
-  // Автоматически инициализируем и запускаем анимацию при загрузке страницы
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    MISHKA_ANIMATION.init().start();
-  } else {
-    document.addEventListener('DOMContentLoaded', function() {
-      MISHKA_ANIMATION.init().start();
-    });
-  }
-})();
-
-
-
-
-
-
 
 
 
@@ -2195,37 +1849,32 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
 
 
 (function() {
-  // Game of Life Implementation - Isolated with IIFE
-  // Safe set function - private to this scope
   function LIVE_set(val, x, y, w, h, buf) {
     if (x < 0 || x >= w) return;
     if (y < 0 || y >= h) return;
     buf[y * w + x] = val;
   }
   
-  // Safe get function - private to this scope
   function LIVE_get(x, y, w, h, buf) {
     if (x < 0 || x >= w) return 0;
     if (y < 0 || y >= h) return 0;
     return buf[y * w + x];
   }
   
-  // Game state - all variables are private to this scope
   let LIVE_cols, LIVE_rows;
   let LIVE_data = [];
-  let LIVE_animationId;
+  let LIVE_timeoutId;
   let LIVE_isPaused = false;
   let LIVE_frame = 0;
   let LIVE_cursorX = -1;
   let LIVE_cursorY = -1;
   let LIVE_isPressed = false;
+  let LIVE_updateSpeed = 42; //speed changer
   
-  // Get reference to our canvas element using the unique ID
-  const LIVE_canvas = document.getElementById('LIVEcanvas');
+  const LIVE_canvas = document.getElementById('LIVECANVAS');
   
   function LIVE_init() {
-    // Calculate dimensions based on container size (not window)
-    const LIVE_container = document.getElementById('LIVEcontainer');
+    const LIVE_container = document.getElementById('LIVECONTAINER');
     const fontSize = 16;
     const containerWidth = LIVE_container.clientWidth || window.innerWidth * 0.9;
     const containerHeight = LIVE_container.clientHeight || window.innerHeight * 0.8;
@@ -2233,49 +1882,49 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
     LIVE_cols = Math.floor(containerWidth / (fontSize * 0.6));
     LIVE_rows = Math.floor(containerHeight / fontSize);
     
-    // Make sure cols/rows are reasonable sizes
     LIVE_cols = Math.min(LIVE_cols, 150);
     LIVE_rows = Math.min(LIVE_rows, 80);
     
-    const len = LIVE_cols * LIVE_rows * 2; // double height
+    const len = LIVE_cols * LIVE_rows * 2;
     
-    // Initialize data buffers
     LIVE_data[0] = [];
     LIVE_data[1] = [];
     
-    // Initialize with random state
     for (let i = 0; i < len; i++) {
       const v = Math.random() > 0.5 ? 1 : 0;
       LIVE_data[0][i] = v;
       LIVE_data[1][i] = v;
     }
     
-    // Set canvas size
     LIVE_canvas.style.width = `${LIVE_cols * fontSize * 0.6}px`;
     LIVE_canvas.style.height = `${LIVE_rows * fontSize}px`;
   }
   
   function LIVE_updateGame() {
-    // Update the buffer
     const prev = LIVE_data[LIVE_frame % 2];
     const curr = LIVE_data[(LIVE_frame + 1) % 2];
     const w = LIVE_cols;
     const h = LIVE_rows * 2;
     
-    // Fill a random rect when mouse is pressed
     if (LIVE_isPressed && LIVE_cursorX >= 0 && LIVE_cursorY >= 0) {
       const cx = Math.floor(LIVE_cursorX);
       const cy = Math.floor(LIVE_cursorY * 2);
-      const s = 5;
-      for (let y = cy - s; y <= cy + s; y++) {
-        for (let x = cx - s; x <= cx + s; x++) {
-          const val = Math.random() < 0.5 ? 1 : 0;
-          LIVE_set(val, x, y, w, h, prev);
+      const s = 3;
+      
+      // Создаем планер (glider) вместо случайных клеток
+      const glider = [
+        [0, 0, 1],
+        [1, 0, 1],
+        [0, 1, 1]
+      ];
+      
+      for (let y = 0; y < glider.length; y++) {
+        for (let x = 0; x < glider[y].length; x++) {
+          LIVE_set(glider[y][x], cx + x - 1, cy + y - 1, w, h, prev);
         }
       }
     }
     
-    // Update the automata
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const current = LIVE_get(x, y, w, h, prev);
@@ -2289,7 +1938,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
           LIVE_get(x,     y + 1, w, h, prev) +
           LIVE_get(x + 1, y + 1, w, h, prev);
         
-        // Update
         const i = x + y * w;
         if (current == 1) {
           curr[i] = neighbors == 2 || neighbors == 3 ? 1 : 0;
@@ -2299,29 +1947,26 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
       }
     }
     
-    // Increment frame
     LIVE_frame++;
   }
   
   function LIVE_render() {
-    // Current buffer
     const curr = LIVE_data[(LIVE_frame + 1) % 2];
     const w = LIVE_cols;
     const h = LIVE_rows * 2;
     
     let output = '';
     
-    // Render the cells
     for (let y = 0; y < LIVE_rows; y++) {
       for (let x = 0; x < LIVE_cols; x++) {
         const idx = x + y * 2 * LIVE_cols;
         const upper = curr[idx];
         const lower = curr[idx + LIVE_cols];
         
-        if (upper && lower) output += '█'; // both cells are occupied
-        else if (upper) output += '▀'; // upper cell
-        else if (lower) output += '▄'; // lower cell
-        else output += ' '; // both cells are empty
+        if (upper && lower) output += '█';
+        else if (upper) output += '▀';
+        else if (lower) output += '▄';
+        else output += ' ';
       }
       output += '\n';
     }
@@ -2334,7 +1979,8 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
       LIVE_updateGame();
     }
     LIVE_render();
-    LIVE_animationId = requestAnimationFrame(LIVE_gameLoop);
+    
+    LIVE_timeoutId = setTimeout(LIVE_gameLoop, LIVE_updateSpeed);
   }
   
   function LIVE_startGame() {
@@ -2342,7 +1988,6 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
     LIVE_gameLoop();
   }
   
-  // Event listeners with namespaced handlers
   function LIVE_handleMouseMove(e) {
     const rect = LIVE_canvas.getBoundingClientRect();
     LIVE_cursorX = Math.floor((e.clientX - rect.left) / rect.width * LIVE_cols);
@@ -2364,24 +2009,1171 @@ console.log(`Inspired by: MIAO, Dragonfly, ertdfgcvb and .nfo's`);
   }
   
   function LIVE_handleResize() {
-    // Cancel previous animation before restarting
-    cancelAnimationFrame(LIVE_animationId);
+    clearTimeout(LIVE_timeoutId);
     LIVE_startGame();
   }
   
-  // Add event listeners with namespaced functions (allows for removal if needed)
   LIVE_canvas.addEventListener('mousemove', LIVE_handleMouseMove);
   LIVE_canvas.addEventListener('mousedown', LIVE_handleMouseDown);
   LIVE_canvas.addEventListener('mouseup', LIVE_handleMouseUp);
   LIVE_canvas.addEventListener('mouseleave', LIVE_handleMouseLeave);
   window.addEventListener('resize', LIVE_handleResize);
   
-  // Start the game
+  window.LIVE_setSpeed = function(speed) {
+    LIVE_updateSpeed = speed;
+  };
+  
+  window.LIVE_togglePause = function() {
+    LIVE_isPaused = !LIVE_isPaused;
+    return LIVE_isPaused;
+  };
+  
   LIVE_startGame();
   
-  // Public API - only expose what's absolutely necessary (nothing in this case)
-  // If you need to expose any functions/variables, you can return them here
   return {
-    // No public API needed for this implementation
+    setSpeed: window.LIVE_setSpeed,
+    togglePause: window.LIVE_togglePause
   };
-})(); // End of IIFE
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(function() {
+  const MISHKA_ANIMATION = {
+    TAU: Math.PI * 2,
+    
+    terminal: null,
+    terminalId: 'terminal',
+    cols: 0,
+    rows: 0,
+    grid: [],
+    frameCount: Math.floor(Math.random() * 1000), // Рандомный начальный кадр
+    animationFrameId: null,
+    isRunning: false,
+    
+    init: function() {
+      this.terminal = document.getElementById(this.terminalId);
+      
+      if (!this.terminal) {
+        console.error('No #terminal found');
+        return this;
+      }
+      
+      this.addTestChar();
+      this.initializeTerminal();
+      
+      window.addEventListener('resize', () => {
+        this.initializeTerminal();
+      });
+      
+      this.terminal.addEventListener('mouseenter', () => {
+        this.start();
+      });
+      
+      this.terminal.addEventListener('mouseleave', () => {
+        this.stop();
+      });
+      
+      // Рендерим начальный рандомный кадр без запуска анимации
+      this.renderRandomFrame();
+      
+      return this;
+    },
+    
+    addTestChar: function() {
+      const oldTest = document.getElementById('mishka-test-char');
+      if (oldTest) oldTest.remove();
+      
+      const testChar = document.createElement('span');
+      testChar.id = 'mishka-test-char';
+      testChar.innerHTML = 'M';
+      testChar.style.visibility = 'hidden';
+      testChar.style.position = 'absolute';
+      testChar.style.fontFamily = getComputedStyle(this.terminal).fontFamily;
+      testChar.style.fontSize = getComputedStyle(this.terminal).fontSize;
+      testChar.style.fontWeight = getComputedStyle(this.terminal).fontWeight;
+      testChar.style.lineHeight = getComputedStyle(this.terminal).lineHeight;
+      testChar.style.whiteSpace = 'pre';
+      
+      document.body.appendChild(testChar);
+      this.charWidth = testChar.getBoundingClientRect().width;
+      testChar.remove();
+    },
+    
+    initializeTerminal: function() {
+      if (!this.terminal) return;
+      
+      const style = getComputedStyle(this.terminal);
+      const paddingLeft = parseFloat(style.paddingLeft) || 0;
+      const paddingRight = parseFloat(style.paddingRight) || 0;
+      const paddingTop = parseFloat(style.paddingTop) || 0;
+      const paddingBottom = parseFloat(style.paddingBottom) || 0;
+      const borderLeft = parseFloat(style.borderLeftWidth) || 0;
+      const borderRight = parseFloat(style.borderRightWidth) || 0;
+      const borderTop = parseFloat(style.borderTopWidth) || 0;
+      const borderBottom = parseFloat(style.borderBottomWidth) || 0;
+      
+      const availableWidth = this.terminal.clientWidth - paddingLeft - paddingRight - borderLeft - borderRight;
+      const availableHeight = this.terminal.clientHeight - paddingTop - paddingBottom - borderTop - borderBottom;
+      
+      const fontSize = parseFloat(style.fontSize);
+      const lineHeight = parseFloat(style.lineHeight) || fontSize;
+      
+      const charWidth = this.charWidth || fontSize * 0.6;
+      
+      this.cols = Math.floor(availableWidth / charWidth) + 1;
+      this.rows = Math.floor(availableHeight / lineHeight);
+      
+      this.cols = Math.min(this.cols, 200);
+      this.rows = Math.min(this.rows, 50);
+      
+      this.grid = [];
+      for (let y = 0; y < this.rows; y++) {
+        let row = [];
+        for (let x = 0; x < this.cols; x++) {
+          row.push(' ');
+        }
+        this.grid.push(row);
+      }
+      
+      this.renderRandomFrame();
+    },
+    
+    renderGrid: function() {
+      if (!this.terminal) return;
+      
+      let output = '';
+      for (let y = 0; y < this.rows; y++) {
+        for (let x = 0; x < this.cols; x++) {
+          output += this.grid[y][x];
+        }
+        if (y < this.rows - 1) {
+          output += '\n';
+        }
+      }
+      this.terminal.textContent = output;
+    },
+    
+    // Новый метод для отрисовки рандомного кадра
+    renderRandomFrame: function() {
+      if (!this.terminal) return;
+      
+      const context = {
+        frame: this.frameCount,
+        cols: this.cols,
+        rows: this.rows
+      };
+      
+      for (let y = 0; y < this.rows; y++) {
+        for (let x = 0; x < this.cols; x++) {
+          const coord = {
+            x: x,
+            y: y,
+            index: y * this.cols + x
+          };
+          
+          const char = this.main(coord, context);
+          this.grid[y][x] = (char === undefined || char === null) ? ' ' : char;
+        }
+      }
+      
+      this.renderGrid();
+    },
+    
+    main: function(coord, context) {
+      const a = context.frame * 0.02;
+      const f = Math.floor((1 - Math.cos(a)) * 10) + 1;
+      const g = Math.floor(a / this.TAU) % 10 + 1;
+      const i = coord.index % (coord.y * g + 1) % (f % context.cols);
+      
+      return "MISHKA"[i];
+    },
+    
+    animate: function() {
+      if (!this.terminal) return;
+      
+      this.frameCount++;
+      
+      const context = {
+        frame: this.frameCount,
+        cols: this.cols,
+        rows: this.rows
+      };
+      
+      for (let y = 0; y < this.rows; y++) {
+        for (let x = 0; x < this.cols; x++) {
+          const coord = {
+            x: x,
+            y: y,
+            index: y * this.cols + x
+          };
+          
+          const char = this.main(coord, context);
+          this.grid[y][x] = (char === undefined || char === null) ? ' ' : char;
+        }
+      }
+      
+      this.renderGrid();
+      
+      if (this.isRunning) {
+        this.animationFrameId = requestAnimationFrame(() => this.animate());
+      }
+    },
+    
+    start: function() {
+      if (!this.isRunning && this.terminal) {
+        this.isRunning = true;
+        this.animate();
+      }
+      return this;
+    },
+    
+    stop: function() {
+      this.isRunning = false;
+      if (this.animationFrameId) {
+        cancelAnimationFrame(this.animationFrameId);
+        this.animationFrameId = null;
+      }
+      return this;
+    },
+    
+    destroy: function() {
+      this.stop();
+      
+      window.removeEventListener('resize', this.initializeTerminal);
+      
+      if (this.terminal) {
+        this.terminal.removeEventListener('mouseenter', this.start);
+        this.terminal.removeEventListener('mouseleave', this.stop);
+        this.terminal.textContent = '';
+      }
+      
+      return this;
+    }
+  };
+  
+  window.MISHKA_ANIMATION = {
+    init: function() {
+      return MISHKA_ANIMATION.init();
+    },
+    start: function() {
+      return MISHKA_ANIMATION.start();
+    },
+    stop: function() {
+      return MISHKA_ANIMATION.stop();
+    },
+    destroy: function() {
+      return MISHKA_ANIMATION.destroy();
+    }
+  };
+  
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    MISHKA_ANIMATION.init();
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      MISHKA_ANIMATION.init();
+    });
+  }
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // PROJECTBOX - Изолированный скрипт
+  (function() {
+    // Конфигурация
+    const PROJECTBOX_CONFIG = {
+      baseWidth: 190,
+      baseHeight: 140,
+      spacingX: 50,  // Увеличено расстояние между карточками по горизонтали
+      spacingY: 40,  // Увеличено расстояние между карточками по вертикали
+      cursorInfluenceRadius: 260,
+      maxRepulsion: 20,
+      pixelSize: 10
+    };
+    
+    // Данные карточек - замените на ваши данные
+    const PROJECTBOX_DATA = [
+      { title: "TECH", date: "2 мая 2025", content: "Прорыв в области квантовой запутанности открывает новые возможности для вычислений" },
+      { title: "FINANCE", date: "28 апреля 2025", content: "Новая модель ИИ превзошла все ожидания в решении творческих задач" },
+      { title: "ECOMMERCE", date: "15 апреля 2025", content: "Запуск нового телескопа позволит заглянуть еще дальше в глубины космоса" },
+      { title: "PRIVATE/VIP", date: "10 апреля 2025", content: "Эффективность солнечных панелей достигла рекордных 45% в лабораторных условиях" },
+      { title: "INDUSTRY_OT/ICS", date: "5 апреля 2025", content: "Нанороботы успешно использованы для доставки лекарств к опухолям" },
+      { title: "GOVERNMENT", date: "1 апреля 2025", content: "Новая VR-система позволяет ощущать текстуры и температуру объектов" },
+      { title: "RESEARCH/EDUCATION", date: "25 марта 2025", content: "Человекоподобный робот научился выполнять сложные манипуляции с предметами" },
+      { title: "FOSS", date: "20 марта 2025", content: "Методы генной терапии успешно применены для лечения редких заболеваний" },
+      { title: "STATE-OWNED", date: "15 марта 2025", content: "Сверхлегкий материал прочнее стали и гибкий как ткань создан учеными" },
+      { title: "OUTSOURCING", date: "10 марта 2025", content: "Первая межконтинентальная квантовая сеть заработала в тестовом режиме" },
+      { title: "CLOUD", date: "5 марта 2025", content: "Система прогнозирования трафика сократила пробки на 35% в тестовом городе" },
+      { title: "SAAS", date: "1 марта 2025", content: "Неинвазивный интерфейс мозг-компьютер достиг скорости ввода 100 символов в минуту" },
+      { title: "LEGAL", date: "25 февраля 2025", content: "Напечатанные органы успешно прошли первую фазу клинических испытаний" },
+      { title: "NGO", date: "20 февраля 2025", content: "Беспилотные автомобили официально признаны безопаснее человека-водителя" },
+      { title: "MEDICAL", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
+      { title: "OUR_OWN", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
+    ];
+
+    // Переменные состояния
+    const PROJECTBOX_STATE = {
+      boxes: [],
+      containerWidth: 0,
+      containerHeight: 0,
+      numX: 0,
+      numY: 0,
+      marginX: 0,
+      marginY: 0,
+      mouseX: 0,
+      mouseY: 0,
+      lastMouseX: 0,
+      lastMouseY: 0,
+      mouseSpeed: 0
+    };
+    
+    // Инициализация
+    function projectboxInit() {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      PROJECTBOX_STATE.containerWidth = container.clientWidth;
+      PROJECTBOX_STATE.containerHeight = container.clientHeight;
+      
+      // Создание карточек с использованием flexbox
+      for (let j = 0; j < 4; j++) {  // Задаем 4 ряда для высоты 800px
+        for (let i = 0; i < 4; i++) {  // Задаем 4 карточки в ряду для ширины 1080px
+          const box = document.createElement('div');
+          box.className = 'projectbox-card';
+          
+          // Получение данных карточки
+          const dataIndex = (i + j * 4) % PROJECTBOX_DATA.length;
+          const card = PROJECTBOX_DATA[dataIndex];
+          
+          // Добавление содержимого
+          box.innerHTML = `
+            <div class="projectbox-title">${card.title}</div>
+            <div class="projectbox-date">${card.date}</div>
+            <div class="projectbox-content">${card.content}</div>
+            <div class="projectbox-position">pos: ${i}×${j}</div>
+          `;
+          
+          // Добавление в контейнер
+          container.appendChild(box);
+          
+          // Сохранение данных карточки
+          PROJECTBOX_STATE.boxes.push({
+            element: box,
+            i: i,
+            j: j
+          });
+        }
+      }
+    }
+    
+    // Обновление позиций карточек
+    function projectboxUpdateBoxes() {
+      // Расчет скорости движения курсора
+      const dx = PROJECTBOX_STATE.mouseX - PROJECTBOX_STATE.lastMouseX;
+      const dy = PROJECTBOX_STATE.mouseY - PROJECTBOX_STATE.lastMouseY;
+      PROJECTBOX_STATE.mouseSpeed = Math.sqrt(dx*dx + dy*dy);
+      PROJECTBOX_STATE.mouseSpeed = Math.min(PROJECTBOX_STATE.mouseSpeed, 50);
+      
+      PROJECTBOX_STATE.lastMouseX = PROJECTBOX_STATE.mouseX;
+      PROJECTBOX_STATE.lastMouseY = PROJECTBOX_STATE.mouseY;
+      
+      PROJECTBOX_STATE.boxes.forEach(box => {
+        if (!box.velocity) {
+          box.velocity = { x: 0, y: 0 };
+          box.targetX = 0;
+          box.targetY = 0;
+          box.currentX = 0;
+          box.currentY = 0;
+        }
+        
+        const { element, i, j, velocity, currentX, currentY } = box;
+        
+        // Получаем текущую позицию карточки относительно контейнера
+        const rect = element.getBoundingClientRect();
+        const containerRect = document.getElementById('projectbox-container').getBoundingClientRect();
+        const centerX = rect.left - containerRect.left + rect.width / 2;
+        const centerY = rect.top - containerRect.top + rect.height / 2;
+        
+        // Расчет расстояния от курсора до центра карточки
+        const dx = PROJECTBOX_STATE.mouseX - centerX;
+        const dy = PROJECTBOX_STATE.mouseY - centerY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Расчет целевой позиции для отталкивания
+        let targetX = 0;
+        let targetY = 0;
+        
+        if (distance < PROJECTBOX_CONFIG.cursorInfluenceRadius && distance > 0) {
+          // Нормализация вектора направления
+          const nx = -dx / distance;
+          const ny = -dy / distance;
+          
+          // Сила отталкивания уменьшается с расстоянием, но увеличивается со скоростью курсора
+          const speedFactor = 1 + PROJECTBOX_STATE.mouseSpeed / 50;
+          const strength = PROJECTBOX_CONFIG.maxRepulsion * (1 - distance / PROJECTBOX_CONFIG.cursorInfluenceRadius) * speedFactor;
+          
+          // Применение пиксельного движения
+          targetX = Math.round(nx * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
+          targetY = Math.round(ny * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
+          
+          // Сохраняем целевую позицию
+          box.targetX = targetX;
+          box.targetY = targetY;
+        } else {
+          // Если курсор далеко, то целевая позиция - возврат с отдачей
+          targetX = 0;
+          targetY = 0;
+          
+          // Если мы близко к целевой позиции и еще движемся с достаточной скоростью, 
+          // добавляем отдачу, меняя целевую позицию на противоположную
+          if (Math.abs(box.currentX) < 4 && Math.abs(velocity.x) > 0.5) {
+            targetX = -Math.sign(velocity.x) * 4;
+          }
+          
+          if (Math.abs(box.currentY) < 4 && Math.abs(velocity.y) > 0.5) {
+            targetY = -Math.sign(velocity.y) * 4;
+          }
+        }
+        
+        // Пружинная физика для более плавного движения с отдачей
+        const spring = 0.2;  // Сила пружины
+        const damping = 0.7; // Затухание (трение)
+        
+        // Вычисляем ускорение на основе разницы текущей и целевой позиции (закон Гука)
+        const ax = (targetX - box.currentX) * spring;
+        const ay = (targetY - box.currentY) * spring;
+        
+        // Обновляем скорость с учетом ускорения и затухания
+        velocity.x = velocity.x * damping + ax;
+        velocity.y = velocity.y * damping + ay;
+        
+        // Обновляем текущую позицию
+        box.currentX += velocity.x;
+        box.currentY += velocity.y;
+        
+        // Применяем пиксельное округление к финальной позиции для сохранения пиксельного эффекта
+        const pixelX = Math.round(box.currentX / 2) * 2;
+        const pixelY = Math.round(box.currentY / 2) * 2;
+        
+        // Применяем трансформацию для перемещения
+        element.style.transform = `translate(${pixelX}px, ${pixelY}px)`;
+        
+        // Обновление отображения позиции
+        const positionDiv = element.querySelector('.projectbox-position');
+        positionDiv.textContent = `pos: ${i}×${j}`;
+      });
+      
+      requestAnimationFrame(projectboxUpdateBoxes);
+    }
+    
+    // Отслеживание позиции курсора
+    function projectboxHandleMouseMove(event) {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      const rect = container.getBoundingClientRect();
+      PROJECTBOX_STATE.mouseX = event.clientX - rect.left;
+      PROJECTBOX_STATE.mouseY = event.clientY - rect.top;
+    }
+    
+    // Обработка изменения размера окна
+    function projectboxHandleResize() {
+      const container = document.getElementById('projectbox-container');
+      if (!container) return;
+      
+      // Удаление всех карточек
+      PROJECTBOX_STATE.boxes.forEach(box => box.element.remove());
+      PROJECTBOX_STATE.boxes = [];
+      
+      // Повторная инициализация
+      projectboxInit();
+    }
+    
+    // Настройка обработчиков событий
+    function projectboxSetupEventListeners() {
+      document.addEventListener('mousemove', projectboxHandleMouseMove);
+      window.addEventListener('resize', projectboxHandleResize);
+    }
+    
+    // Инициализация PROJECTBOX
+    function projectboxStart() {
+      projectboxInit();
+      projectboxSetupEventListeners();
+      projectboxUpdateBoxes();
+    }
+    
+    // Запуск при загрузке страницы
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', projectboxStart);
+    } else {
+      projectboxStart();
+    }
+  })(); // Немедленно вызываемая функция для изоляции кода
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// SlimeMold.js - изолированный модуль для симуляции слизней
+// Для вставки в существующую страницу
+
+(function(window, document) {
+    'use strict';
+    
+    // Создаем уникальное пространство имен
+    window.SlimeMoldNamespace = window.SlimeMoldNamespace || {};
+    
+    // Vector 2 module - изолирован внутри замыкания
+    const v2 = {
+        vec2: (x, y) => ({ x, y }),
+        add: (a, b) => ({ x: a.x + b.x, y: a.y + b.y }),
+        addN: (a, n) => ({ x: a.x + n, y: a.y + n }),
+        mulN: (a, n) => ({ x: a.x * n, y: a.y * n }),
+        rot: (v, angle) => ({
+            x: v.x * Math.cos(angle) - v.y * Math.sin(angle),
+            y: v.x * Math.sin(angle) + v.y * Math.cos(angle)
+        }),
+        floor: (v) => ({ x: Math.floor(v.x), y: Math.floor(v.y) })
+    };
+
+    // Константы симуляции - скрыты внутри замыкания
+    const WIDTH = 400;
+    const HEIGHT = 400;
+    const NUM_AGENTS = 1500;
+    const DECAY = 0.9;
+    const MIN_CHEM = 0.0001;
+
+    // Константы агентов
+    const SENS_ANGLE = 45 * Math.PI / 180;
+    const SENS_DIST = 9;
+    const AGT_SPEED = 1;
+    const AGT_ANGLE = 45 * Math.PI / 180;
+    const DEPOSIT = 1;
+
+    // Текстуры для рендеринга
+    const TEXTURE = [
+        "  ``^@",
+        " ..„v0",
+    ];
+    const OOB = ' ';
+
+    const R = Math.min(WIDTH, HEIGHT)/2;
+
+    // Вспомогательные функции
+    function bounded(vec) {
+        return ((vec.x-R)**2 + (vec.y-R)**2 <= R**2);
+    }
+
+    function blur(row, col, data) {
+        let sum = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+                const val = data[(row + dy) * HEIGHT + (col + dx)] || 0;
+                sum += val;
+            }
+        }
+        return sum / 9;
+    }
+
+    function randCircle() {
+        const r = Math.sqrt(Math.random());
+        const theta = Math.random() * 2 * Math.PI;
+        return {
+            x: r * Math.cos(theta),
+            y: r * Math.sin(theta)
+        };
+    }
+
+    // Класс агента
+    class Agent {
+        constructor(pos, dir) {
+            this.pos = pos;
+            this.dir = dir;
+            this.scatter = false;
+        }
+
+        sense(m, chem) {
+            const senseVec = v2.mulN(v2.rot(this.dir, m * SENS_ANGLE), SENS_DIST);
+            const pos = v2.floor(v2.add(this.pos, senseVec));
+            if (!bounded(pos))
+                return -1;
+            const sensed = chem[pos.y * HEIGHT + pos.x];
+            if (this.scatter)
+                return 1 - sensed;
+            return sensed;
+        }
+
+        react(chem) {
+            // Sense
+            let forwardChem = this.sense(0, chem);
+            let leftChem = this.sense(-1, chem);
+            let rightChem = this.sense(1, chem);
+
+            // Rotate
+            let rotate = 0;
+            if (forwardChem > leftChem && forwardChem > rightChem) {
+                rotate = 0;
+            }
+            else if (forwardChem < leftChem && forwardChem < rightChem) {
+                if (Math.random() < 0.5) {
+                    rotate = -AGT_ANGLE;
+                }
+                else {
+                    rotate = AGT_ANGLE;
+                }
+            }
+            else if (leftChem < rightChem) {
+                rotate = AGT_ANGLE;
+            }
+            else if (rightChem < leftChem) {
+                rotate = -AGT_ANGLE;
+            }
+            else if (forwardChem < 0) {
+                // Turn around at edge
+                rotate = Math.PI / 2;
+            }
+            this.dir = v2.rot(this.dir, rotate);
+
+            // Move
+            this.pos = v2.add(this.pos, v2.mulN(this.dir, AGT_SPEED));
+        }
+
+        deposit(chem) {
+            const { y, x } = v2.floor(this.pos);
+            const i = y * HEIGHT + x;
+            chem[i] = Math.min(1, chem[i] + DEPOSIT);
+        }
+    }
+
+    // Класс симуляции
+    class SlimeMoldSimulation {
+        constructor(containerElement, options = {}) {
+            if (!containerElement) {
+                console.error('Container element must be provided!');
+                return;
+            }
+            
+            // Создаем симуляционный элемент если он не существует
+            this.container = typeof containerElement === 'string' 
+                ? document.getElementById(containerElement) 
+                : containerElement;
+                
+            if (!this.container) {
+                console.error('Container element not found!');
+                return;
+            }
+            
+            // Проверим, есть ли уже стили для этого контейнера
+            if (!this.container.classList.contains('slime-mold-container')) {
+                this.container.classList.add('slime-mold-container');
+                this.container.style.position = 'relative';
+                this.container.style.overflow = 'hidden';
+                
+                // Применяем цвет фона только если он явно указан в опциях
+                // Иначе сохраняем существующий цвет из CSS
+                if (options.backgroundColor) {
+                    this.container.style.backgroundColor = options.backgroundColor;
+                }
+            }
+            
+            // Создаем элемент для симуляции
+            this.simulationElement = document.createElement('div');
+            this.simulationElement.style.position = 'absolute';
+            this.simulationElement.style.top = '0';
+            this.simulationElement.style.left = '0';
+            this.simulationElement.style.width = '100%';
+            this.simulationElement.style.height = '100%';
+            this.simulationElement.style.fontFamily = 'monospace';
+            this.simulationElement.style.fontSize = options.fontSize || '12px';
+            this.simulationElement.style.lineHeight = '1';
+            this.simulationElement.style.whiteSpace = 'pre';
+            this.simulationElement.style.color = options.color || 'antiquewhite';
+            this.simulationElement.style.cursor = 'pointer';
+            
+            this.container.appendChild(this.simulationElement);
+            
+            this.metrics = { aspect: 0.5 }; // Типичное соотношение сторон для шрифтов моноширинных
+
+            this.data = {};
+            this.cursor = { pressed: false, x: 0, y: 0 };
+            this.context = {
+                rows: 0,
+                cols: 0,
+                frame: 0,
+                metrics: this.metrics
+            };
+            this.buffer = [];
+
+            // Инициализация
+            this.boot();
+            
+            // Настройка слушателей событий
+            this.setupEventListeners();
+            
+            // Запуск анимации
+            this.animate();
+        }
+
+        boot() {
+            this.data.chem = new Float32Array(HEIGHT * WIDTH);
+            this.data.wip = new Float32Array(HEIGHT * WIDTH);
+
+            this.initializeAgents();
+
+            this.data.viewScale = { y: 100 / this.metrics.aspect, x: 100 };
+            this.data.viewFocus = { y: 0.5, x: 0.5 };
+            
+            // Сброс состояния анимации
+            this.isResetting = false;
+            this.resetAnimationPhase = null;
+            this.isMouseDown = false;
+            
+            // Обновление размеров симуляции
+            this.updateDimensions();
+        }
+
+        initializeAgents() {
+            this.data.agents = [];
+            for (let agent = 0; agent < NUM_AGENTS; agent++) {
+                this.data.agents.push(new Agent(
+                    // Случайная позиция
+                    v2.mulN(v2.addN(v2.mulN(randCircle(), 0.5), 1), 0.5 * WIDTH),
+                    // Случайное направление
+                    v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
+                ));
+            }
+        }
+
+        pre() {
+            // Diffuse & decay
+            for (let row = 0; row < HEIGHT; row++) {
+                for (let col = 0; col < WIDTH; col++) {
+                    let val = DECAY * blur(row, col, this.data.chem);
+                    if (val < MIN_CHEM)
+                        val = 0;
+                    this.data.wip[row * HEIGHT + col] = val;
+                }
+            }
+            const swap = this.data.chem;
+            this.data.chem = this.data.wip;
+            this.data.wip = swap;
+
+            const { chem, agents } = this.data;
+
+            // Sense, rotate, and move
+            const isScattering = Math.sin(this.context.frame / 150) > 0.8;
+            for (const agent of agents) {
+                agent.scatter = isScattering;
+                agent.react(chem);
+            }
+
+            // Deposit
+            for (const agent of agents) {
+                agent.deposit(chem);
+            }
+
+            // Update view params
+            this.updateView();
+        }
+
+        updateView() {
+            // Всегда поддерживаем центрированный вид
+            const targetScale = {
+                y: 1.1 * WIDTH / this.context.rows,
+                x: 1.1 * WIDTH / this.context.rows * this.metrics.aspect,
+            };
+
+            if (this.data.viewScale.y !== targetScale.y || this.data.viewScale.x !== targetScale.x) {
+                this.data.viewScale.y += 0.1 * (targetScale.y - this.data.viewScale.y);
+                this.data.viewScale.x += 0.1 * (targetScale.x - this.data.viewScale.x);
+            }
+
+            // Всегда держать центрированным
+            const targetFocus = { y: 0.5, x: 0.5 };
+            
+            if (this.data.viewFocus.y !== targetFocus.y || this.data.viewFocus.x !== targetFocus.x) {
+                this.data.viewFocus.y += 0.1 * (targetFocus.y - this.data.viewFocus.y);
+                this.data.viewFocus.x += 0.1 * (targetFocus.x - this.data.viewFocus.x);
+            }
+        }
+
+        main(coord) {
+            const { viewFocus, viewScale } = this.data;
+
+            // Алгоритм масштабирования на основе ближайшего соседа
+            const offset = {
+                y: Math.floor(viewFocus.y * (HEIGHT - viewScale.y * this.context.rows)),
+                x: Math.floor(viewFocus.x * (WIDTH - viewScale.x * this.context.cols)),
+            };
+
+            // "Ближайший сосед"
+            const sampleFrom = {
+                y: offset.y + Math.floor(coord.y * viewScale.y),
+                x: offset.x + Math.floor(coord.x * viewScale.x),
+            };
+
+            // Следующая ячейка ближайшего соседа
+            const sampleTo = {
+                y: offset.y + Math.floor((coord.y + 1) * viewScale.y),
+                x: offset.x + Math.floor((coord.x + 1) * viewScale.x),
+            };
+
+            if (!bounded(sampleFrom) || !bounded(sampleTo))
+                return OOB;
+
+            // При увеличении sampleW/H может быть 0
+            const sampleH = Math.max(1, sampleTo.y - sampleFrom.y);
+            const sampleW = Math.max(1, sampleTo.x - sampleFrom.x);
+
+            // Объединяем все ячейки в [sampleFrom, sampleTo) в одно значение
+            // Для этого случая хорошо работает значение на полпути между средним и максимальным
+            let max = 0;
+            let sum = 0;
+            for (let x = sampleFrom.x; x < sampleFrom.x + sampleW; x++) {
+                for (let y = sampleFrom.y; y < sampleFrom.y + sampleH; y++) {
+                    const v = this.data.chem[y * HEIGHT + x] || 0;
+                    max = Math.max(max, v);
+                    sum += v;
+                }
+            }
+            let val = sum / (sampleW * sampleH);
+            val = (val + max) / 2;
+
+            // Взвешиваем val, чтобы получить лучшее распределение текстур
+            val = Math.pow(val, 1/3);
+
+            // Конвертируем значение ячейки в символ из карты текстур
+            const texRow = (coord.x + coord.y) % TEXTURE.length;
+            const texCol = Math.ceil(val * (TEXTURE[0].length - 1));
+            const char = TEXTURE[texRow][texCol] || ' ';
+
+            return char;
+        }
+
+        render() {
+            this.buffer = [];
+            for (let y = 0; y < this.context.rows; y++) {
+                let row = '';
+                for (let x = 0; x < this.context.cols; x++) {
+                    row += this.main({ x, y });
+                }
+                this.buffer.push(row);
+            }
+            this.simulationElement.textContent = this.buffer.join('\n');
+        }
+
+        animate() {
+            this.context.frame++;
+            this.pre();
+            this.render();
+            this.animationFrame = requestAnimationFrame(() => this.animate());
+        }
+
+        setupEventListeners() {
+            this.isMouseDown = false;
+            
+            this.simulationElement.addEventListener('mousedown', (e) => {
+                this.isMouseDown = true;
+                // Запускаем только фазу затухания
+                this.prepareReset();
+            });
+            
+            // Отслеживаем mouseup на всем документе
+            this.mouseUpHandler = (e) => {
+                if (this.isMouseDown) {
+                    this.isMouseDown = false;
+                    // Теперь завершаем процесс сброса
+                    this.completeReset();
+                }
+            };
+            document.addEventListener('mouseup', this.mouseUpHandler);
+
+            this.resizeHandler = () => {
+                this.updateDimensions();
+            };
+            window.addEventListener('resize', this.resizeHandler);
+
+            // Начальное обновление
+            this.updateDimensions();
+        }
+
+        updateDimensions() {
+            const containerStyle = window.getComputedStyle(this.container);
+            const containerWidth = parseInt(containerStyle.width);
+            const containerHeight = parseInt(containerStyle.height);
+            
+            // Рассчитываем строки и столбцы на основе размеров контейнера и размера шрифта
+            const fontSize = parseInt(window.getComputedStyle(this.simulationElement).fontSize);
+            this.context.cols = Math.floor(containerWidth / (fontSize * 0.6));
+            this.context.rows = Math.floor(containerHeight / fontSize);
+            
+            // Обновляем соотношение сторон
+            this.metrics.aspect = (fontSize * 0.6) / fontSize;
+        }
+
+        prepareReset() {
+            // Сохраняем исходное состояние
+            this.originalAgents = [...this.data.agents];
+            this.originalChem = new Float32Array(this.data.chem);
+            
+            // Сохраняем текущую позицию вида
+            this.originalViewFocus = {
+                x: this.data.viewFocus.x,
+                y: this.data.viewFocus.y
+            };
+            
+            // Переменные анимации
+            this.resetStartTime = performance.now();
+            this.resetAnimationPhase = 'fadeOut';
+            
+            // Запускаем цикл анимации, если он еще не запущен
+            if (!this.isResetting) {
+                this.isResetting = true;
+                this.animateReset();
+            }
+        }
+
+        completeReset() {
+            // Продолжаем только если мы были в фазе затухания
+            if (this.resetAnimationPhase === 'fadeOut') {
+                // Подготавливаем новых агентов, но пока не делаем их видимыми
+                this.newAgents = [];
+                for (let agent = 0; agent < NUM_AGENTS; agent++) {
+                    this.newAgents.push(new Agent(
+                        // Начинаем из центра с случайным направлением
+                        v2.mulN({x: 0.5, y: 0.5}, WIDTH),
+                        v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
+                    ));
+                }
+                
+                // Полностью очищаем химическое поле
+                this.data.chem = new Float32Array(HEIGHT * WIDTH);
+                this.data.wip = new Float32Array(HEIGHT * WIDTH);
+                
+                // Переключаемся на фазу появления
+                this.resetAnimationPhase = 'fadeIn';
+                this.resetStartTime = performance.now();
+            }
+        }
+
+        animateReset() {
+            const timestamp = performance.now();
+            const elapsed = timestamp - this.resetStartTime;
+            const fadeDuration = 1500; // 1.5 секунды для каждой фазы
+            const progress = Math.min(elapsed / fadeDuration, 1);
+            // Используем кубическое сглаживание для более плавного эффекта
+            const easedProgress = progress * (2 - progress);
+            
+            if (this.resetAnimationPhase === 'fadeOut') {
+                // Фаза затухания
+                
+                // Постепенно уменьшаем химическое поле до нуля
+                for (let i = 0; i < HEIGHT * WIDTH; i++) {
+                    this.data.chem[i] = this.originalChem[i] * (1 - easedProgress);
+                }
+                
+                // Анимируем фокус вида обратно к центру
+                this.data.viewFocus = {
+                    y: this.originalViewFocus.y + (0.5 - this.originalViewFocus.y) * easedProgress,
+                    x: this.originalViewFocus.x + (0.5 - this.originalViewFocus.x) * easedProgress
+                };
+                
+                // Медленно уменьшаем отложения агентов и перемещаем их к центру
+                for (let i = 0; i < this.originalAgents.length; i++) {
+                    if (i < this.data.agents.length) {
+                        // Постепенно перемещаем агентов к центру
+                        const agent = this.data.agents[i];
+                        const center = { x: WIDTH / 2, y: HEIGHT / 2 };
+                        const dirToCenter = {
+                            x: center.x - agent.pos.x,
+                            y: center.y - agent.pos.y
+                        };
+                        const dist = Math.sqrt(dirToCenter.x * dirToCenter.x + dirToCenter.y * dirToCenter.y);
+                        if (dist > 0) {
+                            const normalizedDir = {
+                                x: dirToCenter.x / dist,
+                                y: dirToCenter.y / dist
+                            };
+                            // Постепенно поворачиваем к центру
+                            agent.dir = {
+                                x: agent.dir.x * (1 - easedProgress) + normalizedDir.x * easedProgress,
+                                y: agent.dir.y * (1 - easedProgress) + normalizedDir.y * easedProgress
+                            };
+                            
+                            // Движемся к центру
+                            const moveSpeed = dist * easedProgress * 0.02;
+                            agent.pos = {
+                                x: agent.pos.x + normalizedDir.x * moveSpeed,
+                                y: agent.pos.y + normalizedDir.y * moveSpeed
+                            };
+                        }
+                    }
+                }
+                
+                // Продолжаем анимацию, если она не завершена или ждём отпускания мыши
+                if (progress < 1 || this.isMouseDown) {
+                    requestAnimationFrame(() => this.animateReset());
+                } else {
+                    // Если затухание завершено и мышь отпущена, переходим к появлению
+                    this.completeReset();
+                }
+            } else if (this.resetAnimationPhase === 'fadeIn') {
+                // Фаза появления - постепенно вводим новых агентов
+                
+                // Заменяем агентов на новых
+                if (progress < 0.1) {
+                    // Очищаем текущих агентов и подготавливаем новых
+                    this.data.agents = [];
+                    for (let i = 0; i < this.newAgents.length; i++) {
+                        const agent = this.newAgents[i];
+                        // Создаем копию, чтобы избежать изменения оригинала
+                        this.data.agents.push(new Agent(
+                            // Все начинают из центра
+                            {x: agent.pos.x, y: agent.pos.y}, 
+                            // Сохраняем исходное направление
+                            {x: agent.dir.x, y: agent.dir.y}
+                        ));
+                    }
+                }
+                
+                // Постепенно распространяем агентов из центра
+                for (let i = 0; i < this.data.agents.length; i++) {
+                    const agent = this.data.agents[i];
+                    const originalAgent = this.newAgents[i];
+                    
+                    // Вычисляем целевую позицию на основе исходного направления и случайного расстояния
+                    const randDist = Math.random() * WIDTH * 0.4 * easedProgress;
+                    const targetPos = {
+                        x: WIDTH/2 + originalAgent.dir.x * randDist,
+                        y: HEIGHT/2 + originalAgent.dir.y * randDist
+                    };
+                    
+                    // Двигаемся к целевой позиции
+                    const dirToTarget = {
+                        x: targetPos.x - agent.pos.x,
+                        y: targetPos.y - agent.pos.y
+                    };
+                    
+                    const dist = Math.sqrt(dirToTarget.x * dirToTarget.x + dirToTarget.y * dirToTarget.y);
+                    if (dist > 0) {
+                        const normalizedDir = {
+                            x: dirToTarget.x / dist,
+                            y: dirToTarget.y / dist
+                        };
+                        
+                        // Постепенно перемещаемся из центра
+                        const moveSpeed = 0.5 + 2 * easedProgress;
+                        agent.pos = {
+                            x: agent.pos.x + normalizedDir.x * moveSpeed,
+                            y: agent.pos.y + normalizedDir.y * moveSpeed
+                        };
+                    }
+                    
+                    // Слегка рандомизируем направление для более естественного вида
+                    if (Math.random() < 0.1) {
+                        const randAngle = (Math.random() - 0.5) * Math.PI/2;
+                        agent.dir = v2.rot(agent.dir, randAngle);
+                    }
+                }
+                
+                // Продолжаем анимацию, пока она не завершится
+                if (progress < 1) {
+                    requestAnimationFrame(() => this.animateReset());
+                } else {
+                    // Анимация завершена
+                    this.isResetting = false;
+                    // Сохраняем агентов, которые уже двигаются
+                }
+            }
+        }
+        
+        // Публичные методы
+        
+        // Остановить симуляцию
+        stop() {
+            if (this.animationFrame) {
+                cancelAnimationFrame(this.animationFrame);
+                this.animationFrame = null;
+            }
+        }
+        
+        // Запустить симуляцию, если она остановлена
+        start() {
+            if (!this.animationFrame) {
+                this.animate();
+            }
+        }
+        
+        // Полностью уничтожить симуляцию и очистить ресурсы
+        destroy() {
+            this.stop();
+            
+            // Удаляем обработчики событий
+            document.removeEventListener('mouseup', this.mouseUpHandler);
+            window.removeEventListener('resize', this.resizeHandler);
+            
+            // Удаляем DOM элементы
+            if (this.simulationElement && this.simulationElement.parentNode) {
+                this.simulationElement.parentNode.removeChild(this.simulationElement);
+            }
+            
+            // Очищаем ссылки на данные
+            this.data = null;
+        }
+    }
+    
+    // Экспортируем класс в наше пространство имен
+    window.SlimeMoldNamespace.SlimeMoldSimulation = SlimeMoldSimulation;
+    
+    // Удобная функция для создания симуляции
+    window.createSlimeMold = function(container, options = {}) {
+        return new SlimeMoldSimulation(container, options);
+    };
+    
+})(window, document);
