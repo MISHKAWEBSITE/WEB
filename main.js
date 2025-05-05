@@ -344,7 +344,6 @@ var AsciiMorph = (function() {
   const scrollIndicator = document.getElementById("scroll-indicator");
   const maxBars = 20;
   
-  // Update the indicator based on scroll position
   function updateScrollIndicator() {
     const scrollPercentage = Math.min(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100, 100);
     const filledBars = Math.round(scrollPercentage / 100 * maxBars);
@@ -353,42 +352,33 @@ var AsciiMorph = (function() {
     scrollProgress.textContent = `${Math.round(scrollPercentage).toString().padStart(3, "0")}`;
   }
   
-  // Initial update
   updateScrollIndicator();
   
-  // Update on scroll
   window.addEventListener("scroll", updateScrollIndicator);
   
-  // Make the indicator interactive for clicking
   scrollIndicator.addEventListener("click", function(event) {
-    // Calculate click position relative to the indicator
     const rect = scrollIndicator.getBoundingClientRect();
     const clickPositionRatio = (event.clientX - rect.left) / rect.width;
     
-    // Calculate the target scroll position
     const targetScrollPosition = clickPositionRatio * (document.body.scrollHeight - window.innerHeight);
     
-    // Smooth scroll to the target position
     smoothScrollTo(targetScrollPosition);
   });
   
-  // Improved dragging functionality
   let isDraggingItem = false;
   let currentScrollAnimation = null;
   let dragStartTime = null;
   
   scrollIndicator.addEventListener("mousedown", function(event) {
     isDraggingItem = true;
-    document.body.style.userSelect = "none"; // Prevent text selection while dragging
+    document.body.style.userSelect = "none"; 
     dragStartTime = Date.now();
     
-    // Cancel any ongoing scroll animation
     if (currentScrollAnimation) {
       cancelAnimationFrame(currentScrollAnimation);
       currentScrollAnimation = null;
     }
     
-    // Handle the initial click as a drag event
     handleDragMove(event);
   });
   
@@ -398,7 +388,6 @@ var AsciiMorph = (function() {
       document.body.style.userSelect = "";
       dragStartTime = null;
       
-      // Stop any ongoing animation immediately when mouse is released
       if (currentScrollAnimation) {
         cancelAnimationFrame(currentScrollAnimation);
         currentScrollAnimation = null;
@@ -412,58 +401,46 @@ var AsciiMorph = (function() {
     }
   });
   
-  // Handle the dragging motion
   function handleDragMove(event) {
     const rect = scrollIndicator.getBoundingClientRect();
     const positionRatio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
     const targetScrollPosition = positionRatio * (document.body.scrollHeight - window.innerHeight);
     
-    // Use improved lerp function for smoother movement
     improvedLerpScrollTo(targetScrollPosition);
   }
   
-  // Improved linear interpolation for smoother scrolling with less "tail" effect
   function improvedLerpScrollTo(targetPosition) {
     if (currentScrollAnimation) {
       cancelAnimationFrame(currentScrollAnimation);
     }
     
-    // Track animation duration to prevent excessive "tail"
     const maxAnimationDuration = 300; // ms
     const startTime = Date.now();
     
     function animate() {
-      // Get current position
       const currentPosition = window.scrollY;
       const animationDuration = Date.now() - startTime;
       
-      // Calculate the distance to move
-      let lerpFactor = 0.25; // Slightly faster approach
+      let lerpFactor = 0.25;
       
-      // Increase the lerp factor as time goes on to reduce the "tail" effect
       if (animationDuration > 150) {
-        lerpFactor = 0.4; // Even faster approach when animation has been running a while
+        lerpFactor = 0.4;
       }
       
-      // Further increase the factor when we're close to target
       if (Math.abs(targetPosition - currentPosition) < 50) {
-        lerpFactor = 0.5; // Much faster approach when close to target
+        lerpFactor = 0.5; 
       }
       
       const nextPosition = currentPosition + (targetPosition - currentPosition) * lerpFactor;
       
-      // Apply the scroll
       window.scrollTo(0, nextPosition);
       
-      // Determine if we should continue the animation
-      const closeEnough = Math.abs(targetPosition - nextPosition) < 3; // Larger threshold
+      const closeEnough = Math.abs(targetPosition - nextPosition) < 3;
       const timeUp = animationDuration > maxAnimationDuration;
       
       if (!closeEnough && !timeUp && isDraggingItem) {
         currentScrollAnimation = requestAnimationFrame(animate);
       } else {
-        // We're either close enough, time is up, or dragging stopped
-        // Snap to exact position to eliminate "tail"
         if (Math.abs(targetPosition - nextPosition) < 20) {
           window.scrollTo(0, targetPosition);
         }
@@ -474,7 +451,6 @@ var AsciiMorph = (function() {
     currentScrollAnimation = requestAnimationFrame(animate);
   }
   
-  // Smooth scrolling function for clicking
   function smoothScrollTo(targetPosition) {
     if (currentScrollAnimation) {
       cancelAnimationFrame(currentScrollAnimation);
@@ -482,7 +458,7 @@ var AsciiMorph = (function() {
     
     const startPosition = window.scrollY;
     const distance = targetPosition - startPosition;
-    const duration = 500; // Slightly shorter duration
+    const duration = 500; 
     let startTime = null;
     
     function animation(currentTime) {
@@ -490,7 +466,6 @@ var AsciiMorph = (function() {
       const timeElapsed = currentTime - startTime;
       const progress = Math.min(timeElapsed / duration, 1);
       
-      // Smooth easing function with faster finish
       const easedProgress = easeOutQuint(progress);
       
       window.scrollTo(0, startPosition + distance * easedProgress);
@@ -498,7 +473,6 @@ var AsciiMorph = (function() {
       if (timeElapsed < duration && progress < 0.99) {
         currentScrollAnimation = requestAnimationFrame(animation);
       } else {
-        // Ensure we land exactly on target
         window.scrollTo(0, targetPosition);
         currentScrollAnimation = null;
       }
@@ -507,12 +481,10 @@ var AsciiMorph = (function() {
     currentScrollAnimation = requestAnimationFrame(animation);
   }
   
-  // Faster easing function with quicker finish
   function easeOutQuint(t) {
     return 1 - Math.pow(1 - t, 5);
   }
   
-  // Original smooth easing
   function easeInOutQuad(t) {
     return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
   }
@@ -613,7 +585,6 @@ myCanvas.height = 48;
 const myCtx = myCanvas.getContext("2d");
 const asciicontainer = document.querySelector(".ascii");
 
-// Helper functions
 const map = (t, o, e, a, x) => ((t - e) / (o - e)) * (a - x) + x;
 const lerp = (t, o, e) => o + (e - o) * t;
 const map_table = new Array(255).fill(1).map((t, o) => Math.ceil(map(o, 255, 0, 8, 0)));
@@ -630,11 +601,9 @@ const line = (t, o, e, a) => {
   myCtx.closePath();
 };
 
-// Создаем кэш последних значений ASCII для сравнения
 const lastAsciiValues = new Array(myCanvas.width * myCanvas.height).fill('');
 const asciiElements = [];
 
-// Инициализация DOM-элементов один раз
 function initAsciiContainer() {
   asciicontainer.innerHTML = '';
   for (let y = 0; y < myCanvas.height; y++) {
@@ -651,19 +620,17 @@ function initAsciiContainer() {
   }
 }
 
-// Оптимизированная функция обновления ASCII
 const updateAsciiOutput = () => {
   const imageData = myCtx.getImageData(0, 0, myCanvas.width, myCanvas.height).data;
   
   for (let y = 0; y < myCanvas.height; y++) {
     for (let x = 0; x < myCanvas.width; x++) {
       const pixelIndex = (y * myCanvas.width + x) * 4;
-      const brightness = imageData[pixelIndex]; // Используем красный канал для яркости
+      const brightness = imageData[pixelIndex];
       const asciiIndex = map_table[brightness];
       const char = ascii[asciiIndex];
       
       const index = y * myCanvas.width + x;
-      // Обновляем только если значение изменилось
       if (lastAsciiValues[index] !== char) {
         lastAsciiValues[index] = char;
         const element = asciiElements[y][x];
@@ -696,15 +663,13 @@ let nextPos = randomBox();
 let tick = 0;
 let mouseState = false;
 let frameCount = 0;
-const asciiUpdateFrequency = 3; // Update ASCII only every 3 frames
+const asciiUpdateFrequency = 3;
 
-// Для более стабильного FPS
 let lastFrameTime = 0;
 const targetFPS = 120;
 const frameInterval = 1000 / targetFPS;
 
 const loop = (timestamp) => {
-  // Ограничиваем частоту кадров
   const elapsed = timestamp - lastFrameTime;
   if (elapsed < frameInterval) {
     requestAnimationFrame(loop);
@@ -714,21 +679,17 @@ const loop = (timestamp) => {
   
   tick += 0.025;
   
-  // Clear canvas with a single operation
   myCtx.fillStyle = "#000";
   myCtx.fillRect(0, 0, myCanvas.width, myCanvas.height);
   
-  // Draw box
   myCtx.fillStyle = "#f4f4f4";
   myCtx.fillRect(box.x, box.y, box.w, box.h);
   
-  // Draw lines
   line(box.x, box.y, 0, 0);
   line(box.x + box.w, box.y, myCanvas.width, 0);
   line(box.x, box.y + box.h, 0, myCanvas.height);
   line(box.x + box.w, box.y + box.h, myCanvas.width, myCanvas.height);
   
-  // Draw gradient
   myCtx.beginPath();
   let t = box.x + box.w / 2;
   let o = box.y + box.h / 2;
@@ -763,10 +724,8 @@ const loop = (timestamp) => {
   requestAnimationFrame(loop);
 };
 
-// Инициализируем DOM-структуру один раз
 initAsciiContainer();
 
-// Начинаем анимацию
 requestAnimationFrame(loop);
 
 window.addEventListener("mouseover", () => {
@@ -1794,11 +1753,11 @@ notification.style.color = 'antiquewhite';
 notification.innerHTML = `
  <div style="font-size: 30px; padding-top: 20px;">
  <pre style="font-size: 6px; text-align: center;">
- ** _**___ **  **______
-/\\ "-./ \\ /\\ \\ /\\ ___\\ /\\ \\_\\ \\ /\\ \\/ / /\\ __ \\
-\\ \\ \\-./\\ \\ \\ \\ \\ \\ \\___ \\ \\ \\ __ \\ \\ \\ *"-. \\ \\ *_ \\
-\\ \\_\\ \\ \\_\\ \\ \\_\\ \\/\\_____\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\ \\ \\_\\ \\_\\
-\\/_/ \\/_/ \\/_/ \\/_____/ \\/_/\\/_/ \\/_/\\/_/ \\/_/\\/_/ </pre>
+ __    __     __     ______     __  __     __  __     ______    
+/\\ "-./  \\   /\\ \\   /\\  ___\\   /\\ \\_\\ \\   /\\ \\/ /    /\\  __ \\   
+\\ \\ \\-./\\ \\  \\ \\ \\  \\ \\___  \\  \\ \\  __ \\  \\ \\  _"-.  \\ \\  __ \\  
+ \\ \\_\\ \\ \\_\\  \\ \\_\\  \\/\\_____\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\  \\ \\_\\ \\_\\ 
+  \\/_/  \\/_/   \\/_/   \\/_____/   \\/_/\\/_/   \\/_/\\/_/   \\/_/\\/_/ </pre>
  <p style="text-align: center; font-size: 20px; font-family: 'Jersey', sans-serif; color: #FA4C14;">PHONE_ERROR</p>
  </div>
  <div style="padding: 40px; font-size: 12px; color: white;">You're on a phone.<br>
@@ -2321,40 +2280,32 @@ setTimeout(checkWidth, 500);
 
 
 
-  // PROJECTBOX - Изолированный скрипт
   (function() {
-    // Конфигурация
     const PROJECTBOX_CONFIG = {
       baseWidth: 190,
       baseHeight: 140,
-      spacingX: 50,  // Увеличено расстояние между карточками по горизонтали
-      spacingY: 40,  // Увеличено расстояние между карточками по вертикали
+      spacingX: 50,  
+      spacingY: 40, 
       cursorInfluenceRadius: 260,
       maxRepulsion: 20,
       pixelSize: 10
     };
     
-    // Данные карточек - замените на ваши данные
     const PROJECTBOX_DATA = [
-      { title: "TECH", date: "2 мая 2025", content: "Прорыв в области квантовой запутанности открывает новые возможности для вычислений" },
-      { title: "FINANCE", date: "28 апреля 2025", content: "Новая модель ИИ превзошла все ожидания в решении творческих задач" },
-      { title: "ECOMMERCE", date: "15 апреля 2025", content: "Запуск нового телескопа позволит заглянуть еще дальше в глубины космоса" },
-      { title: "PRIVATE/VIP", date: "10 апреля 2025", content: "Эффективность солнечных панелей достигла рекордных 45% в лабораторных условиях" },
-      { title: "INDUSTRY_OT/ICS", date: "5 апреля 2025", content: "Нанороботы успешно использованы для доставки лекарств к опухолям" },
-      { title: "GOVERNMENT", date: "1 апреля 2025", content: "Новая VR-система позволяет ощущать текстуры и температуру объектов" },
-      { title: "RESEARCH/EDUCATION", date: "25 марта 2025", content: "Человекоподобный робот научился выполнять сложные манипуляции с предметами" },
-      { title: "FOSS", date: "20 марта 2025", content: "Методы генной терапии успешно применены для лечения редких заболеваний" },
-      { title: "STATE-OWNED", date: "15 марта 2025", content: "Сверхлегкий материал прочнее стали и гибкий как ткань создан учеными" },
-      { title: "OUTSOURCING", date: "10 марта 2025", content: "Первая межконтинентальная квантовая сеть заработала в тестовом режиме" },
-      { title: "CLOUD", date: "5 марта 2025", content: "Система прогнозирования трафика сократила пробки на 35% в тестовом городе" },
-      { title: "SAAS", date: "1 марта 2025", content: "Неинвазивный интерфейс мозг-компьютер достиг скорости ввода 100 символов в минуту" },
-      { title: "LEGAL", date: "25 февраля 2025", content: "Напечатанные органы успешно прошли первую фазу клинических испытаний" },
-      { title: "NGO", date: "20 февраля 2025", content: "Беспилотные автомобили официально признаны безопаснее человека-водителя" },
-      { title: "MEDICAL", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
-      { title: "OUR_OWN", date: "15 февраля 2025", content: "Новые очки AR заменяют экраны гаджетов виртуальными проекциями" },
+      { title: "VIP", date: "they love us", content: "from personal/physical protection to info SEC etc" },
+      { title: "RUSSIA", date: "most of us live here", content: "don't shit where you eat" },
+      { title: "EUROPE", date: "others of us live here", content: "fine place tho" },
+      { title: "ASIA", date: "we like them, cool guys", content: "protection, defending, software. Also we make our hardtech in there" },
+      { title: "FOSS", date: "hi, Richard", content: "Almoust no money in there" },
+      { title: "FINTECH", date: "CONSTRUCTION", content: "CONSTRUCTION" },
+      { title: "RESEARCH/EDUCATION", date: "N/a", content: "CONSTRUCTION" },
+      { title: "FOSS", date: "N/a", content: "CONSTRUCTION" },
+      { title: "STATE-OWNED", date: "N/a", content: "CONSTRUCTION" },
+      { title: "OUTSOURCING", date: "N/a", content: "CONSTRUCTION" },
+      { title: "CLOUD", date: "N/a", content: "CONSTRUCTION" },
+      { title: "SAAS", date: "N/a", content: "CONSTRUCTION" },
     ];
 
-    // Переменные состояния
     const PROJECTBOX_STATE = {
       boxes: [],
       containerWidth: 0,
@@ -2370,7 +2321,6 @@ setTimeout(checkWidth, 500);
       mouseSpeed: 0
     };
     
-    // Инициализация
     function projectboxInit() {
       const container = document.getElementById('projectbox-container');
       if (!container) return;
@@ -2378,17 +2328,14 @@ setTimeout(checkWidth, 500);
       PROJECTBOX_STATE.containerWidth = container.clientWidth;
       PROJECTBOX_STATE.containerHeight = container.clientHeight;
       
-      // Создание карточек с использованием flexbox
-      for (let j = 0; j < 4; j++) {  // Задаем 4 ряда для высоты 800px
-        for (let i = 0; i < 4; i++) {  // Задаем 4 карточки в ряду для ширины 1080px
+      for (let j = 0; j < 3; j++) {  
+        for (let i = 0; i < 4; i++) {  
           const box = document.createElement('div');
           box.className = 'projectbox-card';
           
-          // Получение данных карточки
           const dataIndex = (i + j * 4) % PROJECTBOX_DATA.length;
           const card = PROJECTBOX_DATA[dataIndex];
           
-          // Добавление содержимого
           box.innerHTML = `
             <div class="projectbox-title">${card.title}</div>
             <div class="projectbox-date">${card.date}</div>
@@ -2396,10 +2343,8 @@ setTimeout(checkWidth, 500);
             <div class="projectbox-position">pos: ${i}×${j}</div>
           `;
           
-          // Добавление в контейнер
           container.appendChild(box);
           
-          // Сохранение данных карточки
           PROJECTBOX_STATE.boxes.push({
             element: box,
             i: i,
@@ -2409,9 +2354,7 @@ setTimeout(checkWidth, 500);
       }
     }
     
-    // Обновление позиций карточек
     function projectboxUpdateBoxes() {
-      // Расчет скорости движения курсора
       const dx = PROJECTBOX_STATE.mouseX - PROJECTBOX_STATE.lastMouseX;
       const dy = PROJECTBOX_STATE.mouseY - PROJECTBOX_STATE.lastMouseY;
       PROJECTBOX_STATE.mouseSpeed = Math.sqrt(dx*dx + dy*dy);
@@ -2431,44 +2374,34 @@ setTimeout(checkWidth, 500);
         
         const { element, i, j, velocity, currentX, currentY } = box;
         
-        // Получаем текущую позицию карточки относительно контейнера
         const rect = element.getBoundingClientRect();
         const containerRect = document.getElementById('projectbox-container').getBoundingClientRect();
         const centerX = rect.left - containerRect.left + rect.width / 2;
         const centerY = rect.top - containerRect.top + rect.height / 2;
         
-        // Расчет расстояния от курсора до центра карточки
         const dx = PROJECTBOX_STATE.mouseX - centerX;
         const dy = PROJECTBOX_STATE.mouseY - centerY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
-        // Расчет целевой позиции для отталкивания
         let targetX = 0;
         let targetY = 0;
         
         if (distance < PROJECTBOX_CONFIG.cursorInfluenceRadius && distance > 0) {
-          // Нормализация вектора направления
           const nx = -dx / distance;
           const ny = -dy / distance;
           
-          // Сила отталкивания уменьшается с расстоянием, но увеличивается со скоростью курсора
           const speedFactor = 1 + PROJECTBOX_STATE.mouseSpeed / 50;
           const strength = PROJECTBOX_CONFIG.maxRepulsion * (1 - distance / PROJECTBOX_CONFIG.cursorInfluenceRadius) * speedFactor;
           
-          // Применение пиксельного движения
           targetX = Math.round(nx * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
           targetY = Math.round(ny * strength / PROJECTBOX_CONFIG.pixelSize) * PROJECTBOX_CONFIG.pixelSize;
           
-          // Сохраняем целевую позицию
           box.targetX = targetX;
           box.targetY = targetY;
         } else {
-          // Если курсор далеко, то целевая позиция - возврат с отдачей
           targetX = 0;
           targetY = 0;
           
-          // Если мы близко к целевой позиции и еще движемся с достаточной скоростью, 
-          // добавляем отдачу, меняя целевую позицию на противоположную
           if (Math.abs(box.currentX) < 4 && Math.abs(velocity.x) > 0.5) {
             targetX = -Math.sign(velocity.x) * 4;
           }
@@ -2478,30 +2411,23 @@ setTimeout(checkWidth, 500);
           }
         }
         
-        // Пружинная физика для более плавного движения с отдачей
-        const spring = 0.2;  // Сила пружины
-        const damping = 0.7; // Затухание (трение)
+        const spring = 0.2;  
+        const damping = 0.7;
         
-        // Вычисляем ускорение на основе разницы текущей и целевой позиции (закон Гука)
         const ax = (targetX - box.currentX) * spring;
         const ay = (targetY - box.currentY) * spring;
         
-        // Обновляем скорость с учетом ускорения и затухания
         velocity.x = velocity.x * damping + ax;
         velocity.y = velocity.y * damping + ay;
         
-        // Обновляем текущую позицию
         box.currentX += velocity.x;
         box.currentY += velocity.y;
         
-        // Применяем пиксельное округление к финальной позиции для сохранения пиксельного эффекта
         const pixelX = Math.round(box.currentX / 2) * 2;
         const pixelY = Math.round(box.currentY / 2) * 2;
         
-        // Применяем трансформацию для перемещения
         element.style.transform = `translate(${pixelX}px, ${pixelY}px)`;
         
-        // Обновление отображения позиции
         const positionDiv = element.querySelector('.projectbox-position');
         positionDiv.textContent = `pos: ${i}×${j}`;
       });
@@ -2509,7 +2435,6 @@ setTimeout(checkWidth, 500);
       requestAnimationFrame(projectboxUpdateBoxes);
     }
     
-    // Отслеживание позиции курсора
     function projectboxHandleMouseMove(event) {
       const container = document.getElementById('projectbox-container');
       if (!container) return;
@@ -2519,39 +2444,33 @@ setTimeout(checkWidth, 500);
       PROJECTBOX_STATE.mouseY = event.clientY - rect.top;
     }
     
-    // Обработка изменения размера окна
     function projectboxHandleResize() {
       const container = document.getElementById('projectbox-container');
       if (!container) return;
       
-      // Удаление всех карточек
       PROJECTBOX_STATE.boxes.forEach(box => box.element.remove());
       PROJECTBOX_STATE.boxes = [];
       
-      // Повторная инициализация
       projectboxInit();
     }
     
-    // Настройка обработчиков событий
     function projectboxSetupEventListeners() {
       document.addEventListener('mousemove', projectboxHandleMouseMove);
       window.addEventListener('resize', projectboxHandleResize);
     }
     
-    // Инициализация PROJECTBOX
     function projectboxStart() {
       projectboxInit();
       projectboxSetupEventListeners();
       projectboxUpdateBoxes();
     }
     
-    // Запуск при загрузке страницы
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', projectboxStart);
     } else {
       projectboxStart();
     }
-  })(); // Немедленно вызываемая функция для изоляции кода
+  })();
 
 
 
