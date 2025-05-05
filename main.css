@@ -699,7 +699,6 @@ body {
 
 
 
-  /* PROJECTBOX изолированные стили */
   .projectbox-container {
     position: relative;
     width: 100%;
@@ -730,7 +729,7 @@ body {
     width: 200px;
     margin: 0 20px 35px 20px;
     z-index: 1;
-    transition: transform 0.05s ease-out; /* Легкий переход для плавности */
+    transition: transform 0.05s ease-out;
   }
   
   .projectbox-title {
@@ -769,21 +768,11 @@ body {
 
 
 
-
-
-
-
-
-
-    /* Минимальные необходимые стили только для контейнера симуляции */
   #slime-container {
       width: 400px;
       height: 400px;
       float: right;
   }
-
-
-
 
 
 

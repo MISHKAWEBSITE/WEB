@@ -574,10 +574,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
 const ascii = ".:-=+*#%@";
 const myCanvas = document.createElement("canvas");
 myCanvas.width = 32;
