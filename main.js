@@ -979,9 +979,9 @@ function showEmailModal(email) {
       
       .LOGBUNAFTER {
         cursor: pointer;
-        font-family: DOS437;
+        font-family: VT323;
         display: grid;
-        font-size: 20px;
+        font-size: 24px;
         width: 140px;
         position: relative;
         color: antiquewhite;
@@ -1830,7 +1830,10 @@ setTimeout(checkWidth, 500);
   let LIVE_cursorX = -1;
   let LIVE_cursorY = -1;
   let LIVE_isPressed = false;
-  let LIVE_updateSpeed = 42; //speed changer
+  let LIVE_updateSpeed = 42;
+  let LIVE_lastRandomBlock = 0;
+  let LIVE_randomBlockInterval = 50;
+  let LIVE_liveCellCount = 0;
   
   const LIVE_canvas = document.getElementById('LIVECANVAS');
   
@@ -1860,6 +1863,69 @@ setTimeout(checkWidth, 500);
     LIVE_canvas.style.width = `${LIVE_cols * fontSize * 0.6}px`;
     LIVE_canvas.style.height = `${LIVE_rows * fontSize}px`;
   }
+
+  function LIVE_addRandomBlock(prev, w, h) {
+    const patterns = [
+      [
+        [1, 1],
+        [1, 1]
+      ],
+      [
+        [1, 1, 1]
+      ],
+      [
+        [0, 1, 0],
+        [0, 0, 1],
+        [1, 1, 1]
+      ],
+      [
+        [1, 1],
+        [1, 0]
+      ]
+    ];
+
+    let liveCells = [];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (LIVE_get(x, y, w, h, prev) === 1) {
+          liveCells.push({x, y});
+        }
+      }
+    }
+
+    if (liveCells.length > 0) {
+      const randomCellIndex = Math.floor(Math.random() * liveCells.length);
+      const cell = liveCells[randomCellIndex];
+      
+      const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+      
+      const offsetX = Math.floor(Math.random() * 10) - 5;
+      const offsetY = Math.floor(Math.random() * 10) - 5;
+      
+      for (let y = 0; y < pattern.length; y++) {
+        for (let x = 0; x < pattern[y].length; x++) {
+          if (pattern[y][x] === 1) {
+            LIVE_set(1, cell.x + x + offsetX, cell.y + y + offsetY, w, h, prev);
+          }
+        }
+      }
+    } else {
+      const randomX = Math.floor(Math.random() * w);
+      const randomY = Math.floor(Math.random() * h);
+      
+      const glider = [
+        [0, 0, 1],
+        [1, 0, 1],
+        [0, 1, 1]
+      ];
+      
+      for (let y = 0; y < glider.length; y++) {
+        for (let x = 0; x < glider[y].length; x++) {
+          LIVE_set(glider[y][x], randomX + x, randomY + y, w, h, prev);
+        }
+      }
+    }
+  }
   
   function LIVE_updateGame() {
     const prev = LIVE_data[LIVE_frame % 2];
@@ -1870,9 +1936,7 @@ setTimeout(checkWidth, 500);
     if (LIVE_isPressed && LIVE_cursorX >= 0 && LIVE_cursorY >= 0) {
       const cx = Math.floor(LIVE_cursorX);
       const cy = Math.floor(LIVE_cursorY * 2);
-      const s = 3;
       
-      // Создаем планер (glider) вместо случайных клеток
       const glider = [
         [0, 0, 1],
         [1, 0, 1],
@@ -1886,6 +1950,7 @@ setTimeout(checkWidth, 500);
       }
     }
     
+    LIVE_liveCellCount = 0;
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const current = LIVE_get(x, y, w, h, prev);
@@ -1905,7 +1970,33 @@ setTimeout(checkWidth, 500);
         } else {
           curr[i] = neighbors == 3 ? 1 : 0;
         }
+        
+        if (curr[i] === 1) {
+          LIVE_liveCellCount++;
+        }
       }
+    }
+    
+    let shouldAddBlock = false;
+    
+    let dynamicInterval = LIVE_randomBlockInterval;
+    if (LIVE_liveCellCount < 50) {
+      dynamicInterval = 20;
+    } else if (LIVE_liveCellCount < 200) {
+      dynamicInterval = 40;
+    } else {
+      dynamicInterval = 80;
+    }
+    
+    if (LIVE_frame - LIVE_lastRandomBlock > dynamicInterval) {
+      shouldAddBlock = true;
+    } else if (LIVE_liveCellCount < 20) {
+      shouldAddBlock = Math.random() < 0.3;
+    }
+    
+    if (shouldAddBlock) {
+      LIVE_addRandomBlock(curr, w, h);
+      LIVE_lastRandomBlock = LIVE_frame;
     }
     
     LIVE_frame++;
@@ -1989,16 +2080,18 @@ setTimeout(checkWidth, 500);
     return LIVE_isPaused;
   };
   
+  window.LIVE_setRandomInterval = function(frames) {
+    LIVE_randomBlockInterval = frames;
+  };
+  
   LIVE_startGame();
   
   return {
     setSpeed: window.LIVE_setSpeed,
-    togglePause: window.LIVE_togglePause
+    togglePause: window.LIVE_togglePause,
+    setRandomInterval: window.LIVE_setRandomInterval
   };
 })();
-
-
-
 
 
 
