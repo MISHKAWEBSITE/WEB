@@ -327,18 +327,6 @@ var AsciiMorph = (function() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
   const scrollIndicatorBars = document.getElementById("scroll-indicator-bars");
   const scrollProgress = document.getElementById("scroll-progress");
   const scrollIndicator = document.getElementById("scroll-indicator");
@@ -414,7 +402,7 @@ var AsciiMorph = (function() {
       cancelAnimationFrame(currentScrollAnimation);
     }
     
-    const maxAnimationDuration = 300; // ms
+    const maxAnimationDuration = 300;
     const startTime = Date.now();
     
     function animate() {
@@ -493,11 +481,6 @@ var AsciiMorph = (function() {
 
 
 
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
   const spinner = document.querySelector('.activity');
@@ -569,11 +552,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
 const ascii = ".:-=+*#%@";
 const myCanvas = document.createElement("canvas");
 myCanvas.width = 32;
@@ -641,6 +619,8 @@ const updateAsciiOutput = () => {
     }
   }
 };
+
+
 
 const randomBox = () => ({
   x: Math.floor(10 * Math.random()) + 7,
@@ -742,9 +722,6 @@ window.addEventListener("mousemove", (t) => {
 
 
 
-
-
-
 function changeText() {
   const e = document.getElementById("myDiv");
   let t = 0;
@@ -774,12 +751,6 @@ document.addEventListener('DOMContentLoaded', function() {
       container.style.maxWidth = "100%";
   });
 });
-
-
-
-
-
-
 
 
 
@@ -1181,21 +1152,6 @@ if (document.readyState === 'loading') {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const TOX_ID = "2800F4E2258D0A56175E40AF2CBAFAC3F43E4867B5C3A06DC638F4553A2E311086340A206E01";
 
 function copyToxId() {
@@ -1279,13 +1235,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
-
-
 const TG_ID = "UNAVAILABLE";
 
 function copyTgId() {
@@ -1364,14 +1313,6 @@ document.addEventListener('DOMContentLoaded', function() {
     tgButton.onclick = copyTgId;
   }
 });
-
-
-
-
-
-
-
-
 
 
 
@@ -1572,7 +1513,6 @@ function drawLine(x1, y1, z1, x2, y2, z2, buffer, zBuffer) {
   }
 }
 
-// Mouse event handlers
 container.addEventListener('mousedown', (e) => {
   isDragging = true;
   lastMouseX = e.clientX;
@@ -1657,8 +1597,6 @@ function resumeAnimation() {
 }
 
 animate();
-
-
 
 
 
@@ -1832,8 +1770,10 @@ setTimeout(checkWidth, 500);
   let LIVE_isPressed = false;
   let LIVE_updateSpeed = 42;
   let LIVE_lastRandomBlock = 0;
-  let LIVE_randomBlockInterval = 50;
+  let LIVE_randomBlockInterval = 30;
   let LIVE_liveCellCount = 0;
+  let LIVE_prevLiveCellCount = 0;
+  let LIVE_stableCount = 0;
   
   const LIVE_canvas = document.getElementById('LIVECANVAS');
   
@@ -1881,6 +1821,16 @@ setTimeout(checkWidth, 500);
       [
         [1, 1],
         [1, 0]
+      ],
+      [
+        [1, 1, 0],
+        [1, 0, 1],
+        [0, 1, 0]
+      ],
+      [
+        [1, 0, 1],
+        [0, 1, 0],
+        [1, 0, 1]
       ]
     ];
 
@@ -1894,18 +1844,22 @@ setTimeout(checkWidth, 500);
     }
 
     if (liveCells.length > 0) {
-      const randomCellIndex = Math.floor(Math.random() * liveCells.length);
-      const cell = liveCells[randomCellIndex];
+      const numPatterns = Math.max(1, Math.floor(Math.random() * 3));
       
-      const pattern = patterns[Math.floor(Math.random() * patterns.length)];
-      
-      const offsetX = Math.floor(Math.random() * 10) - 5;
-      const offsetY = Math.floor(Math.random() * 10) - 5;
-      
-      for (let y = 0; y < pattern.length; y++) {
-        for (let x = 0; x < pattern[y].length; x++) {
-          if (pattern[y][x] === 1) {
-            LIVE_set(1, cell.x + x + offsetX, cell.y + y + offsetY, w, h, prev);
+      for (let p = 0; p < numPatterns; p++) {
+        const randomCellIndex = Math.floor(Math.random() * liveCells.length);
+        const cell = liveCells[randomCellIndex];
+        
+        const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+        
+        const offsetX = Math.floor(Math.random() * 14) - 7;
+        const offsetY = Math.floor(Math.random() * 14) - 7;
+        
+        for (let y = 0; y < pattern.length; y++) {
+          for (let x = 0; x < pattern[y].length; x++) {
+            if (pattern[y][x] === 1) {
+              LIVE_set(1, cell.x + x + offsetX, cell.y + y + offsetY, w, h, prev);
+            }
           }
         }
       }
@@ -1950,7 +1904,9 @@ setTimeout(checkWidth, 500);
       }
     }
     
+    LIVE_prevLiveCellCount = LIVE_liveCellCount;
     LIVE_liveCellCount = 0;
+    
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const current = LIVE_get(x, y, w, h, prev);
@@ -1977,20 +1933,32 @@ setTimeout(checkWidth, 500);
       }
     }
     
+    if (Math.abs(LIVE_liveCellCount - LIVE_prevLiveCellCount) < 5) {
+      LIVE_stableCount++;
+    } else {
+      LIVE_stableCount = 0;
+    }
+    
     let shouldAddBlock = false;
     
     let dynamicInterval = LIVE_randomBlockInterval;
-    if (LIVE_liveCellCount < 50) {
+    if (LIVE_liveCellCount < 30) {
+      dynamicInterval = 10;
+    } else if (LIVE_liveCellCount < 100) {
       dynamicInterval = 20;
-    } else if (LIVE_liveCellCount < 200) {
-      dynamicInterval = 40;
     } else {
-      dynamicInterval = 80;
+      dynamicInterval = 40;
+    }
+    
+    if (LIVE_stableCount > 5) {
+      dynamicInterval = Math.max(5, dynamicInterval / 2);
     }
     
     if (LIVE_frame - LIVE_lastRandomBlock > dynamicInterval) {
       shouldAddBlock = true;
     } else if (LIVE_liveCellCount < 20) {
+      shouldAddBlock = Math.random() < 0.4;
+    } else if (LIVE_stableCount > 10) {
       shouldAddBlock = Math.random() < 0.3;
     }
     
