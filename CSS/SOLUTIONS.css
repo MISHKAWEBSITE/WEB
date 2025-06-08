@@ -59,7 +59,7 @@ body {
 
 
 ::selection {
-    background-color: #ffcc00;
+    background-color: #ffce2e;
     color: #010101;
 }
 
@@ -70,7 +70,15 @@ body {
   font-family: DOS437;
   font-size: 16px;
   margin-bottom: 20px;
-  margin-top: 40px;
+  margin-top: 20px;
+}
+
+.BANNERSOLD {
+  text-align: center;
+  font-family: DOS437;
+  font-size: 16px;
+  margin-bottom: 120px;
+  margin-top: 20px;
 }
 
 
@@ -145,6 +153,14 @@ body {
     text-align: center;
     color: antiquewhite;
 }
+
+  .TABLEBS {
+    font-family: DOS437;
+    font-size: 20px;
+    text-align: center;
+    color: antiquewhite;
+}
+
 
 
 .LOGBUNAFTER { 
@@ -232,7 +248,7 @@ body {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: #ffcc00;
+        color: #ffce2e;
         font-size: 80px;
         font-weight: bold;
         z-index: 10;
@@ -315,3 +331,119 @@ body {
   font-size: 20px;
   margin-bottom: 20px;
 }
+
+
+
+
+
+
+
+
+.gridblock {
+  display: grid;
+  margin: 0 auto;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  width: 800px;
+  height: 220px;
+  gap: 2px;
+  position: relative;
+}
+
+.gridblockspan {
+  --rotate: -10deg;
+  display: block;
+  width: 2px;
+  height: 20px;
+  background-color: antiquewhite;
+  will-change: transform;
+  transform-origin: center;
+  transform: rotate(var(--rotate));
+  transition: transform 0.1s ease-out;
+  border-radius: 1px;
+  justify-self: center;
+  align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gridblockspan {
+      transition: none;
+  }
+}
+
+
+.COOP_HIGHLIGHTSS{
+  cursor: default;
+  font-size: 20px;
+  font-family: DOS437;
+  width: 100%;
+}
+
+.COOP_HIGHLIGHTSS:hover {
+  background-color: #ffce2e;
+  color: #010101;
+}
+
+.COOP_HIGHLIGHTSS::selection {
+  background-color: #010101;
+  color: #ffce2e;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /* Оверлей модалки с анимацией */
+    .modal-overlay {
+      font-family: DOS437;
+
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      backdrop-filter: none;
+      background: rgba(0,0,0,0.6);
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      font-family: DOS437;
+
+
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Окно модалки с анимацией */
+    .modal {
+      font-family: DOS437;
+
+      background: #010101;
+      color: antiquewhite;
+      padding: 20px;
+      border: 1px solid antiquewhite;
+      border-radius: 4px;
+      max-width: 90%;
+      width: 400px;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .modal-overlay.active .modal {
+      font-family: DOS437;
+
+      opacity: 1;
+      transform: scale(1);
+    }

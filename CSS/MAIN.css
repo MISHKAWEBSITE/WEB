@@ -375,6 +375,23 @@ body {
     font-family: VT323;
 }
 
+.NDABLOCK {
+    width: 1080px;
+    margin: 0 auto;
+    font-family: DOS437, monospace;
+    font-size: 20px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  .NDABLOCK .char {
+    display: inline-block;
+    width: 1ch;
+    vertical-align: baseline;
+  }
+  
+
 .FORMTEXT {
     font-size: 22px;
     text-align: center;
