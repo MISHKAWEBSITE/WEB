@@ -1,0 +1,285 @@
+:root {
+    font-family: "DotGothic", sans-serif;
+    background-color: #010101;
+    color: antiquewhite;
+}
+
+@font-face {
+    font-family: 'VT323';
+    src: url('../assets/fonts/VT323.ttf');
+}
+
+@font-face {
+    font-family: 'DotGothic';
+    src: url('../assets/fonts/DotGothic16-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'DOS437';
+    src: url(../assets/fonts/DOS437.ttf);
+}
+
+
+
+body {
+    cursor: default;
+}
+
+
+* {
+    cursor: default;
+}
+
+a, button, .cornerEffect {
+    cursor: pointer;
+}
+
+html {
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+body {
+    -ms-overflow-style: none;
+}
+
+
+
+
+#scroll-percentage {
+    margin-left: 14px;
+    font-size: 16px;
+    min-width: 50px;
+    text-align: right;
+}
+
+
+::selection {
+    background-color: #85bb65;
+    color: #010101;
+}
+
+
+
+
+/* сам navbar остаётся как было */
+.navbar {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 1100px;
+    background-color: #010101;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between; /* между группами */
+    align-items: center;
+    z-index: 999;
+    transform: translateX(-50%);
+  }
+  
+  /* новая обёртка для трёх элементов */
+  .info-group {
+    display: flex;
+    align-items: center;
+    gap: 0; /* никаких отступов между ними */
+  }
+  
+  /* если у внутренних элементов вдруг есть margin, его можно сбросить */
+  .info-group .activity,
+  .info-group #scroll-indicator,
+  .info-group #scroll-progress {
+    margin: 0;
+  }
+  
+  /* ссылки остаются без изменений */
+  .navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  .navbar-nav a {
+    color: #555;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 50px;
+    transition: color 0.25s ease, transform 0.25s ease;
+    display: inline-block;
+  }
+  .navbar-nav a:first-child {
+    margin-left: 0;
+  }
+  .navbar-nav a:hover {
+    color: antiquewhite;
+    transform: scale(1.1);
+  }
+  .navbar-nav a.active {
+    color: antiquewhite;
+    cursor: default;
+  }
+  
+  /* часы */
+  #clock {
+    color: antiquewhite;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  
+.COOP_LINE{
+    text-align: center;
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 100%;
+}
+
+.TABLE {
+    font-family: DOS437;
+    font-size: 24px;
+    text-align: center;
+    color: antiquewhite;
+}
+
+.EMPLOYEE_MANIFESTO {
+    font-family: DOS437;
+    font-size: 22px;
+    color: antiquewhite;
+    width: 980px;
+    margin: 0 auto;
+}
+
+
+
+
+
+.LOGBUNAFTER { 
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    width: 260px;
+    background: none;
+    border: none;
+    position: relative;
+    color: antiquewhite;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    &::after {
+        content: "";
+        background: var(--grad) top left / var(--thik) var(--size),
+        var(--grad) top left / var(--size) var(--thik),
+        var(--grad) top right / var(--size) var(--thik),
+        var(--grad) top right / var(--thik) var(--size),
+        var(--grad) bottom left / var(--thik) var(--size),
+        var(--grad) bottom left / var(--size) var(--thik),
+        var(--grad) bottom right / var(--size) var(--thik),
+        var(--grad) bottom right / var(--thik) var(--size);
+        background-repeat: no-repeat;
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.LOGBUNAFTER:hover {
+    background-color: antiquewhite;
+    color: #010101;
+    border-radius: 1px;
+}
+
+.LOGBUNAFTER:hover::after {
+    background: none;
+}
+
+.LOGBUNAFTER:active {
+    background-color: antiquewhite;
+    transform: scale(0.95);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#LIVECONTAINER {
+    margin: 0 auto;
+    width: 1080px;
+    height: 400px;
+    position: relative;
+}
+
+#LIVECANVAS {
+    margin: 0;
+    color: antiquewhite;
+    line-height: 1;
+    font-family: monospace;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.overlay-hiring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    font-family: DOS437;
+    color:  #85bb65;
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+.overlay-hiring::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;   /* подберите под ширину контейнера */
+    height: 410px;   /* подберите под высоту контейнера */
+    background: radial-gradient(
+      circle at center,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0.8) 20%,
+      rgba(0, 0, 0, 0.4) 60%,
+      rgba(0, 0, 0, 0) 80%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+  
+
+.MEMBERS_HEADER {
+    color: antiquewhite;
+    font-family: DOS437;
+    font-size: 18px;
+    text-align: center;
+}
+
+
+
+.COOP_HIGHLIGHTGR{
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 100%;
+}
+
+.COOP_HIGHLIGHTGR:hover {
+    background-color: #85bb65;
+    color: #010101;
+}
+
+.COOP_HIGHLIGHTGR::selection {
+    background-color: #010101;
+    color: #85bb65;
+}

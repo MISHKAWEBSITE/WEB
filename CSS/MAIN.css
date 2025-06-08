@@ -1,0 +1,728 @@
+@font-face {
+    font-family: 'VT323';
+    src: url('../assets/fonts/VT323.ttf');
+}
+
+@font-face {
+    font-family: 'DotGothic';
+    src: url('../assets/fonts/DotGothic16-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'DOS437';
+    src: url(../assets/fonts/DOS437.ttf);
+}
+
+@font-face {
+    font-family: 'WARDEN';
+    src: url(../assets/fonts/PIXELWARDEN.ttf);
+}
+
+
+:root {
+    font-family: "DotGothic", sans-serif;
+    background-color: #010101;
+    color: antiquewhite;
+    --grad: linear-gradient(currentColor 0 0);
+    --thik: 1px;
+    --size: 10px;
+    /* -webkit-touch-callout: none; 
+    -webkit-user-select: none;  
+    -khtml-user-select: none; 
+    -moz-user-select: none;    
+    -ms-user-select: none;    
+    user-select: none;           */
+}
+
+body {
+    cursor: default;
+}
+
+
+* {
+    cursor: default;
+}
+a, button, .cornerEffect {
+    cursor: pointer;
+}
+.cornerEffect { 
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    width: 160px;
+    background: none;
+    border: none;
+    position: relative;
+    color: antiquewhite;
+    font-family: "VT323";
+    &::after {
+        content: "";
+        background: var(--grad) top left / var(--thik) var(--size),
+        var(--grad) top left / var(--size) var(--thik),
+        var(--grad) top right / var(--size) var(--thik),
+        var(--grad) top right / var(--thik) var(--size),
+        var(--grad) bottom left / var(--thik) var(--size),
+        var(--grad) bottom left / var(--size) var(--thik),
+        var(--grad) bottom right / var(--size) var(--thik),
+        var(--grad) bottom right / var(--thik) var(--size);
+        background-repeat: no-repeat;
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.cornerEffect:hover {
+    background-color: antiquewhite;
+    color: #010101;
+}
+.cornerEffect:hover::after {
+    background: none;
+}
+
+
+#scroll-percentage {
+    margin-left: 14px;
+    font-size: 16px;
+    min-width: 50px;
+    text-align: right;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
+}
+
+
+::selection {
+    background-color: #fa4c14;
+    color: #010101;
+}
+
+
+
+
+
+
+
+
+
+/* сам navbar остаётся как было */
+.navbar {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 1100px;
+    background-color: #010101;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between; /* между группами */
+    align-items: center;
+    z-index: 999;
+    transform: translateX(-50%);
+  }
+  
+  /* новая обёртка для трёх элементов */
+  .info-group {
+    display: flex;
+    align-items: center;
+    gap: 0; /* никаких отступов между ними */
+  }
+  
+  /* если у внутренних элементов вдруг есть margin, его можно сбросить */
+  .info-group .activity,
+  .info-group #scroll-indicator,
+  .info-group #scroll-progress {
+    margin: 0;
+  }
+  
+  /* ссылки остаются без изменений */
+  .navbar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+  }
+  .navbar-nav a {
+    color: #555;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 50px;
+    transition: color 0.25s ease, transform 0.25s ease;
+    display: inline-block;
+  }
+  .navbar-nav a:first-child {
+    margin-left: 0;
+  }
+  .navbar-nav a:hover {
+    color: antiquewhite;
+    transform: scale(1.1);
+  }
+  .navbar-nav a.active {
+    color: antiquewhite;
+    cursor: default;
+  }
+  
+  /* часы */
+  #clock {
+    color: antiquewhite;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  
+
+
+
+
+
+
+.headerPreMax {
+    padding-top: 80px;
+    text-align: center;
+    letter-spacing: 1px;
+    height: 10em;
+}
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+html {
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+body {
+    -ms-overflow-style: none;
+}
+
+.my-p{
+    font-size: 22px;
+    font-family: DOS437;
+}
+
+.my-p:hover {
+    background-color: #fa4c14;
+    color: #0a0a0a;
+}
+.my-p::selection {
+    background-color: #0a0a0a;
+    color: #fa4c14;
+}
+
+.text-link {
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: antiquewhite;
+    border: 1px solid antiquewhite;
+}
+.text-link:hover {
+    background-color: #fa4c14;
+    color: #0a0a0a;
+}
+
+.KNOWLEDE_HIGHLIGHT{
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 720px;
+}
+
+.KNOWLEDE_LINE{
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 720px;
+}
+
+.COOP_HIGHLIGHT{
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 100%;
+}
+
+.COOP_LINE{
+    text-align: center;
+    cursor: default;
+    font-size: 22px;
+    font-family: DOS437;
+    width: 100%;
+}
+
+.projects a{
+    color: antiquewhite;
+    text-decoration: none;
+}
+
+.projects:hover {
+    background-color: #fa4c14;
+    color: #010101;
+}
+
+.projects::selection {
+    background-color: #010101;
+    color: #fa4c14;
+}
+
+.KNOWLEDE_HIGHLIGHT:hover {
+    background-color: #fa4c14;
+    color: #010101;
+}
+
+.KNOWLEDE_HIGHLIGHT::selection {
+    background-color: #0a0a0a;
+    color: #fa4c14;
+}
+
+.COOP_HIGHLIGHT:hover {
+    background-color: #fa4c14;
+    color: #010101;
+}
+
+.COOP_HIGHLIGHT::selection {
+    background-color: #010101;
+    color: #fa4c14;
+}
+
+.projectsClear::selection {
+    background-color: #010101;
+    color: #fa4c14;
+}
+
+.projects2::selection {
+    background-color: #010101;
+    color: #fa4c14;
+}
+
+.projectsClear{
+    color: antiquewhite;
+    font-size: 16px;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: auto;
+}
+.left, .right {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.cornerEffectWork { 
+    display: grid;
+    place-items: center;
+    font-size: 16px;
+    width: 46px;
+    background: none;
+    border: none;
+    position: relative;
+    color: #696969;
+    font-family: "DotGothic", sans-serif;
+    margin-bottom: 4px;
+    &::after {
+        content: "";
+        background: var(--grad) top left / var(--thik) var(--size),
+        var(--grad) top left / var(--size) var(--thik),
+        var(--grad) top right / var(--size) var(--thik),
+        var(--grad) top right / var(--thik) var(--size),
+        var(--grad) bottom left / var(--thik) var(--size),
+        var(--grad) bottom left / var(--size) var(--thik),
+        var(--grad) bottom right / var(--size) var(--thik),
+        var(--grad) bottom right / var(--thik) var(--size);
+        background-repeat: no-repeat;
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.container1 {
+    width: 98%;
+    margin: 10px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.text-block {
+    flex: 1 1 calc(50% - 10px);
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #696969;
+    border-radius: 2px;
+    font-size: 20px;
+}
+
+.text-block1 {
+    width: 524px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #696969;
+    border-radius: 2px;
+    font-size: 20px;
+}
+
+
+.TABLE {
+    font-family: DOS437;
+    font-size: 24px;
+    text-align: center;
+    color: antiquewhite;
+}
+
+.FORMSELECT {
+    font-size: 26px;
+    text-align: center;
+    background-color: black;
+    color: antiquewhite;
+    font-family: VT323;
+}
+
+.FORMTEXT {
+    font-size: 22px;
+    text-align: center;
+    background-color: #010101;
+    color: antiquewhite;
+    font-family: VT323;
+    width: 200px;
+}
+
+.FORM {
+    width: 1080px;
+    overflow: auto;
+    padding: 10px;
+    border: 1px solid #585858;
+    margin:0 auto;
+    font-size: 26px;
+    border-radius: 2px;
+    font-family: VT323;
+}
+
+.EMPLOYEE_MANIFESTO {
+    font-family: DOS437;
+    font-size: 22px;
+    color: antiquewhite;
+    width: 980px;
+    margin: 0 auto;
+}
+
+.MINDSET_MANIFESTO {
+    font-family: DOS437;
+    font-size: 22px;
+    color: antiquewhite;
+    width: 1080px;
+    margin: 0 auto;
+    margin-top: 8px;
+}
+
+.BANNER {
+    text-align: center;
+    margin-top: 140px;
+    font-family: DOS437;
+    font-size: 16px;
+}
+
+#cube-container {
+    font-family: DOS437;
+    white-space: pre;
+    color: antiquewhite;
+    font-size: 12px;
+    line-height: 0.85;
+    cursor: grab;
+    user-select: none;
+    display: inline-block;
+}
+#cube-container:active {
+    cursor: grabbing;
+}
+
+.gridblock {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    width: 1080px;
+    height: 220px;
+    gap: 2px;
+    position: relative;
+}
+
+.gridblockspan {
+    --rotate: -10deg;
+    display: block;
+    width: 2px;
+    height: 20px;
+    background-color: antiquewhite;
+    will-change: transform;
+    transform-origin: center;
+    transform: rotate(var(--rotate));
+    transition: transform 0.1s ease-out;
+    border-radius: 1px;
+    justify-self: center;
+    align-self: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gridblockspan {
+        transition: none;
+    }
+}
+
+.MEMBERS_HEADER {
+    color: antiquewhite;
+    font-family: DOS437;
+    font-size: 18px;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .projectbox-container {
+    position: relative;
+    width: 100%;
+    max-width: 1080px;
+    height: 600px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    padding-top: 20px;
+  }
+  
+  .projectbox-card {
+    position: relative;
+    border: 1px double antiquewhite;
+    background-color: #010101;
+    box-shadow: 5px 5px 0px #333333;
+    padding: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    font-family: DOS437;
+    image-rendering: pixelated;
+    height: 140px;
+    width: 200px;
+    margin: 0 20px 35px 20px;
+    z-index: 1;
+    transition: transform 0.05s ease-out;
+  }
+  
+  .projectbox-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: antiquewhite;
+    height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .projectbox-date {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #666;
+  }
+  
+  .projectbox-content {
+    font-size: 14px;
+    line-height: 1.2;
+    color: antiquewhite;
+    text-align: left;
+    height: 60px;
+    overflow: hidden;
+    margin-bottom: auto;
+  }
+  
+  .projectbox-position {
+    font-size: 10px;
+    color: #999;
+    height: 12px;
+    margin-top: auto;
+  }
+
+
+
+  #slime-container {
+    margin-top: 60px;
+      width: 380px;
+      height: 400px;
+      float: right;
+  }
+
+
+
+
+
+
+  .LOGBUNAFTER { 
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    width: 260px;
+    background: none;
+    border: none;
+    position: relative;
+    color: antiquewhite;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    &::after {
+        content: "";
+        background: var(--grad) top left / var(--thik) var(--size),
+        var(--grad) top left / var(--size) var(--thik),
+        var(--grad) top right / var(--size) var(--thik),
+        var(--grad) top right / var(--thik) var(--size),
+        var(--grad) bottom left / var(--thik) var(--size),
+        var(--grad) bottom left / var(--size) var(--thik),
+        var(--grad) bottom right / var(--size) var(--thik),
+        var(--grad) bottom right / var(--thik) var(--size);
+        background-repeat: no-repeat;
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.LOGBUNAFTER:hover {
+    background-color: antiquewhite;
+    color: #010101;
+    border-radius: 1px;
+}
+
+.LOGBUNAFTER:hover::after {
+    background: none;
+}
+
+.LOGBUNAFTER:active {
+    background-color: antiquewhite;
+    transform: scale(0.95);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.infinite-scroll-wrapper {
+    position: relative;
+    width: 1080px;
+    height: 400px;
+    overflow: hidden;
+    perspective: 800px;
+    cursor: grab;
+    user-select: none;
+  }
+  .infinite-scroll-wrapper:before,
+  .infinite-scroll-wrapper:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 25%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, #000, transparent);
+  }
+  .infinite-scroll-wrapper:after {
+    bottom: 0;
+    background: linear-gradient(
+to top,
+rgba(0, 0, 0, 1) 0%,
+rgba(0, 0, 0, 1) 40%,
+rgba(0, 0, 0, 0.6) 60%,
+transparent 100%
+);
+
+  }
+  .infinite-scroll-wrapper:active {
+    cursor: grabbing;
+  }
+
+  .infinite-scroll-tilt {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform-origin: center top;
+    transform-style: preserve-3d;
+    transform: translateX(-50%) rotateZ(-4deg) skewX(10deg);
+    
+    width: 800px;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .infinite-scroll-track {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .infinite-scroll-item {
+    --accent-color: antiquewhite;
+    box-sizing: border-box;
+    width: 100%;
+    height: 150px;
+    margin-bottom: 20px;
+    padding: 1rem;
+    border: 2px solid antiquewhite;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+    background: #010101;
+    color: antiquewhite;
+    flex-shrink: 0;
+  }
+  .infinite-scroll-item:last-child {
+    margin-bottom: 20px;
+  }

@@ -1,0 +1,102 @@
+:root {
+    --grad: linear-gradient(antiquewhite, antiquewhite);
+    --thik: 1px;
+    --size: 10px;
+}
+
+::selection {
+    background-color: #fa4c14;
+    color: #010101;
+}
+
+@font-face {
+    font-family: 'VT323';
+    src: url('../assets/fonts/VT323.ttf');
+}
+
+@font-face {
+    font-family: 'DOS437';
+    src: url(../assets/fonts/DOS437.ttf);
+}
+
+
+.LOGWORD {
+    font-family: 'VT323', monospace;
+    font-size: 40px;
+}
+
+
+.LOGBUNAFTER { 
+    cursor: pointer;
+    font-family: 'VT323', monospace;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    width: 260px;
+    background: none;
+    border: none;
+    position: relative;
+    color: antiquewhite;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+    &::after {
+        content: "";
+        background: var(--grad) top left / var(--thik) var(--size),
+        var(--grad) top left / var(--size) var(--thik),
+        var(--grad) top right / var(--size) var(--thik),
+        var(--grad) top right / var(--thik) var(--size),
+        var(--grad) bottom left / var(--thik) var(--size),
+        var(--grad) bottom left / var(--size) var(--thik),
+        var(--grad) bottom right / var(--size) var(--thik),
+        var(--grad) bottom right / var(--thik) var(--size);
+        background-repeat: no-repeat;
+        inset: 0;
+        position: absolute;
+    }
+}
+
+.LOGBUNAFTER:hover {
+    background-color: antiquewhite;
+    color: #010101;
+    border-radius: 1px;
+}
+
+.LOGBUNAFTER:hover::after {
+    background: none;
+}
+
+.LOGBUNAFTER:active {
+    background-color: antiquewhite;
+    transform: scale(0.95);
+}
+
+.LOGWIN {
+    font-family: 'VT323', monospace;
+    width: 540px;
+    height: 140px;
+    color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.LOGWINSM {
+    font-family: 'VT323', monospace;
+    color: antiquewhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: calc(50% + 100px);
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
