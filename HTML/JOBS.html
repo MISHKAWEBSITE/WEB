@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TextPressure на голом JS</title>
+  <style>
+    /* Подключаем переменный шрифт Compressa VF */
+    @font-face {
+      font-family: 'Compressa VF';
+      src: url('https://res.cloudinary.com/dr6lvwubh/raw/upload/v1529908256/CompressaPRO-GX.woff2') format('woff2');
+      font-style: normal;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000; /* Фон страницы */
+      overflow: hidden;
+    }
+
+    /* Центрируем контейнер по вертикали и горизонтали */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Контейнер для текста */
+    #container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: transparent;
+    }
+
+    /* Стили для заголовка с эффектом */
+    .text-pressure-title {
+      font-family: 'Compressa VF', sans-serif;
+      text-transform: uppercase;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      white-space: nowrap;
+      text-align: center;
+      color: antiquewhite;
+      overflow: hidden;
+      display: flex;               /* flex = true, чтобы растянуть символы по ширине */
+      justify-content: space-between;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1, 1); /* изначально scaleY = 1 */
+      transform-origin: center top;
+    }
+
+    /* Если понадобятся границы у символов (stroke), можно раскомментировать и настроить */
+    /*
+    .stroke span {
+      position: relative;
+      color: #ffffff;
+    }
+    .stroke span::after {
+      content: attr(data-char);
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: transparent;
+      z-index: -1;
+      -webkit-text-stroke-width: 3px;
+      -webkit-text-stroke-color: #ff0000;
+    }
+    */
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Здесь будет генерироваться наше слово -->
+    <h1 id="textPressure" class="text-pressure-title"></h1>
+  </div>
+
+  <script>
+    (function() {
+      // Текст, который нужно отобразить
+      const text = 'MISHKA';
+      const chars = text.split('');
+
+      // Минимальный размер шрифта
+      const minFontSize = 36;
+
+      // Параметры эффекта
+      const useWidth = true;   // управлять осью 'wdth'
+      const useWeight = true;  // управлять осью 'wght'
+      const useItalic = true;  // управлять осью 'ital'
+      const useAlpha = false;  // управлять opacity (в примере alpha=false)
+
+      // Ссылки на элементы
+      const container = document.getElementById('container');
+      const title = document.getElementById('textPressure');
+
+      // Создаём спаны для каждого символа и вставляем в <h1>
+      const spans = [];
+      chars.forEach((char, i) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.setAttribute('data-char', char);
+        span.style.display = 'inline-block';
+        span.style.color = '#ffffff';
+        spans.push(span);
+        title.appendChild(span);
+      });
+
+      // Объекты для координат мыши (плавная и реальная)
+      const mouseRef = { x: 0, y: 0 };
+      const cursorRef = { x: 0, y: 0 };
+
+      // При загрузке страницы инициализируем позицию мыши по центру контейнера
+      function initMousePosition() {
+        const rect = container.getBoundingClientRect();
+        mouseRef.x = rect.left + rect.width / 2;
+        mouseRef.y = rect.top + rect.height / 2;
+        cursorRef.x = mouseRef.x;
+        cursorRef.y = mouseRef.y;
+      }
+
+      // Обработчики движения курсора
+      function onMouseMove(e) {
+        cursorRef.x = e.clientX;
+        cursorRef.y = e.clientY;
+      }
+      function onTouchMove(e) {
+        const t = e.touches[0];
+        cursorRef.x = t.clientX;
+        cursorRef.y = t.clientY;
+      }
+
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('touchmove', onTouchMove, { passive: false });
+
+      // Функция вычисляет расстояние между двумя точками
+      function dist(a, b) {
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      // Функция вычисления атрибута (аналог getAttr из React-кода)
+      // distance — расстояние до символа, minVal, maxVal — диапазон для оси вариаций
+      function getAttr(distance, minVal, maxVal, maxDist) {
+        // val = maxVal - |(maxVal * distance) / maxDist|
+        const raw = maxVal - Math.abs((maxVal * distance) / maxDist);
+        // возвращаем max(minVal, raw + minVal)
+        return Math.max(minVal, raw + minVal);
+      }
+
+      // Устанавливаем размер шрифта и scaleY/line-height (scale=false по умолчанию)
+      function setSize() {
+        const rect = container.getBoundingClientRect();
+        const containerW = rect.width;
+        const containerH = rect.height;
+
+        // Вычисляем новый размер шрифта
+        let newFontSize = containerW / (chars.length / 2);
+        if (newFontSize < minFontSize) newFontSize = minFontSize;
+
+        title.style.fontSize = newFontSize + 'px';
+        title.style.lineHeight = '1';
+        title.style.transform = 'translate(-50%, -50%) scale(1, 1)';
+
+        // Если бы scale=true, можно было бы добавить масштабирование по Y:
+        // const textRect = title.getBoundingClientRect();
+        // const yRatio = containerH / textRect.height;
+        // title.style.transform = `translate(-50%, -50%) scale(1, ${yRatio})`;
+        // title.style.lineHeight = yRatio;
+      }
+
+      // Анимация: плавно приближаем mouseRef к cursorRef, потом меняем вариации шрифта у каждого символа
+      function animate() {
+        // Плавное приближение
+        mouseRef.x += (cursorRef.x - mouseRef.x) / 15;
+        mouseRef.y += (cursorRef.y - mouseRef.y) / 15;
+
+        const titleRect = title.getBoundingClientRect();
+        const maxDist = titleRect.width / 2;
+
+        spans.forEach((span) => {
+          const rect = span.getBoundingClientRect();
+          const charCenter = {
+            x: rect.left + rect.width / 2,
+            y: rect.top + rect.height / 2
+          };
+
+          const d = dist(mouseRef, charCenter);
+
+          // Вычисляем атрибуты
+          const wdth = useWidth   ? Math.floor(getAttr(d, 5, 200, maxDist)) : 100;
+          const wght = useWeight  ? Math.floor(getAttr(d, 100, 900, maxDist)) : 400;
+          const ital = useItalic  ? getAttr(d, 0, 1, maxDist).toFixed(2) : 0;
+          const alpha = useAlpha  ? getAttr(d, 0, 1, maxDist).toFixed(2) : 1;
+
+          // Применяем вариации шрифта и прозрачность
+          span.style.opacity = alpha;
+          span.style.fontVariationSettings = `'wght' ${wght}, 'wdth' ${wdth}, 'ital' ${ital}`;
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      // Инициализация
+      window.addEventListener('load', () => {
+        initMousePosition();
+        setSize();
+        window.addEventListener('resize', setSize);
+        requestAnimationFrame(animate);
+      });
+    })();
+  </script>
+</body>
+</html>
