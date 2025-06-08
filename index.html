@@ -35,5 +35,17 @@
     <script src="./JS/DOOM.js"></script>
     <script src="./JS/INDEX.js"></script>
 
+<script>
+  function redirectIfTooSmall() {
+    if (window.innerWidth < 1100) {
+      window.location.href = 'no-js.html';
+    }
+  }
+
+  redirectIfTooSmall();
+  document.addEventListener('DOMContentLoaded', redirectIfTooSmall);
+</script>
+
+
 </body>
 </html>
