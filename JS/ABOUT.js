@@ -1171,67 +1171,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-    const wrapper = document.getElementById("gridblock");
-    const rows = 11;
-    const cols = 9;
-    const totalItems = rows * cols;
-    
-    for (let i = 0; i < totalItems; i++) {
-      const span = document.createElement("span");
-      span.className = "gridblockspan";
-      wrapper.appendChild(span);
-    }
-    
-    const items = wrapper.querySelectorAll(".gridblockspan");
-    
-    const onPointerMove = (event) => {
-      const mouseX = event.clientX || event.x;
-      const mouseY = event.clientY || event.y;
-      
-      items.forEach((element) => {
-        const rect = element.getBoundingClientRect();
-        const centerX = rect.x + rect.width / 2;
-        const centerY = rect.y + rect.height / 2;
-        
-        const deltaX = mouseX - centerX;
-        const deltaY = mouseY - centerY;
-        
-        const distance = Math.sqrt(Math.pow(deltaY, 2) + Math.pow(deltaX, 2));
-        
-        let angle = (180 * Math.acos(deltaX / distance)) / Math.PI;
-        if (mouseY > centerY) {
-          angle = angle;
-        } else {
-          angle = -angle;
-        }
-        
-        const maxDistance = 240;
-        let intensity = 1 - Math.min(distance / maxDistance, 1);
-        intensity = Math.pow(intensity, 0.5);
-        
-        element.style.setProperty("--rotate", `${angle * intensity}deg`);
-      });
-    };
-    
-    window.addEventListener("pointermove", onPointerMove);
-    
-    const initialItem = items[Math.floor(totalItems / 2)];
-    onPointerMove(initialItem.getBoundingClientRect());
-    
-    let ticking = false;
-    window.addEventListener("pointermove", (event) => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          onPointerMove(event);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-
-
-
 const container = document.getElementById("cube-container");
     
 const SCREEN_WIDTH = 20;
@@ -1667,9 +1606,609 @@ animate();
   })();
 
 
+  (function(window, document) {
+    'use strict';
+    
+    window.SlimeMoldNamespace = window.SlimeMoldNamespace || {};
+    
+    const v2 = {
+        vec2: (x, y) => ({ x, y }),
+        add: (a, b) => ({ x: a.x + b.x, y: a.y + b.y }),
+        addN: (a, n) => ({ x: a.x + n, y: a.y + n }),
+        mulN: (a, n) => ({ x: a.x * n, y: a.y * n }),
+        rot: (v, angle) => ({
+            x: v.x * Math.cos(angle) - v.y * Math.sin(angle),
+            y: v.x * Math.sin(angle) + v.y * Math.cos(angle)
+        }),
+        floor: (v) => ({ x: Math.floor(v.x), y: Math.floor(v.y) })
+    };
+
+    const WIDTH = 400;
+    const HEIGHT = 400;
+    const NUM_AGENTS = 1500;
+    const DECAY = 0.9;
+    const MIN_CHEM = 0.0001;
+
+    const SENS_ANGLE = 45 * Math.PI / 180;
+    const SENS_DIST = 9;
+    const AGT_SPEED = 1;
+    const AGT_ANGLE = 45 * Math.PI / 180;
+    const DEPOSIT = 1;
+
+    const TEXTURE = [
+        "  ``^@",
+        " ..„v0",
+    ];
+    const OOB = ' ';
+
+    const R = Math.min(WIDTH, HEIGHT)/2;
+
+    function bounded(vec) {
+        return ((vec.x-R)**2 + (vec.y-R)**2 <= R**2);
+    }
+
+    function blur(row, col, data) {
+        let sum = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+                const val = data[(row + dy) * HEIGHT + (col + dx)] || 0;
+                sum += val;
+            }
+        }
+        return sum / 9;
+    }
+
+    function randCircle() {
+        const r = Math.sqrt(Math.random());
+        const theta = Math.random() * 2 * Math.PI;
+        return {
+            x: r * Math.cos(theta),
+            y: r * Math.sin(theta)
+        };
+    }
+
+    class Agent {
+        constructor(pos, dir) {
+            this.pos = pos;
+            this.dir = dir;
+            this.scatter = false;
+        }
+
+        sense(m, chem) {
+            const senseVec = v2.mulN(v2.rot(this.dir, m * SENS_ANGLE), SENS_DIST);
+            const pos = v2.floor(v2.add(this.pos, senseVec));
+            if (!bounded(pos))
+                return -1;
+            const sensed = chem[pos.y * HEIGHT + pos.x];
+            if (this.scatter)
+                return 1 - sensed;
+            return sensed;
+        }
+
+        react(chem) {
+            // Sense
+            let forwardChem = this.sense(0, chem);
+            let leftChem = this.sense(-1, chem);
+            let rightChem = this.sense(1, chem);
+
+            let rotate = 0;
+            if (forwardChem > leftChem && forwardChem > rightChem) {
+                rotate = 0;
+            }
+            else if (forwardChem < leftChem && forwardChem < rightChem) {
+                if (Math.random() < 0.5) {
+                    rotate = -AGT_ANGLE;
+                }
+                else {
+                    rotate = AGT_ANGLE;
+                }
+            }
+            else if (leftChem < rightChem) {
+                rotate = AGT_ANGLE;
+            }
+            else if (rightChem < leftChem) {
+                rotate = -AGT_ANGLE;
+            }
+            else if (forwardChem < 0) {
+                rotate = Math.PI / 2;
+            }
+            this.dir = v2.rot(this.dir, rotate);
+
+            this.pos = v2.add(this.pos, v2.mulN(this.dir, AGT_SPEED));
+        }
+
+        deposit(chem) {
+            const { y, x } = v2.floor(this.pos);
+            const i = y * HEIGHT + x;
+            chem[i] = Math.min(1, chem[i] + DEPOSIT);
+        }
+    }
+
+    class SlimeMoldSimulation {
+        constructor(containerElement, options = {}) {
+            if (!containerElement) {
+                console.error('Container element must be provided!');
+                return;
+            }
+            
+            this.container = typeof containerElement === 'string' 
+                ? document.getElementById(containerElement) 
+                : containerElement;
+                
+            if (!this.container) {
+                console.error('Container element not found!');
+                return;
+            }
+            
+            if (!this.container.classList.contains('slime-mold-container')) {
+                this.container.classList.add('slime-mold-container');
+                this.container.style.position = 'relative';
+                this.container.style.overflow = 'hidden';
+                
+                if (options.backgroundColor) {
+                    this.container.style.backgroundColor = options.backgroundColor;
+                }
+            }
+            
+            this.simulationElement = document.createElement('div');
+            this.simulationElement.style.position = 'absolute';
+            this.simulationElement.style.top = '0';
+            this.simulationElement.style.left = '0';
+            this.simulationElement.style.width = '100%';
+            this.simulationElement.style.height = '100%';
+            this.simulationElement.style.fontFamily = 'monospace';
+            this.simulationElement.style.fontSize = options.fontSize || '12px';
+            this.simulationElement.style.lineHeight = '1';
+            this.simulationElement.style.whiteSpace = 'pre';
+            this.simulationElement.style.color = options.color || 'antiquewhite';
+            this.simulationElement.style.cursor = 'pointer';
+            
+            this.container.appendChild(this.simulationElement);
+            
+            this.metrics = { aspect: 0.5 };
+
+            this.data = {};
+            this.cursor = { pressed: false, x: 0, y: 0 };
+            this.context = {
+                rows: 0,
+                cols: 0,
+                frame: 0,
+                metrics: this.metrics
+            };
+            this.buffer = [];
+
+            this.boot();
+            
+            this.setupEventListeners();
+            
+            this.animate();
+        }
+
+        boot() {
+            this.data.chem = new Float32Array(HEIGHT * WIDTH);
+            this.data.wip = new Float32Array(HEIGHT * WIDTH);
+
+            this.initializeAgents();
+
+            this.data.viewScale = { y: 100 / this.metrics.aspect, x: 100 };
+            this.data.viewFocus = { y: 0.5, x: 0.5 };
+            
+            this.isResetting = false;
+            this.resetAnimationPhase = null;
+            this.isMouseDown = false;
+            
+            this.updateDimensions();
+        }
+
+        initializeAgents() {
+            this.data.agents = [];
+            for (let agent = 0; agent < NUM_AGENTS; agent++) {
+                this.data.agents.push(new Agent(
+                    v2.mulN(v2.addN(v2.mulN(randCircle(), 0.5), 1), 0.5 * WIDTH),
+                    v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
+                ));
+            }
+        }
+
+        pre() {
+            for (let row = 0; row < HEIGHT; row++) {
+                for (let col = 0; col < WIDTH; col++) {
+                    let val = DECAY * blur(row, col, this.data.chem);
+                    if (val < MIN_CHEM)
+                        val = 0;
+                    this.data.wip[row * HEIGHT + col] = val;
+                }
+            }
+            const swap = this.data.chem;
+            this.data.chem = this.data.wip;
+            this.data.wip = swap;
+
+            const { chem, agents } = this.data;
+
+            const isScattering = Math.sin(this.context.frame / 150) > 0.8;
+            for (const agent of agents) {
+                agent.scatter = isScattering;
+                agent.react(chem);
+            }
+
+            for (const agent of agents) {
+                agent.deposit(chem);
+            }
+
+            this.updateView();
+        }
+
+        updateView() {
+            const targetScale = {
+                y: 1.1 * WIDTH / this.context.rows,
+                x: 1.1 * WIDTH / this.context.rows * this.metrics.aspect,
+            };
+
+            if (this.data.viewScale.y !== targetScale.y || this.data.viewScale.x !== targetScale.x) {
+                this.data.viewScale.y += 0.1 * (targetScale.y - this.data.viewScale.y);
+                this.data.viewScale.x += 0.1 * (targetScale.x - this.data.viewScale.x);
+            }
+
+            const targetFocus = { y: 0.5, x: 0.5 };
+            
+            if (this.data.viewFocus.y !== targetFocus.y || this.data.viewFocus.x !== targetFocus.x) {
+                this.data.viewFocus.y += 0.1 * (targetFocus.y - this.data.viewFocus.y);
+                this.data.viewFocus.x += 0.1 * (targetFocus.x - this.data.viewFocus.x);
+            }
+        }
+
+        main(coord) {
+            const { viewFocus, viewScale } = this.data;
+
+            const offset = {
+                y: Math.floor(viewFocus.y * (HEIGHT - viewScale.y * this.context.rows)),
+                x: Math.floor(viewFocus.x * (WIDTH - viewScale.x * this.context.cols)),
+            };
+
+            const sampleFrom = {
+                y: offset.y + Math.floor(coord.y * viewScale.y),
+                x: offset.x + Math.floor(coord.x * viewScale.x),
+            };
+
+            const sampleTo = {
+                y: offset.y + Math.floor((coord.y + 1) * viewScale.y),
+                x: offset.x + Math.floor((coord.x + 1) * viewScale.x),
+            };
+
+            if (!bounded(sampleFrom) || !bounded(sampleTo))
+                return OOB;
+
+            const sampleH = Math.max(1, sampleTo.y - sampleFrom.y);
+            const sampleW = Math.max(1, sampleTo.x - sampleFrom.x);
+
+            let max = 0;
+            let sum = 0;
+            for (let x = sampleFrom.x; x < sampleFrom.x + sampleW; x++) {
+                for (let y = sampleFrom.y; y < sampleFrom.y + sampleH; y++) {
+                    const v = this.data.chem[y * HEIGHT + x] || 0;
+                    max = Math.max(max, v);
+                    sum += v;
+                }
+            }
+            let val = sum / (sampleW * sampleH);
+            val = (val + max) / 2;
+
+            val = Math.pow(val, 1/3);
+
+            const texRow = (coord.x + coord.y) % TEXTURE.length;
+            const texCol = Math.ceil(val * (TEXTURE[0].length - 1));
+            const char = TEXTURE[texRow][texCol] || ' ';
+
+            return char;
+        }
+
+        render() {
+            this.buffer = [];
+            for (let y = 0; y < this.context.rows; y++) {
+                let row = '';
+                for (let x = 0; x < this.context.cols; x++) {
+                    row += this.main({ x, y });
+                }
+                this.buffer.push(row);
+            }
+            this.simulationElement.textContent = this.buffer.join('\n');
+        }
+
+        animate() {
+            this.context.frame++;
+            this.pre();
+            this.render();
+            this.animationFrame = requestAnimationFrame(() => this.animate());
+        }
+
+        setupEventListeners() {
+            this.isMouseDown = false;
+            
+            this.simulationElement.addEventListener('mousedown', (e) => {
+                this.isMouseDown = true;
+                this.prepareReset();
+            });
+            
+            this.mouseUpHandler = (e) => {
+                if (this.isMouseDown) {
+                    this.isMouseDown = false;
+                    this.completeReset();
+                }
+            };
+            document.addEventListener('mouseup', this.mouseUpHandler);
+
+            this.resizeHandler = () => {
+                this.updateDimensions();
+            };
+            window.addEventListener('resize', this.resizeHandler);
+
+            this.updateDimensions();
+        }
+
+        updateDimensions() {
+            const containerStyle = window.getComputedStyle(this.container);
+            const containerWidth = parseInt(containerStyle.width);
+            const containerHeight = parseInt(containerStyle.height);
+            
+            const fontSize = parseInt(window.getComputedStyle(this.simulationElement).fontSize);
+            this.context.cols = Math.floor(containerWidth / (fontSize * 0.6));
+            this.context.rows = Math.floor(containerHeight / fontSize);
+            
+            this.metrics.aspect = (fontSize * 0.6) / fontSize;
+        }
+
+        prepareReset() {
+            this.originalAgents = [...this.data.agents];
+            this.originalChem = new Float32Array(this.data.chem);
+            
+            this.originalViewFocus = {
+                x: this.data.viewFocus.x,
+                y: this.data.viewFocus.y
+            };
+            
+            this.resetStartTime = performance.now();
+            this.resetAnimationPhase = 'fadeOut';
+            
+            if (!this.isResetting) {
+                this.isResetting = true;
+                this.animateReset();
+            }
+        }
+
+        completeReset() {
+            if (this.resetAnimationPhase === 'fadeOut') {
+                this.newAgents = [];
+                for (let agent = 0; agent < NUM_AGENTS; agent++) {
+                    this.newAgents.push(new Agent(
+                        v2.mulN({x: 0.5, y: 0.5}, WIDTH),
+                        v2.rot(v2.vec2(1, 0), Math.random() * 2 * Math.PI),
+                    ));
+                }
+                
+                this.data.chem = new Float32Array(HEIGHT * WIDTH);
+                this.data.wip = new Float32Array(HEIGHT * WIDTH);
+                
+                this.resetAnimationPhase = 'fadeIn';
+                this.resetStartTime = performance.now();
+            }
+        }
+
+        animateReset() {
+            const timestamp = performance.now();
+            const elapsed = timestamp - this.resetStartTime;
+            const fadeDuration = 1500; // 1.5 секунды для каждой фазы
+            const progress = Math.min(elapsed / fadeDuration, 1);
+            const easedProgress = progress * (2 - progress);
+            
+            if (this.resetAnimationPhase === 'fadeOut') {
+                
+                for (let i = 0; i < HEIGHT * WIDTH; i++) {
+                    this.data.chem[i] = this.originalChem[i] * (1 - easedProgress);
+                }
+                
+                this.data.viewFocus = {
+                    y: this.originalViewFocus.y + (0.5 - this.originalViewFocus.y) * easedProgress,
+                    x: this.originalViewFocus.x + (0.5 - this.originalViewFocus.x) * easedProgress
+                };
+                
+                for (let i = 0; i < this.originalAgents.length; i++) {
+                    if (i < this.data.agents.length) {
+                        const agent = this.data.agents[i];
+                        const center = { x: WIDTH / 2, y: HEIGHT / 2 };
+                        const dirToCenter = {
+                            x: center.x - agent.pos.x,
+                            y: center.y - agent.pos.y
+                        };
+                        const dist = Math.sqrt(dirToCenter.x * dirToCenter.x + dirToCenter.y * dirToCenter.y);
+                        if (dist > 0) {
+                            const normalizedDir = {
+                                x: dirToCenter.x / dist,
+                                y: dirToCenter.y / dist
+                            };
+                            agent.dir = {
+                                x: agent.dir.x * (1 - easedProgress) + normalizedDir.x * easedProgress,
+                                y: agent.dir.y * (1 - easedProgress) + normalizedDir.y * easedProgress
+                            };
+                            
+                            const moveSpeed = dist * easedProgress * 0.02;
+                            agent.pos = {
+                                x: agent.pos.x + normalizedDir.x * moveSpeed,
+                                y: agent.pos.y + normalizedDir.y * moveSpeed
+                            };
+                        }
+                    }
+                }
+                
+                if (progress < 1 || this.isMouseDown) {
+                    requestAnimationFrame(() => this.animateReset());
+                } else {
+                    this.completeReset();
+                }
+            } else if (this.resetAnimationPhase === 'fadeIn') {
+                
+                if (progress < 0.1) {
+                    this.data.agents = [];
+                    for (let i = 0; i < this.newAgents.length; i++) {
+                        const agent = this.newAgents[i];
+                        this.data.agents.push(new Agent(
+                            {x: agent.pos.x, y: agent.pos.y}, 
+                            {x: agent.dir.x, y: agent.dir.y}
+                        ));
+                    }
+                }
+                
+                for (let i = 0; i < this.data.agents.length; i++) {
+                    const agent = this.data.agents[i];
+                    const originalAgent = this.newAgents[i];
+                    
+                    const randDist = Math.random() * WIDTH * 0.4 * easedProgress;
+                    const targetPos = {
+                        x: WIDTH/2 + originalAgent.dir.x * randDist,
+                        y: HEIGHT/2 + originalAgent.dir.y * randDist
+                    };
+                    
+                    const dirToTarget = {
+                        x: targetPos.x - agent.pos.x,
+                        y: targetPos.y - agent.pos.y
+                    };
+                    
+                    const dist = Math.sqrt(dirToTarget.x * dirToTarget.x + dirToTarget.y * dirToTarget.y);
+                    if (dist > 0) {
+                        const normalizedDir = {
+                            x: dirToTarget.x / dist,
+                            y: dirToTarget.y / dist
+                        };
+                        
+                        const moveSpeed = 0.5 + 2 * easedProgress;
+                        agent.pos = {
+                            x: agent.pos.x + normalizedDir.x * moveSpeed,
+                            y: agent.pos.y + normalizedDir.y * moveSpeed
+                        };
+                    }
+                    
+                    if (Math.random() < 0.1) {
+                        const randAngle = (Math.random() - 0.5) * Math.PI/2;
+                        agent.dir = v2.rot(agent.dir, randAngle);
+                    }
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(() => this.animateReset());
+                } else {
+                    this.isResetting = false;
+                }
+            }
+        }
+        
+        stop() {
+            if (this.animationFrame) {
+                cancelAnimationFrame(this.animationFrame);
+                this.animationFrame = null;
+            }
+        }
+        
+        start() {
+            if (!this.animationFrame) {
+                this.animate();
+            }
+        }
+        
+        destroy() {
+            this.stop();
+            
+            document.removeEventListener('mouseup', this.mouseUpHandler);
+            window.removeEventListener('resize', this.resizeHandler);
+            
+            if (this.simulationElement && this.simulationElement.parentNode) {
+                this.simulationElement.parentNode.removeChild(this.simulationElement);
+            }
+            
+            this.data = null;
+        }
+    }
+    
+    window.SlimeMoldNamespace.SlimeMoldSimulation = SlimeMoldSimulation;
+    
+    window.createSlimeMold = function(container, options = {}) {
+        return new SlimeMoldSimulation(container, options);
+    };
+    
+})(window, document);
 
 
 
+document.addEventListener('DOMContentLoaded', () => {
+  const radius = 100;
+  const duration = 1000;
+  const speed = 2;
+  const scrambleChars = ':';
+
+  const root = document.querySelector('.NDABLOCK');
+  const p = root.querySelector('p');
+
+  const rawText = p.textContent;
+  p.innerHTML = '';
+
+  const chars = [];
+  for (let char of rawText) {
+    const span = document.createElement('span');
+    span.className = 'char';
+
+    if (char === ' ') {
+      span.textContent = '\u00A0';
+      span.dataset.isSpace = 'true';
+      span.dataset.content = '\u00A0';
+    } else if (char === '\n') {
+      const br = document.createElement('br');
+      p.appendChild(br);
+      continue;
+    } else {
+      span.textContent = char;
+      span.dataset.content = char;
+    }
+
+    p.appendChild(span);
+    chars.push(span);
+  }
+
+  function handleMove(e) {
+    chars.forEach((c) => {
+      if (c.dataset.isSpace === 'true') return;
+
+      const rect = c.getBoundingClientRect();
+      const dx = e.clientX - (rect.left + rect.width / 2);
+      const dy = e.clientY - (rect.top + rect.height / 2);
+      const dist = Math.hypot(dx, dy);
+
+      if (dist < radius) {
+        const scrambleTime = duration * (1 - dist / radius);
+        triggerScramble(c, scrambleTime);
+      }
+    });
+  }
+
+  function triggerScramble(span, time) {
+    if (span.dataset.scrambling === 'true') return;
+    span.dataset.scrambling = 'true';
+
+    const original = span.dataset.content;
+    const intervalMs = 50 / speed;
+    const endTime = Date.now() + time;
+
+    const intervalID = setInterval(() => {
+      if (Date.now() >= endTime) {
+        clearInterval(intervalID);
+        span.textContent = original;
+        span.dataset.scrambling = 'false';
+      } else {
+        const randIndex = Math.floor(Math.random() * scrambleChars.length);
+        span.textContent = scrambleChars.charAt(randIndex);
+      }
+    }, intervalMs);
+  }
+
+  root.addEventListener('pointermove', handleMove);
+});
 
 
 

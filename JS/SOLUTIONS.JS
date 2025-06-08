@@ -1074,6 +1074,114 @@ function easeInOutQuad(t) {
 
 
 
+    // Открытие по клику на кнопку
+    document.querySelectorAll('.pixel-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modalId = btn.dataset.modal;
+        const overlay = document.getElementById(modalId);
+        overlay.classList.add('active');
+      });
+    });
+
+    // Закрытие по клику на крестик
+    document.querySelectorAll('.modal-close').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.target.closest('.modal-overlay').classList.remove('active');
+      });
+    });
+
+    // Закрытие по клику вне окна (на оверлей)
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const wrapper = document.getElementById("gridblock");
+    const rows = 11;
+    const cols = 9;
+    const totalItems = rows * cols;
+    
+    for (let i = 0; i < totalItems; i++) {
+      const span = document.createElement("span");
+      span.className = "gridblockspan";
+      wrapper.appendChild(span);
+    }
+    
+    const items = wrapper.querySelectorAll(".gridblockspan");
+    
+    const onPointerMove = (event) => {
+      const mouseX = event.clientX || event.x;
+      const mouseY = event.clientY || event.y;
+      
+      items.forEach((element) => {
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.x + rect.width / 2;
+        const centerY = rect.y + rect.height / 2;
+        
+        const deltaX = mouseX - centerX;
+        const deltaY = mouseY - centerY;
+        
+        const distance = Math.sqrt(Math.pow(deltaY, 2) + Math.pow(deltaX, 2));
+        
+        let angle = (180 * Math.acos(deltaX / distance)) / Math.PI;
+        if (mouseY > centerY) {
+          angle = angle;
+        } else {
+          angle = -angle;
+        }
+        
+        const maxDistance = 240;
+        let intensity = 1 - Math.min(distance / maxDistance, 1);
+        intensity = Math.pow(intensity, 0.5);
+        
+        element.style.setProperty("--rotate", `${angle * intensity}deg`);
+      });
+    };
+    
+    window.addEventListener("pointermove", onPointerMove);
+    
+    const initialItem = items[Math.floor(totalItems / 2)];
+    onPointerMove(initialItem.getBoundingClientRect());
+    
+    let ticking = false;
+    window.addEventListener("pointermove", (event) => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          onPointerMove(event);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 console.log(`WEB_DEVELOPMENT: ARCH1, R001, ACID`);
