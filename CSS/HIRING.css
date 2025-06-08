@@ -245,7 +245,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 900px;   /* подберите под ширину контейнера */
-    height: 410px;   /* подберите под высоту контейнера */
+    height: 404px;   /* подберите под высоту контейнера */
     background: radial-gradient(
       circle at center,
       rgba(0, 0, 0, 0.95) 0%,
