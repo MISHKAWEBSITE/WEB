@@ -78,3 +78,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
 console.log(`WEB_DEVELOPMENT: ARCH1, R001, ACID`);
 console.log(`INSPIRED_BY: MIAO, Dragonfly, ertdfgcvb, Ivan Picelj, and .nfo's`);
+console.log(`We're not web developers — we threw this site together in a few days, just for fun. Yeah, it might look kinda shitty. That's because... it is.`);
