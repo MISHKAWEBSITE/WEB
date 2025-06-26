@@ -241,6 +241,3 @@ window.addEventListener('resize', () => {
   setTimeout(initializeFire, 100);
 });
 requestAnimationFrame(updateFire);
-
-
-console.log(`We're not web developers — we threw this site together in a few days, just for fun. Yeah, it might look kinda shitty. That's because... it is.`);
